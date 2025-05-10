@@ -1,0 +1,43 @@
+<!-- Sidebar -->
+<trinity-left-sidebar
+[isEnglish]="isEnglish"></trinity-left-sidebar>
+
+<!-- Contenido principal -->
+<div class="main-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="welcome-text">
+        <ng-container *ngIf="!isEnglish"
+        > <h1 >Bienvenido a Alquiloando</h1>
+        <p>Tu plataforma de alquileres temporarios</p>
+        </ng-container>
+        <ng-container *ngIf="isEnglish">
+        <h1>Welcome to Alquiloando</h1>
+        <p>Your temporary rental platform</p>
+        </ng-container>
+    </div>
+    <div class="flag">
+      <button class="lang-toggle" (click)="toggleLanguage()">
+        <img 
+          [src]="isEnglish ? 'assets/en.png' : 'assets/es.png'" 
+          alt="Idioma" 
+          width="24" 
+          height="16"
+          style="vertical-align: middle; margin-right: 8px;"
+        />
+        {{ isEnglish ? 'English' : 'Español' }}
+      </button>
+    </div>
+    </div>
+  </header>
+  
+
+  <!-- Contenido -->
+  <section >
+    <div class="main-content">
+     
+    </div>
+   
+  </section>
+</div>

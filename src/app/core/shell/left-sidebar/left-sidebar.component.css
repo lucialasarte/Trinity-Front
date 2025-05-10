@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap');
+
+.sidebar {
+    width: 80px;
+    height: 100vh;
+    background-color: #FFF4E6;
+    border-right: 1px solid #FFF4E6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    transition: width 0.3s ease;
+    position: fixed ;
+  }
+  
+  .logo {
+    padding-left: 12px;
+    width: 120px;
+    height: 120px;
+  }
+  
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .nav-list li {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .nav-list button {
+    border-radius: 10px;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 15px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #555;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .nav-list button:hover,
+  .nav-list button.active {
+    background-color: #9bb5cf8a;
+    color: #2C3E50;
+  }
+  
+  .icon {
+    font-size: 20px;
+  }
+  
+  .label {
+    margin-top: 5px;
+  }
+  
+
+  /* Animaciones logo */
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0rem;
+    animation: fadeInScale 1.5s ease-in-out;
+  }
+  
+  .logo-img {
+    width: 90px;
+    height: auto;
+    transition: filter 0.4s ease, transform 0.4s ease;
+    padding-left: 9px;
+  }
+  
+  .logo-img:hover {
+    filter: drop-shadow(0 0 6px #a0c4ff);
+    transform: scale(1.02);
+  }
+  
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a2c48; /* azul oscuro que combina con el logo */
+    line-height: 1;
+    padding-top: 0rem; /* ajuste fino */
+    text-align: center;
+    padding-left: 9px;
+  }
+  
+  /* Fade in */
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }

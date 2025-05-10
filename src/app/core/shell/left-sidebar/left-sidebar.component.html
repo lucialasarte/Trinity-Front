@@ -1,0 +1,63 @@
+<nav class="sidebar">
+  <div class="logo-container">
+    <a [routerLink]="'/home'" class="logo-link">
+    <img src="assets/laTrinidadAzulChico.png" alt="Alquiloando Logo" class="logo-img" />
+    </a>
+  </div>
+  <div class="logo-text-container">
+    <h1 class="logo-text">
+      Alquiloando
+    </h1>
+  </div>
+  <ul class="nav-list">
+    <li>
+      <button [routerLink]="'/home'" routerLinkActive="active">
+        <span class="icon">🏠</span>
+        <span *ngIf="isEnglish" class="label">Home</span>
+        <span *ngIf="!isEnglish" class="label">Inicio</span>
+      </button>
+    </li>
+    <li>
+      <button [routerLink]="'/iniciar-sesion'" routerLinkActive="active">
+        <span class="icon">👤</span>
+        <span *ngIf="isEnglish" class="label">Log in</span>
+        <span *ngIf="!isEnglish" class="label">Iniciar Sesión</span>
+      </button>
+    </li>
+    <li>
+      <button [routerLink]="'/propiedades'" routerLinkActive="active">
+        <span class="icon">🏘️</span>
+        <span *ngIf="isEnglish" class="label">Properties</span>
+        <span *ngIf="!isEnglish" class="label">Propiedades</span>
+      </button>
+    </li>
+    <li>
+      <button [routerLink]="'/reservas'" routerLinkActive="active">
+        <span class="icon">📅</span>
+        <span *ngIf="isEnglish" class="label">Reservations</span>
+        <span *ngIf="!isEnglish" class="label">Reservas</span>
+      </button>
+    </li>
+    <li>
+      <button [routerLink]="'/empleados'" routerLinkActive="active">
+        <span class="icon">👥 </span>
+        <span *ngIf="isEnglish" class="label">Employees</span>
+        <span *ngIf="!isEnglish" class="label">Empleados</span>
+      </button>
+    </li>
+    <li>
+      <button [routerLink]="'/perfil'" routerLinkActive="active">
+        <span class="icon">⚙️</span>
+        <span *ngIf="isEnglish" class="label">My Profile</span>
+        <span *ngIf="!isEnglish" class="label">Mi Perfil</span>
+      </button>
+    </li>
+    <li>
+      <button [routerLink]="'/logout'" routerLinkActive="active">
+        <span class="icon">🚪</span>
+        <span *ngIf="isEnglish" class="label">Log out</span>
+        <span *ngIf="!isEnglish" class="label">Cerrar sesión</span>
+      </button>
+    </li>
+  </ul>
+</nav>
