@@ -1,0 +1,56 @@
+<ng-container>
+  <div class="row" style="padding-top: 20px">
+    <div class="content-form">
+      <div class="row">
+        <div class="col-md-10">FORM</div>
+        <div class="col-md-2">
+          <button >
+            <i class="fa fa-search"></i> Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2" style="align-content: center">
+      <button >
+        <i class="fa fa-plus"></i> Agregar Propiedad
+      </button>
+    </div>
+  </div>
+  <div class="row" style="padding-top: 20px">
+    <!-- Título con estilo -->
+    <div class="row">
+      <h2 class="titulo-propiedades">Propiedades</h2>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo Propiedad</th>
+            <th>Localidad</th>
+            <th>Provincia</th>
+            <th>Precio Noche</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let propiedad of propiedades">
+            <td>{{ propiedad.nombre }}</td>
+            <td>{{ propiedad.tipoPropiedad }}</td>
+            <td>{{ propiedad.localidad }}</td>
+            <td>{{ propiedad.provincia }}</td>
+            <td>{{ propiedad.precio | currency }}</td>
+            <td>
+              <button (click)="verPropiedad(propiedad.id)">
+                <i class="fa fa-eye"></i> Ver Propiedad
+              </button>
+              <button (click)="eliminar(propiedad.id)">
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-container>

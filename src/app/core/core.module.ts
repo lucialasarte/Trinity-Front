@@ -8,11 +8,12 @@ import { LeftSidebarComponent } from './shell/left-sidebar/left-sidebar.componen
 @NgModule({
   imports: [
     CommonModule,
-    CoreRoutingModule,
+    CoreRoutingModule
   ],
   declarations: [
     ShellComponent,
-    LeftSidebarComponent
+    LeftSidebarComponent,
+    
   ],
   providers: [],
   exports: [
