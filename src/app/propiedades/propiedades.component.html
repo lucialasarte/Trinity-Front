@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="col-md-2" style="align-content: center">
-      <button >
+      <button (click)="showModal()" class="btn btn-primary">
         <i class="fa fa-plus"></i> Agregar Propiedad
       </button>
     </div>
@@ -54,3 +54,23 @@
     </div>
   </div>
 </ng-container>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  (nzOnOk)="onSubmitPropiedad()"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="'50%'"
+  [nzTitle]="'Agregar Propiedad'"
+>
+  <div *nzModalContent>
+    <app-form-propiedades></app-form-propiedades>
+  </div>
+    
+  <div *nzModalFooter>
+    <button class="btn-cancel" nz-button (click)="handleCancel()">Cancelar</button>
+    <button class=" btn-aceptar" nz-button (click)="onSubmitPropiedad()">
+      Agregar
+    </button>
+  </div>
+
+</nz-modal>

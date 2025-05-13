@@ -5,12 +5,14 @@ NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
+    
   ],
   declarations: [],
   providers: [],
   exports: [
     FormsModule,
     ReactiveFormsModule,
+    
   ],
 
   bootstrap: [],

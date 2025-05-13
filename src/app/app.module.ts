@@ -11,6 +11,8 @@ import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzZorroModule } from './shared/nz-zorro.module';
 
 registerLocaleData(en);
 
@@ -21,7 +23,9 @@ registerLocaleData(en);
     CoreModule,
     FormsModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NzZorroModule
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [ShellComponent],
