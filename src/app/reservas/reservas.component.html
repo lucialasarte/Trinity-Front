@@ -1,0 +1,93 @@
+<ng-container>
+  <div class="row" style="padding-top: 20px">
+    <div class="content-form">
+      <h2 class="titulo-form">Buscar Reserva</h2>
+      <div class="d-flex align-items-center">
+        <form
+          nz-form
+          nzLayout="vertical"
+          [formGroup]="form"
+          class="flex-grow-1"
+        >
+          <nz-form-item>
+            <nz-form-label nzFor="dato">Dato Identificatorio</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="dato" />
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+        <button class="btn btn-primary ml-2" (click)="buscarReserva()">
+          <i class="fa fa-search"></i> Buscar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="padding-top: 20px">
+    <div class="row">
+      <h2 class="titulo-reservas">Reservas</h2>
+    </div>
+    <div class="table-container">
+      <nz-table
+        #reservaTable
+        [nzData]="reservas"
+        [nzPageSize]="5"
+        [nzFrontPagination]="true"
+        [nzSize]="'small'"
+      >
+        <thead>
+          <tr style="background-color: antiquewhite">
+            <th nzShowSort nzColumnKey="estado" [nzSortFn]="stadoCompare">
+              Estado
+            </th>
+            <th nzShowSort nzColumnKey="fecha_inicio" [nzSortFn]="fechaCompare">
+              Fecha de Inicio
+            </th>
+            <th nzShowSort nzColumnKey="fecha_fin" [nzSortFn]="fechaCompare">
+              Fecha de Fin
+            </th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of reservaTable.data">
+            <td>
+              <span
+                [ngClass]="{
+                  'badge-confirmada': reserva.estado === 'Confirmada',
+                  'badge-pendiente': reserva.estado === 'Pendiente',
+                  'badge-cancelada': reserva.estado === 'Cancelada'
+                }"
+              >
+                {{ reserva.estado }}
+              </span>
+            </td>
+            <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+            <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
+            <td>
+              <button
+                (click)="verReserva(reserva.id)"
+                class="btn btn-primary btn-sm"
+              >
+                <i class="fa fa-eye"></i> Ver reserva
+              </button>
+              <button
+                (click)="eliminar(reserva.id)"
+                class="btn btn-danger btn-sm"
+              >
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+
+      <div
+        *ngIf="!reservas || reservas.length === 0"
+        class="mensaje-sin-propiedades"
+      >
+        No hay reservas.
+      </div>
+    </div>
+  </div>
+</ng-container>

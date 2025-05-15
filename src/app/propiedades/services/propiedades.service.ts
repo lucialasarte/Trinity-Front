@@ -20,4 +20,22 @@ export class PropiedadesService {
   createPropiedad(propiedad: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/`, propiedad);
   }
+
+  get_propiedad_id(id:number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/id/${id}`);
+  }
+
+  cambiar_estado_propiedad(id: number) {
+  return this.http.patch<any[]>(`${this.apiUrl}/cambiarEstado/${id}`, {});
+}
+
+eliminar_propiedad(id: number) {
+  return this.http.patch<any[]>(`${this.apiUrl}/eliminar/${id}`,{});
+}
+
+
+
+
+
+
 }

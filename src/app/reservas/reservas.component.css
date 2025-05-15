@@ -1,71 +1,68 @@
 .content-form {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: left;
-    width: 70%;
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #FFF4E6;
-    margin-left: 20px;
-    
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  width: 50%;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff4e6;
+  margin-left: 20px;
 }
-.table-container{
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: left;
-    width: 70%;
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #FFF4E6;
-    margin-left: 20px;
+.table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  width: 80%;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff4e6;
+  margin-left: 20px;
 }
 
 thead th,
-tbody td,th {
+tbody td {
   border: 1px solid #2c3e508a;
   text-align: center;
   background-color: rgb(255, 253, 250);
 
   &:hover {
-    background-color: rgb(248, 239, 228); /* Gris un poco más oscuro */
-
-    border-color: #2c3e508a;
-  }
-}
-
- button {
-    background-color: #475c70;
-    color: #FFF4E6;
-    border: 2px solid #2c3e508a;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    padding: 5px;
-    margin: 5px;
-    &:hover {
     background-color: antiquewhite; /* Gris un poco más oscuro */
-    color: #2c3e508a;
+
     border-color: #2c3e508a;
   }
 }
- .titulo-propiedades {
-    font-size: 28px;
-    font-weight: bold; 
-    margin-left: 40px;
-    color: #2c3e50; 
-    margin-bottom: 20px; 
-    text-transform: uppercase;
-    
+
+button {
+  background-color: #475c70;
+  color: #fff4e6;
+  border: 2px solid #2c3e508a;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  margin: 5px;
+  &:hover {
+    background-color: #a6bacc; /* Gris un poco más oscuro */
+    color: #fff4e6;
+    border-color: #2c3e508a;
+  }
+}
+.titulo-propiedades {
+  font-size: 28px;
+  font-weight: bold;
+  margin-left: 40px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .titulo-form {
   font-size: 22px;
-  font-weight: bold; 
-  color: #2c3e50; 
+  font-weight: bold;
+  color: #2c3e50;
 }
-
 
 /* Boton Segundario/Cancel */
 .btn-cancel {
@@ -135,8 +132,6 @@ tbody td,th {
   border: 1px solid #ddd;
 }
 
-
-
 /* Estados Reserva */
 .badge-confirmada {
   background-color: #28a745; /* Verde */
@@ -147,7 +142,14 @@ tbody td,th {
   font-size: 12px;
 }
 
-
+.badge-pendiente {
+  background-color: #6c757d; /* Gris */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
+}
 
 .badge-cancelada {
   background-color: #dc3545; /* Rojo */

@@ -1,0 +1,143 @@
+<h2 class="titulo-general">Detalle de la Propiedad</h2>
+
+<ng-container>
+  <div class="fila-horizontal">
+    <div class="detalle-container">
+      <h5 style="margin-bottom: 0px">Datos</h5>
+      <hr />
+      <div
+        class="detalle-grid"
+        style="padding-left: 20px; margin-top: 0px"
+        *ngIf="propiedad"
+      >
+        <div class="detalle-item">
+          <p>
+            Nombre: <strong>{{ propiedad.nombre }}</strong>
+          </p>
+          <p>
+            Código de Acceso: <strong>{{ propiedad.codigoAcceso }}</strong>
+          </p>
+          <p>
+            ¿Está habilitada?:
+            <strong>{{ propiedad.is_habilitada ? "Sí" : "No" }}</strong>
+          </p>
+          <p>
+            Tipo de Propiedad: <strong>{{ propiedad.tipo }}</strong>
+          </p>
+          <p>
+            Descripción: <strong>{{ propiedad.descripcion }}</strong>
+          </p>
+
+          <p>
+            Ambientes: <strong>{{ propiedad.ambientes }}</strong>
+          </p>
+          <p>
+            Baños: <strong>{{ propiedad.banios }}</strong>
+          </p>
+          <p>
+            Cocheras: <strong>{{ propiedad.cocheras }}</strong>
+          </p>
+          <p>
+            Huéspedes: <strong>{{ propiedad.huespedes }}</strong>
+          </p>
+        </div>
+        <div class="detalle-item">
+          <p>
+            Ciudad: <strong>{{ propiedad.ciudad }}</strong>
+          </p>
+          <p>
+            Provincia: <strong>{{ propiedad.provincia }}</strong>
+          </p>
+          <p>
+            Calle: <strong>{{ propiedad.calle }}</strong>
+
+            Número: <strong>{{ propiedad.numero }}</strong>
+          </p>
+          <p>
+            Piso: <strong>{{ propiedad.piso }}</strong>
+
+            Departamento: <strong>{{ propiedad.depto }}</strong>
+          </p>
+          <p>
+            Entre Calles: <strong>{{ propiedad.entre_calles }}</strong>
+          </p>
+          <p>
+            Precio por Noche: <strong>U$D{{ propiedad.precioNoche }}</strong>
+          </p>
+          <p>
+            Política de Reserva: <strong>{{ propiedad.pol_reserva }}</strong>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <nz-carousel *ngIf="imagenes.length" class="carousel-limited">
+          <div nz-carousel-content *ngFor="let imagen of imagenes">
+            <img
+              [src]="imagen"
+              alt="Imagen de la propiedad"
+              class="imagen-propiedad"
+            />
+          </div>
+        </nz-carousel>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <h4 style="padding-bottom: 10px">Reservas</h4>
+      <nz-table
+        #reservaTable
+        [nzData]="reservas"
+        [nzPageSize]="5"
+        [nzFrontPagination]="true"
+        [nzSize]="'small'"
+      >
+        <thead>
+          <tr style="background-color: antiquewhite; color: #ffefdb">
+            <th nzShowSort nzColumnKey="estado" [nzSortFn]="stadoCompare">
+              Estado
+            </th>
+            <th nzShowSort nzColumnKey="fecha_inicio" [nzSortFn]="fechaCompare">
+              Fecha de Inicio
+            </th>
+            <th nzShowSort nzColumnKey="fecha_fin" [nzSortFn]="fechaCompare">
+              Fecha de Fin
+            </th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reserva of reservaTable.data">
+            <td>
+              <span
+                [ngClass]="{
+                  'badge-confirmada': reserva.estado === 'Confirmada',
+                  'badge-pendiente': reserva.estado === 'Pendiente',
+                  'badge-cancelada': reserva.estado === 'Cancelada'
+                }"
+              >
+                {{ reserva.estado }}
+              </span>
+            </td>
+            <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+            <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
+            <td>
+              <button
+                (click)="verReserva(reserva.id)"
+                class="btn btn-primary btn-sm"
+              >
+                <i class="fa fa-eye"></i> Ver reserva
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+
+      <div
+        *ngIf="!reservas || reservas.length === 0"
+        class="mensaje-sin-propiedades"
+      >
+        No hay reservas.
+      </div>
+    </div>
+  </div>
+</ng-container>

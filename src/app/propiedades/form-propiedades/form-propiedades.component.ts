@@ -1,93 +1,100 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoPropiedad } from '../models/tipoPropiedad';
 import { PropiedadesService } from '../services/propiedades.service';
+import { ParametricasService } from 'src/app/shared/services/parametricas.service';
 
 @Component({
   selector: 'app-form-propiedades',
   templateUrl: './form-propiedades.component.html',
-  styleUrls: ['./form-propiedades.component.css']
+  styleUrls: ['./form-propiedades.component.css'],
 })
 export class FormPropiedadesComponent {
-
+  @Output() formValidityChange = new EventEmitter<boolean>();
   form!: FormGroup;
   isEditing: boolean = false;
-  tipoPropiedades: Array<TipoPropiedad>=[
-    { id: 1, nombre: 'Casa' },
-    { id: 2, nombre: 'Departamento' },
-    { id: 3, nombre: 'Cabaña' },
-    { id: 4, nombre: 'Chalet' },
-    { id: 5, nombre: 'Casa de Campo' },
-    { id: 6, nombre: 'Loft' },
-    { id: 7, nombre: 'Estudio' },
-    { id: 8, nombre: 'Duplex' }
-  ];
+  tipoPropiedades: Array<TipoPropiedad> = [];
+  politicasReserva: Array<any> = [];
+
   partidos: Array<any> = [];
   provincias: Array<any> = [];
-  localidades: Array<any> = [];
+  ciudades: Array<any> = [];
 
   constructor(
     private fb: FormBuilder,
-    private propiedadesService: PropiedadesService
+    private propiedadesService: PropiedadesService,
+    private parametricasService: ParametricasService
   ) {}
+
   ngOnInit(): void {
     this._initForm();
-    //this._getTiposPropiedades();
-    //this._getProvincias();
+    this._getTiposPropiedades();
+    this._get_provincias();
+    this._getPorcentajes();
   }
-  onSubmit() {}
 
   private _initForm() {
     this.form = this.fb.group({
       id: [null],
-      nombre: ['', Validators.required],
-      idTipoPropiedad: [null, Validators.required],
-      tipoPropiedad: [''],
+      nombre: [null, Validators.required],
+      id_tipo: [null, Validators.required],
+      tipo: [null],
       calle: [null, Validators.required],
       numero: [null, Validators.required],
+      entre_calles: [null,Validators.required],
+      descripcion: [null, Validators.required],
       piso: [null],
       depto: [null],
-      codigoPostal: [null, Validators.required],
-      idLocalidad: [null, Validators.required],
-      localidad: [null],
-      idProvincia: [null, Validators.required],
-      provincia: [null],
-      precio: [null, [Validators.required, Validators.min(0)]],
-      codigoAcceso: ['0000', [ Validators.pattern(/^\d{4}$/)]], 
+      id_pol_reserva: [null, Validators.required],
+      id_ciudad: [null, Validators.required],
+      id_provincia: [null, Validators.required],
+      precioNoche: [null, [Validators.required, Validators.min(0)]],
+      codigoAcceso: ['0000', [Validators.pattern(/^\d{4}$/)]],
       banios: [null, [Validators.required, Validators.min(0)]],
       ambientes: [null, [Validators.required, Validators.min(0)]],
       huespedes: [null, [Validators.required, Validators.min(0)]],
       cocheras: [null, [Validators.required, Validators.min(0)]],
     });
+
+    this.form.statusChanges.subscribe(() => {
+      this.formValidityChange.emit(this.form.valid);
+    });
   }
+
+  onProvinciaChange(idProvincia: number): void {
+    if (idProvincia) {
+      this.parametricasService
+        .get_ciudades_by_provincia(idProvincia)
+        .subscribe((data) => {
+          this.ciudades = data;
+          this.form.patchValue({ id_ciudad: null });
+        });
+    } else {
+      this.ciudades = [];
+    }
+  }
+
   private _getTiposPropiedades() {
-    // this.propiedadesService.getTiposPropiedades().subscribe(
-    //   (response: TipoPropiedad[]) => {
-    //     this.tiposPropiedades = response;
-    //   },
-    //   (error) => {
-    //     console.error('Error al obtener los tipos de propiedades', error);
-    //   }
-    // );
+    this.parametricasService.get_tipos_propiedad().subscribe(
+      (data: TipoPropiedad[]) => {
+        this.tipoPropiedades = data;
+      },
+      (error) => {
+        console.error('Error al obtener los tipos de propiedades', error);
+      }
+    );
   }
-  private _getProvincias() {
-    // this.propiedadesService.getProvincias().subscribe(
-    //   (response: any[]) => {
-    //     this.provincias = response;
-    //   },
-    //   (error) => {
-    //     console.error('Error al obtener las provincias', error);
-    //   }
-    // );
+
+  private _get_provincias() {
+    this.parametricasService.get_provincias().subscribe((data) => {
+      this.provincias = data;
+      console.log(this.provincias);
+    });
   }
-  private _getPartidos() {
-    // this.propiedadesService.getPartidos().subscribe(
-    //   (response: any[]) => {
-    //     this.partidos = response;
-    //   },
-    //   (error) => {
-    //     console.error('Error al obtener los partidos', error);
-    //   }
-    // );
+
+  private _getPorcentajes() {
+    this.parametricasService.get_porcentajes().subscribe((data) => {
+      this.politicasReserva = data;
+    });
   }
-  }
+}

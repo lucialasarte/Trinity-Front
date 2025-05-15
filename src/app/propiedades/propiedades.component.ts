@@ -3,6 +3,9 @@ import { Form, FormBuilder, FormGroup } from '@angular/forms';
 import { PropiedadesService } from './services/propiedades.service';
 import { Propiedad } from './models/propiedad';
 import { FormPropiedadesComponent } from './form-propiedades/form-propiedades.component';
+import { Router } from '@angular/router';
+import { UtilsService } from '../shared/services/utils.service';
+import { ParametricasService } from '../shared/services/parametricas.service';
 
 @Component({
   selector: 'app-propiedades',
@@ -12,50 +15,19 @@ import { FormPropiedadesComponent } from './form-propiedades/form-propiedades.co
 export class PropiedadesComponent implements OnInit {
   @ViewChild(FormPropiedadesComponent)
   formPropiedad!: FormPropiedadesComponent;
-  form: FormGroup | undefined;
-  // propiedades: any[] = [
-  //   {
-  //     id: 1,
-  //     nombre: 'Casa en la Playa',
-  //     tipoPropiedad: 'Casa',
-  //     localidad: 'Mar del Plata',
-  //     provincia: 'Buenos Aires',
-  //     precio: 5000,
-  //     disponible: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     nombre: 'Departamento Centro',
-  //     tipoPropiedad: 'Departamento',
-  //     localidad: 'Buenos Aires',
-  //     provincia: 'Buenos Aires',
-  //     precio: 3000,
-  //     disponible: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     nombre: 'Cabaña de Montaña',
-  //     tipoPropiedad: 'Cabaña',
-  //     localidad: 'Cordoba',
-  //     provincia: 'Cordoba',
-  //     precio: 4000,
-  //     disponible: true,
-  //   },
-  // ];
-  // tiposPropiedades: any[] = [
-  //   { id: 1, nombre: 'Casa' },
-  //   { id: 2, nombre: 'Departamento' },
-  //   { id: 3, nombre: 'Cabaña' },
-  //   { id: 4, nombre: 'Chalet' },
-  // ];
+  form!: FormGroup;
 
-  propiedades: any[] = [];
+  // propiedades: any[] = [];
 
   isVisible = false;
+  propiedades: any[] = [];
+  isFormValid = false;
 
   constructor(
     private fb: FormBuilder,
-    private propiedadesService: PropiedadesService
+    private propiedadesService: PropiedadesService,
+    private router: Router,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -63,19 +35,34 @@ export class PropiedadesComponent implements OnInit {
   }
 
   onSubmitPropiedad() {
-    console.log(this.formPropiedad.form);
-    if (this.formPropiedad.form.valid) {
-      const form = this.formPropiedad.form.getRawValue();
-      let propiedad = new Propiedad(form);
-      console.log(propiedad);
-      this.propiedadesService.createPropiedad(propiedad).subscribe((data) => {
-        console.log(data);
+    const form = this.formPropiedad.form.getRawValue();
+    let propiedad = new Propiedad(form);
+    propiedad.precioNoche = Number(form.precioNoche);
+    propiedad.is_habilitada = true;
+
+    this.propiedadesService.createPropiedad(propiedad).subscribe({
+      next: () => {
         this._getPropiedades();
-      });
-    } else {
-      console.log('Formulario inválido');
-    }
+        this.utilsService.showMessage({
+          title: 'Propiedad creada',
+          message: 'La propiedad ha sido creada correctamente.',
+          icon: 'success',
+        });
+        this.formPropiedad.form.reset();
+        this.isVisible = false;
+      },
+      error: (err) => {
+        console.error('Error al crear la propiedad:', err);
+        this.utilsService.showMessage({
+          title: 'Error al crear la propiedad',
+          message:
+            'No se pudo crear la propiedad. Por favor, intente nuevamente.',
+          icon: 'error',
+        });
+      },
+    });
   }
+
   showModal() {
     this.isVisible = true;
   }
@@ -85,15 +72,88 @@ export class PropiedadesComponent implements OnInit {
     this.formPropiedad.form.reset();
   }
 
-  eliminar(id: number) {}
-  verPropiedad(id: number) {}
+  buscarPropiedad() {}
 
-  onSubmit() {}
+  eliminar(id: number) {
+    this.utilsService.showMessage2({
+      title: '¿Desea cancelar las reservas futuras?',
+      message:
+        'Las reservas futuras se cancelarán y la propiedad será eliminada. Caso contrario, la propiedad será deshabilitada hasta que se concrete la última reserva.',
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true,
+      cancelButtonText: 'Deshabilitar',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Cancelar Reservas',
+      cancelButtonColor: '#d33',
+      actionOnConfirm: () => {
+        this.propiedadesService.eliminar_propiedad(id).subscribe({
+          next: (data) => {
+            this.utilsService.showMessage({
+              title: 'Reservas canceladas',
+              message:
+                'Las reservas futuras han sido canceladas y la propiedad ha sido eliminada.',
+              icon: 'success',
+            });
+            this._getPropiedades();
+          },
+          error: (error) => {
+            this.utilsService.showMessage({
+              icon: 'error',
+              title: 'Error al eliminar propiedad',
+              message:
+                'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
+            });
+            console.error(error);
+          },
+        });
+      },
+      actionOnCancel: () => {
+        this.propiedadesService.eliminar_propiedad(id).subscribe({
+          next: (data) => {
+            this.utilsService.showMessage({
+              title: 'Propiedad deshabilitada',
+              message: 'La propiedad ha sido deshabilitada correctamente.',
+              icon: 'success',
+            });
+            this._getPropiedades();
+          },
+          error: (error) => {
+            this.utilsService.showMessage({
+              icon: 'error',
+              title: 'Error al deshabilitar propiedad',
+              message:
+                'No se pudo deshabilitar la propiedad. Por favor, intente nuevamente más tarde.',
+            });
+            console.error(error);
+          },
+        });
+      },
+    });
+  }
+
+  verPropiedad(id: number) {
+    this.router.navigate(['detalle-propiedad', id]);
+  }
+
+  deshabilitar(id: number) {
+    this._habilitar(id);
+  }
+  onFormValidityChange(valid: boolean): void {
+    this.isFormValid = valid;
+  }
 
   private _getPropiedades() {
     this.propiedadesService.getPropiedades().subscribe((data) => {
       this.propiedades = data;
       console.log(this.propiedades);
+    });
+  }
+
+  private _habilitar(id: number) {
+    this.propiedadesService.cambiar_estado_propiedad(id).subscribe((data) => {
+      console.log(data);
+      this._getPropiedades();
     });
   }
 }
