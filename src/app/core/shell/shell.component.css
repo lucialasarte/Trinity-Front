@@ -9,14 +9,12 @@
 .main-container {
   min-height: 100vh;
   background-color: #FFF4E6;
-  /* display: flex;
-  flex-direction: column; */
+
   padding-left: 100px;
 }
 
- /* Header rosa pálido */
  .header {
-  /* background-color: #4B1D3F; */
+
   background-color: #2C3E50;
   padding: 15px;
   border-radius: 10px;

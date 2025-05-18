@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-detalle-propiedad',
@@ -9,6 +10,7 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
   styleUrls: ['./detalle-propiedad.component.css'],
 })
 export class DetallePropiedadComponent implements OnInit {
+  formCodigo: FormGroup = new FormGroup({});
   propiedadId!: number;
   propiedad: any;
   reservas: {
@@ -71,7 +73,9 @@ export class DetallePropiedadComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private propiedadesService: PropiedadesService
+    private propiedadesService: PropiedadesService,
+    private router: Router,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -83,11 +87,23 @@ export class DetallePropiedadComponent implements OnInit {
       }
     });
     this._cargarImagenes();
+    this.formCodigo = this.fb.group({
+      codigo: [null, Validators.required],
+    });
   }
 
   verReserva(id: number) {
-    // this.router.navigate(['/detalle-reserva', id]);
+    this.router.navigate(['/detalle-reserva', id]);
   }
+
+  editarCodigoAcceso() {}
+
+  updatePropiedad(id: number) {}
+
+  estadoFilterFn = (filter: string[], item: any): boolean => {
+  return filter.length === 0 || filter.includes(item.estado);
+};
+
 
   _getPropiedad(id: number) {
     this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
@@ -105,11 +121,11 @@ export class DetallePropiedadComponent implements OnInit {
   }
 
   private _cargarImagenes(): void {
-    // Asumiendo que las imágenes están en 'assets/{id}/'
+    // Asumiendo que las imágenes están en 'assets/'
     this.imagenes = [
-      `assets/alquiFondoNegro.png`,
-      `assets/laTrinidad.png`,
-      `assets/laTrinidadAzul.png`,
+      `assets/propiedades/1.jpeg`,
+      `assets/propiedades/2.jpeg`,
+      `assets/propiedades/3.jpg`,
     ];
   }
 }

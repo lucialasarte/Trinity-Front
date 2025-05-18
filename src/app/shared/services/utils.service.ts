@@ -1,16 +1,17 @@
-import {  Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import Swal from "sweetalert2";
-import { MessageOptions } from "../interfaces/message-option.interface";
-
-
+import Swal from 'sweetalert2';
+import {
+  MessageOptions,
+  MessageOptions2,
+} from '../interfaces/message-option.interface';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class UtilsService {
-  readonly BUTTON_TEXT_ACEPTAR = "Aceptar";
-  readonly BUTTON_TEXT_CANCELAR = "Cancelar";
+  readonly BUTTON_TEXT_ACEPTAR = 'Aceptar';
+  readonly BUTTON_TEXT_CANCELAR = 'Cancelar';
 
   constructor() {}
 
@@ -18,12 +19,12 @@ export class UtilsService {
     Swal.fire({
       title: options.title,
       html: options.message,
-      icon: options.icon || "error",
+      icon: options.icon || 'error',
       showConfirmButton: options.showConfirmButton ?? false,
       showCancelButton: options.showCancelButton ?? false,
       confirmButtonText: options.confirmButtonText || this.BUTTON_TEXT_ACEPTAR,
-      confirmButtonColor: options.confirmButtonColor || "#0078CF",
-      cancelButtonText: options.cancelButtonText ||this.BUTTON_TEXT_CANCELAR,
+      confirmButtonColor: options.confirmButtonColor || '#0078CF',
+      cancelButtonText: options.cancelButtonText || this.BUTTON_TEXT_CANCELAR,
       reverseButtons: true,
       allowOutsideClick: false,
       input: options.input || undefined,
@@ -36,28 +37,35 @@ export class UtilsService {
       }
     });
   }
-  showMessage2(options: MessageOptions = {}): void {
-  Swal.fire({
-    title: options.title,
-    html: options.message,
-    icon: options.icon || "error",
-    showConfirmButton: options.showConfirmButton ?? false,
-    showCancelButton: options.showCancelButton ?? false,
-    confirmButtonText: options.confirmButtonText || this.BUTTON_TEXT_ACEPTAR,
-    confirmButtonColor: options.confirmButtonColor || "#0078CF",
-    cancelButtonText: options.cancelButtonText || this.BUTTON_TEXT_CANCELAR,
-    reverseButtons: true,
-    allowOutsideClick: false,
-    input: options.input || undefined,
-  }).then((result) => {
-    if (result?.isConfirmed && options.actionOnConfirm) {
-      options.actionOnConfirm();
-    } else if (result?.dismiss === Swal.DismissReason.cancel && options.actionOnCancel) {
-      options.actionOnCancel();
-    }
-  });
-}
-
+  showMessage2(options: MessageOptions2 = {}): void {
+    Swal.fire({
+      title: options.title,
+      html: options.message,
+      icon: options.icon || 'error',
+      showConfirmButton: options.showConfirmButton ?? false,
+      showCancelButton: options.showCancelButton ?? false,
+      showDenyButton: options.showDenyButton ?? false,
+      confirmButtonText: options.confirmButtonText || this.BUTTON_TEXT_ACEPTAR,
+      confirmButtonColor: options.confirmButtonColor || '#0078CF',
+      cancelButtonText: options.cancelButtonText || this.BUTTON_TEXT_CANCELAR,
+      denyButtonText: 'Cancelar',
+      denyButtonColor: '#d33',
+      reverseButtons: true,
+      allowOutsideClick: false,
+      input: options.input || undefined,
+    }).then((result) => {
+      if (result.isConfirmed && options.actionOnConfirm) {
+        options.actionOnConfirm();
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel &&
+        options.actionOnCancel
+      ) {
+        options.actionOnCancel();
+      } else if (result.isDenied && options.actionOnDeny) {
+        options.actionOnDeny();
+      }
+    });
+  }
 
   showSuccessAlert(
     title?: any,
@@ -68,7 +76,7 @@ export class UtilsService {
     timer?: any
   ) {
     Swal.fire({
-      icon: "success",
+      icon: 'success',
       title: title,
       html: html,
       text: message,
@@ -87,7 +95,7 @@ export class UtilsService {
     timer?: any
   ) {
     Swal.fire({
-      icon: "error",
+      icon: 'error',
       title: title,
       html: html,
       text: message,
@@ -109,7 +117,7 @@ export class UtilsService {
     cancelButtonColor?: any
   ) {
     Swal.fire({
-      icon: "warning",
+      icon: 'warning',
       title: title,
       html: html,
       text: message,
@@ -122,5 +130,4 @@ export class UtilsService {
       timer: 3000,
     });
   }
-
 }

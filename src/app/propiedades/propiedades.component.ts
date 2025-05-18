@@ -21,6 +21,7 @@ export class PropiedadesComponent implements OnInit {
 
   isVisible = false;
   propiedades: any[] = [];
+  propiedadesEliminadas: any[] = [];
   isFormValid = false;
 
   constructor(
@@ -32,6 +33,7 @@ export class PropiedadesComponent implements OnInit {
 
   ngOnInit(): void {
     this._getPropiedades();
+    this._getPropiedadesEliminadas();
   }
 
   onSubmitPropiedad() {
@@ -82,6 +84,7 @@ export class PropiedadesComponent implements OnInit {
       icon: 'warning',
       showCancelButton: true,
       showConfirmButton: true,
+      showDenyButton: true,
       cancelButtonText: 'Deshabilitar',
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'Cancelar Reservas',
@@ -129,15 +132,54 @@ export class PropiedadesComponent implements OnInit {
           },
         });
       },
+      actionOnDeny: () => {
+        // this.utilsService.showMessage({
+        //   title: 'Operación cancelada',
+        //   message: 'La operación ha sido cancelada.',
+        //   icon: 'info',
+        // });
+      },
     });
+  }
+
+  cambiarEstado(propiedad: Propiedad) {
+    if (propiedad.is_habilitada) {
+      this.utilsService.showMessage2({
+        title: '¿Seguro desea deshabilitar la propiedad?',
+        message:
+          'Una vez deshabilitada no aparecerá en el listado de propiedades para reservar',
+        icon: 'warning',
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Si, deshabilitar!',
+        actionOnConfirm: () => {
+          this._habilitar(propiedad);
+        },
+      });
+    } else {
+      this.utilsService.showMessage2({
+        title: '¿Seguro desea habilitar la propiedad?',
+        message:
+          'Una vez habilitada aparecerá en el listado de propiedades para reservar',
+        icon: 'warning',
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Si, habilitar!',
+        actionOnConfirm: () => {
+          this._habilitar(propiedad);
+        },
+      });
+    }
   }
 
   verPropiedad(id: number) {
     this.router.navigate(['detalle-propiedad', id]);
   }
 
-  deshabilitar(id: number) {
-    this._habilitar(id);
+  deshabilitar(propiedad: Propiedad) {
+    this._habilitar(propiedad);
   }
   onFormValidityChange(valid: boolean): void {
     this.isFormValid = valid;
@@ -150,10 +192,56 @@ export class PropiedadesComponent implements OnInit {
     });
   }
 
-  private _habilitar(id: number) {
-    this.propiedadesService.cambiar_estado_propiedad(id).subscribe((data) => {
-      console.log(data);
-      this._getPropiedades();
+  private _getPropiedadesEliminadas() {
+    this.propiedadesService.getPropiedadesEliminadas().subscribe((data) => {
+      this.propiedadesEliminadas = data;
+      console.log(this.propiedadesEliminadas);
     });
+  }
+
+  private _habilitar(propiedad: Propiedad) {
+    if (propiedad.is_habilitada) {
+      this.propiedadesService.cambiar_estado_propiedad(propiedad.id).subscribe({
+        next: (data) => {
+          console.log('Respuesta del servidor:', data);
+          this.utilsService.showMessage({
+            title: 'Propiedad deshabilitada',
+            message: 'La propiedad ha sido deshabilitada correctamente.',
+            icon: 'success',
+          });
+          this._getPropiedades();
+        },
+        error: (err) => {
+          console.error('Error al habilitar propiedad:', err);
+          this.utilsService.showMessage({
+            title: 'Error al habilitar propiedad',
+            message:
+              'No se pudo deshabilitar la propiedad. Por favor, intenta nuevamente.',
+            icon: 'error',
+          });
+        },
+      });
+    } else {
+      this.propiedadesService.cambiar_estado_propiedad(propiedad.id).subscribe({
+        next: (data) => {
+          console.log('Respuesta del servidor:', data);
+          this.utilsService.showMessage({
+            title: 'Propiedad habilitada',
+            message: 'La propiedad ha sido habilitada correctamente.',
+            icon: 'success',
+          });
+          this._getPropiedades();
+        },
+        error: (err) => {
+          console.error('Error al habilitar propiedad:', err);
+          this.utilsService.showMessage({
+            title: 'Error al habilitar propiedad',
+            message:
+              'No se pudo habilitar la propiedad. Por favor, intenta nuevamente.',
+            icon: 'error',
+          });
+        },
+      });
+    }
   }
 }

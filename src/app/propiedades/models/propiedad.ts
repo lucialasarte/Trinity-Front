@@ -36,10 +36,10 @@ export class Propiedad {
     this.provincia = obj && obj.provincia || null;
     this.precioNoche = obj && obj.precio || null;
     this.codigoAcceso = obj && obj.codigoAcceso || '0000';
-    this.banios = obj && obj.banios || null;
-    this.ambientes = obj && obj.ambientes || null;
-    this.huespedes = obj && obj.huespedes || null;
-    this.cocheras = obj && obj.cocheras || null;
+    this.banios = obj && obj.banios || '0';
+    this.ambientes = obj && obj.ambientes || '0';
+    this.huespedes = obj && obj.huespedes || '0';
+    this.cocheras = obj && obj.cocheras || '0';
     this.id_pol_reserva = obj && obj.id_pol_reserva || null;
     this.descripcion = obj && obj.descripcion || null;
     this.entre_calles = obj && obj.entre_calles || null;

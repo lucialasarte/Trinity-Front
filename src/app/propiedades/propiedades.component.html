@@ -36,7 +36,7 @@
       <nz-table
         #propertyTable
         [nzData]="propiedades"
-        [nzPageSize]="8"
+        [nzPageSize]="4"
         [nzFrontPagination]="true"
         [nzSize]="'small'"
       >
@@ -83,12 +83,12 @@
                 <i class="fa fa-trash"></i> Eliminar
               </button>
               <button
-                (click)="deshabilitar(propiedad.id)"
+                (click)="cambiarEstado(propiedad)"
                 class="btn btn-warning btn-sm"
               >
                 <i
                   class="fa"
-                  [ngClass]="propiedad.is_habilitada ? 'fa-stop' : 'fa-play'"
+                  [ngClass]="propiedad.is_habilitada ? 'fa-ban' : 'fa-play'"
                 ></i>
                 {{ propiedad.is_habilitada ? "Deshabilitar" : "Habilitar" }}
               </button>
@@ -103,6 +103,54 @@
       >
         No hay propiedades.
       </div>
+    </div>
+  </div>
+
+  <div
+    class="row"
+    style="padding-top: 20px"
+    *ngIf="propiedadesEliminadas.length > 0"
+  >
+    <div class="row">
+      <h2 class="titulo-propiedades">Propiedades Eliminadas con reservas</h2>
+    </div>
+    <div class="table-container">
+      <nz-table
+        #propertyTableEliminadas
+        [nzData]="propiedadesEliminadas"
+        [nzPageSize]="4"
+        [nzFrontPagination]="true"
+        [nzSize]="'small'"
+      >
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo Propiedad</th>
+            <th>Localidad</th>
+            <th>Ciudad</th>
+            <th>Precio por Noche (USD)</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let propiedad of propertyTableEliminadas.data">
+            <td>{{ propiedad.nombre }}</td>
+            <td>{{ propiedad.tipo }}</td>
+            <td>{{ propiedad.ciudad }}</td>
+            <td>{{ propiedad.ciudad }}</td>
+            <td>{{ propiedad.precioNoche | currency : "USD" : "symbol" }}</td>
+
+            <td>
+              <button
+                (click)="verPropiedad(propiedad.id)"
+                class="btn btn-success btn-sm"
+              >
+                <i class="fa fa-eye"></i> Ver
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
     </div>
   </div>
 </ng-container>

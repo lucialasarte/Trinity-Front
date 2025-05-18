@@ -15,6 +15,9 @@ export class PropiedadesService {
   getPropiedades(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/`);
   }
+  getPropiedadesEliminadas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/eliminadas`);
+  }
 
   // Crear una propiedad
   createPropiedad(propiedad: any): Observable<any> {
