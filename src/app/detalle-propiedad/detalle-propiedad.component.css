@@ -9,14 +9,12 @@
   gap: 20px;
 }
 
-/* Para que el título no se sienta tan apretado */
 .reserva-header h2 {
   margin: 0;
   color: #2a2a2a;
   font-weight: 700;
   font-size: 1.5em;
 }
-
 
 .detalle-container {
   width: 97%;
@@ -108,7 +106,6 @@ button {
   border: 1px solid #ddd;
 }
 
-/* Estados Reserva */
 .badge-confirmada {
   background-color: #28a745;
   color: white;
@@ -179,7 +176,7 @@ p {
 }
 
 ::ng-deep .ant-carousel .slick-dots li button {
-  background-color: #555 !important; /* color del punto */
+  background-color: #555 !important;
   width: 14px !important;
   height: 14px !important;
   border-radius: 50% !important;
@@ -187,11 +184,11 @@ p {
 }
 
 ::ng-deep .ant-carousel .slick-dots li.slick-active button {
-  background-color: #1890ff !important; /* color del punto activo */
+  background-color: #1890ff !important;
 }
 
 ::ng-deep .ant-carousel .slick-dots {
-  bottom: -10px !important; /* ajustar posición si hace falta */
+  bottom: -10px !important;
 }
 
 .boton-cerrar {
@@ -232,8 +229,8 @@ p {
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .card-title {
