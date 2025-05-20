@@ -1,0 +1,28 @@
+<div class="usuarios-container">
+  <h2>Usuarios</h2>
+  <div *ngIf="loading">Cargando...</div>
+  <div *ngIf="error">{{ error }}</div>
+  <table *ngIf="!loading && !error">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.id }}</td>
+        <td>{{ usuario.nombre }}</td>
+        <td>{{ usuario.correo }}</td>
+        <td>
+          <ng-container *ngIf="usuario.roles?.length; else sinRol">
+            {{ getRolesString(usuario) }}
+          </ng-container>
+          <ng-template #sinRol>-</ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

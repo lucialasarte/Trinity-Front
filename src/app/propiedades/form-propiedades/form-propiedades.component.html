@@ -1,0 +1,344 @@
+<section class="content">
+  <div class="row">
+    <form nz-form nzLayout="vertical" [formGroup]="form">
+      <!-- Tipo de Propiedad -->
+      <div class="row">
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="id_tipo" nzRequired
+              >Tipo de Propiedad</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="tipoPropiedadErrorTpl">
+              <nz-select
+                nzPlaceHolder="Seleccionar"
+                formControlName="id_tipo"
+                nzShowSearch
+              >
+                <nz-option
+                  *ngFor="let tipo of tipoPropiedades"
+                  [nzValue]="tipo.id"
+                  [nzLabel]="tipo.tipo"
+                ></nz-option>
+              </nz-select>
+              <ng-template #tipoPropiedadErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >El tipo de propiedad es obligatorio.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Nombre -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="nombre" nzRequired>Nombre</nz-form-label>
+            <nz-form-control [nzErrorTip]="nombreErrorTpl">
+              <input nz-input formControlName="nombre" />
+              <ng-template #nombreErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >El nombre es obligatorio.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Precio -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="precioNoche" nzRequired
+              >Precio por noche</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="precioErrorTpl">
+              <input nz-input type="number" formControlName="precioNoche" />
+              <ng-template #precioErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >El precio es obligatorio.</span
+                >
+                <span *ngIf="control.hasError('min')"
+                  >El precio debe ser mayor o igual a 0.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Código de Acceso -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="codigoAcceso">Código de Acceso</nz-form-label>
+            <nz-form-control [nzErrorTip]="codigoAccesoErrorTpl">
+              <input
+                nz-input
+                type="text"
+                formControlName="codigoAcceso"
+                maxlength="4"
+              />
+              <ng-template #codigoAccesoErrorTpl let-control>
+                <span *ngIf="control.hasError('pattern')"
+                  >El código de acceso debe ser exactamente 4 dígitos.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Calle -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="calle" nzRequired>Calle</nz-form-label>
+            <nz-form-control [nzErrorTip]="calleErrorTpl">
+              <input nz-input formControlName="calle" />
+              <ng-template #calleErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >La calle es obligatoria.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Número -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="numero" nzRequired>Número</nz-form-label>
+            <nz-form-control [nzErrorTip]="numeroErrorTpl">
+              <input nz-input type="number" formControlName="numero" />
+              <ng-template #numeroErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >El número es obligatorio.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Piso -->
+        <div class="col-md-1">
+          <nz-form-item>
+            <nz-form-label nzFor="piso">Piso</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="piso" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Departamento -->
+        <div class="col-md-1">
+          <nz-form-item>
+            <nz-form-label nzFor="depto">Departamento</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="depto" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Entre Calles -->
+        <div class="col-md-4">
+          <nz-form-item>
+            <nz-form-label nzFor="entre_calles" nzRequired
+              >Entre calles</nz-form-label
+            >
+            <nz-form-control>
+              <input
+                nz-input
+                formControlName="entre_calles"
+                placeholder="Ej: Calle A y Calle B"
+              />
+              <div
+                *ngIf="
+                  form.get('entre_calles')?.invalid &&
+                  form.get('entre_calles')?.touched
+                "
+                class="error"
+              >
+                Este campo es obligatorio.
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Provincia -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="id_provincia" nzRequired
+              >Provincia</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="provinciaErrorTpl">
+              <nz-select
+                nzPlaceHolder="Seleccionar"
+                formControlName="id_provincia"
+                nzShowSearch
+                (ngModelChange)="onProvinciaChange($event)"
+              >
+                <nz-option
+                  *ngFor="let provincia of provincias"
+                  [nzValue]="provincia.id"
+                  [nzLabel]="provincia.nombre"
+                ></nz-option>
+              </nz-select>
+              <ng-template #provinciaErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >La provincia es obligatoria.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Localidad -->
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="id_ciudad" nzRequired>Ciudad</nz-form-label>
+            <nz-form-control [nzErrorTip]="ciudadErrorTpl">
+              <nz-select
+                nzPlaceHolder="Seleccionar"
+                formControlName="id_ciudad"
+                nzShowSearch
+              >
+                <nz-option
+                  *ngFor="let ciudad of ciudades"
+                  [nzValue]="ciudad.id"
+                  [nzLabel]="ciudad.nombre"
+                ></nz-option>
+              </nz-select>
+              <ng-template #ciudadErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >La ciudad es obligatoria.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <!-- Polìtica de Reserva -->
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label nzFor="id_pol_reserva" nzRequired
+              >Politica de Reserva</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="politicasReservaErrorTpl">
+              <nz-select
+                nzPlaceHolder="Seleccionar"
+                formControlName="id_pol_reserva"
+              >
+                <nz-option
+                  *ngFor="let pol of politicasReserva"
+                  [nzValue]="pol.id"
+                  [nzLabel]="pol.label"
+                ></nz-option>
+              </nz-select>
+              <ng-template #politicasReservaErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >La politica de reserva es obligatoria.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <!-- Baños, Ambientes, Huéspedes y Cocheras -->
+      <div class="row">
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="banios" nzRequired>Baños</nz-form-label>
+            <nz-form-control [nzErrorTip]="baniosErrorTpl">
+              <input nz-input type="number" formControlName="banios" />
+              <ng-template #baniosErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >Este campo es obligatorio.</span
+                >
+                <span *ngIf="control.hasError('min')"
+                  >Debe ser mayor o igual a 0.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="ambientes" nzRequired
+              >Ambientes</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="ambientesErrorTpl">
+              <input nz-input type="number" formControlName="ambientes" />
+              <ng-template #ambientesErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >Este campo es obligatorio.</span
+                >
+                <span *ngIf="control.hasError('min')"
+                  >Debe ser mayor o igual a 0.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="huespedes" nzRequired
+              >Huéspedes</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="huespedesErrorTpl">
+              <input nz-input type="number" formControlName="huespedes" />
+              <ng-template #huespedesErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >Este campo es obligatorio.</span
+                >
+                <span *ngIf="control.hasError('min')"
+                  >Debe ser mayor o igual a 0.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="cocheras" nzRequired>Cocheras</nz-form-label>
+            <nz-form-control [nzErrorTip]="cocherasErrorTpl">
+              <input nz-input type="number" formControlName="cocheras" />
+              <ng-template #cocherasErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >Este campo es obligatorio.</span
+                >
+                <span *ngIf="control.hasError('min')"
+                  >Debe ser mayor o igual a 0.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Descripción -->
+        <div class="col-md-12">
+          <nz-form-item>
+            <nz-form-label nzFor="descripcion" nzRequired
+              >Descripción</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="descripcionErrorTpl">
+              <textarea
+                nz-input
+                formControlName="descripcion"
+                rows="4"
+              ></textarea>
+              <ng-template #descripcionErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >La descripción es obligatoria.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

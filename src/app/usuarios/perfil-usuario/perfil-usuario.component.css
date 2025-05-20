@@ -1,0 +1,91 @@
+.perfil-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+  padding: 56px 64px 48px 64px;
+  border: 1px solid #f0f0f0;
+}
+
+.perfil-container h2 {
+  text-align: center;
+  color: #2C3E50;
+  font-size: 2.1em;
+  margin-bottom: 28px;
+  font-family: 'Cinzel', serif;
+}
+
+.perfil-row {
+  margin-bottom: 18px;
+  font-size: 1.13em;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #2C3E50;
+}
+
+.perfil-row b {
+  min-width: 170px;
+  color: #8D8D8D;
+  font-weight: 500;
+}
+
+.perfil-row ul {
+  margin: 0 0 0 10px;
+  padding: 0;
+  list-style: disc inside;
+}
+
+.perfil-row li {
+  font-size: 0.98em;
+  color: #3a3a3a;
+  margin-bottom: 4px;
+  background: #f7f7fa;
+  border-radius: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ececec;
+  display: inline-block;
+}
+
+.perfil-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  justify-content: space-between;
+}
+
+.perfil-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .perfil-container {
+    padding: 18px 6px;
+  }
+  .perfil-row b {
+    min-width: 110px;
+  }
+}
+
+@media (max-width: 900px) {
+  .perfil-container {
+    max-width: 98vw;
+    padding: 18px 6px;
+  }
+  .perfil-grid {
+    flex-direction: column;
+    gap: 0;
+  }
+  .perfil-col {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .perfil-container {
+    max-width: 98vw;
+    padding: 18px 6px;
+  }
+}

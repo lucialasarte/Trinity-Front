@@ -1,0 +1,148 @@
+<div class="reserva-header">
+  <h2 class="titulo-propiedades" *ngIf="reserva">
+    Reserva #{{ reserva.id }}
+    <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
+      {{ reserva.estado }}
+    </span>
+  </h2>
+</div>
+
+<ng-container *ngIf="reserva && propiedad">
+
+  <div class="detalle-container">
+    <!-- Sección de Detalles de la Reserva -->
+    <div class="card">
+      <h3 class="card-title">Detalles de la Reserva</h3>
+      <div class="card-content">
+        <div class="reserva-info">
+          <div class="reserva-item">
+            <label>Fecha de Inicio:</label>
+            <span>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</span>
+          </div>
+          <div class="reserva-item">
+            <label>Fecha de Fin:</label>
+            <span>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</span>
+          </div>
+          <div class="reserva-item">
+            <label>Cantidad de Noches:</label>
+            <span>{{ reserva.cantidad_noches }}</span>
+          </div>
+          <div class="reserva-item">
+            <label>Precio Estadia:</label>
+            <span>${{ reserva.monto_total }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Detalles de la Propiedad -->
+    <div class="card">
+      <h3 class="card-title">
+        Detalles de la Propiedad
+        <button
+          class="btn btn-secondary"
+          (click)="verPropiedad(propiedad.id)"
+          style="float: right"
+        >
+          <i class="fa fa-eye"></i>
+        </button>
+      </h3>
+      <div class="card-content">
+        <div class="propiedad-info">
+          <div class="propiedad-item">
+            <label>Nombre:</label>
+            <span>{{ propiedad.nombre }}</span>
+          </div>
+          <div class="propiedad-item">
+            <label>Tipo:</label>
+            <span>{{ propiedad.tipo }}</span>
+          </div>
+          <div class="propiedad-item">
+            <label>Descripción:</label>
+            <span>{{ propiedad.descripcion }}</span>
+          </div>
+          <div class="propiedad-item">
+            <label>Ciudad:</label>
+            <span>{{ propiedad.ciudad }}</span>
+          </div>
+          <div class="propiedad-item">
+            <label>Provincia:</label>
+            <span>{{ propiedad.provincia }}</span>
+          </div>
+          <div class="propiedad-item">
+            <label>Direccion:</label>
+            <span>
+              {{ propiedad.calle }} entre {{ propiedad.entre_calles }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card acciones-card">
+      <h3 class="card-title">Acciones</h3>
+      <div class="card-content">
+        <button
+          class="btn-sm"
+          (click)="cancelar()"
+          *ngIf="reserva.estado !== 'Finalizada'"
+        >
+          Cancelar
+        </button>
+        <button class="btn-sm" (click)="subirDocumentacion()">
+          Subir Documentación
+        </button>
+        <button
+          class="btn-sm"
+          (click)="confirmarReserva()"
+          *ngIf="reserva.estado == 'pendiente'"
+        >
+          Confirmar Reserva
+        </button>
+        <button class="btn-sm" (click)="calificar()">Calificar</button>
+      </div>
+    </div>
+
+    <div class="documentacion-container">
+      <h5>Documentación Adjunta</h5>
+      <ul *ngIf="documentos.length > 0">
+        <li *ngFor="let doc of documentos">
+          <a href="{{ doc.url }}" target="_blank">{{ doc.nombre }}</a>
+        </li>
+      </ul>
+      <p *ngIf="documentos.length === 0">No se ha subido documentación.</p>
+    </div>
+
+    <div class="calificacion-container" *ngIf="calificacion">
+      <h5>Calificación</h5>
+      <div>
+        <label>Personal:</label>
+        <nz-rate [ngModel]="calificacion.personal" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Instalaciones:</label>
+        <nz-rate [ngModel]="calificacion.instalaciones" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Servicios:</label>
+        <nz-rate [ngModel]="calificacion.servicios" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Limpieza:</label>
+        <nz-rate [ngModel]="calificacion.limpieza" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Confort:</label>
+        <nz-rate [ngModel]="calificacion.confort" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Relación Precio-Calidad:</label>
+        <nz-rate [ngModel]="calificacion.precioCalidad" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Ubicación:</label>
+        <nz-rate [ngModel]="calificacion.ubicacion" disabled></nz-rate>
+      </div>
+    </div>
+  </div>
+</ng-container>

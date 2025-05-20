@@ -1,0 +1,25 @@
+<div class="login-container">
+  <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+    <h2 style="text-align:center;">Iniciar Sesión</h2>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="24" nzFor="correo">Correo</nz-form-label>
+      <nz-form-control [nzSpan]="24">
+        <input nz-input id="correo" type="email" formControlName="correo" placeholder="Ingrese su correo" />
+        <div *ngIf="form.get('correo')?.invalid && form.get('correo')?.touched">
+          <nz-alert nzType="error" nzMessage="Ingrese un correo válido." nzShowIcon></nz-alert>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="24" nzFor="password">Contraseña</nz-form-label>
+      <nz-form-control [nzSpan]="24">
+        <input nz-input id="password" type="password" formControlName="password" placeholder="Ingrese su contraseña" />
+        <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          <nz-alert nzType="error" nzMessage="Ingrese su contraseña." nzShowIcon></nz-alert>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button nzType="primary" class="login-btn" [disabled]="form.invalid || loading" style="width:100%;margin-top:12px;">Entrar</button>
+    <nz-alert *ngIf="error" nzType="error" nzMessage="{{ error }}" nzShowIcon style="margin-top:12px;"></nz-alert>
+  </form>
+</div>
