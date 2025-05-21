@@ -32,6 +32,9 @@ export class PropiedadesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      dato: ['']
+    });
     this._getPropiedades();
     this._getPropiedadesEliminadas();
   }

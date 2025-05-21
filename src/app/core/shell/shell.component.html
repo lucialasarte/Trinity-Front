@@ -6,38 +6,82 @@
 <div class="main-container">
   <!-- Header -->
   <header class="header">
-    <div class="header-content">
-      <div class="welcome-text">
-        <ng-container *ngIf="!isEnglish"
-        > <h1 >Bienvenido a Alquiloando</h1>
-        <p>Tu plataforma de alquileres temporarios</p>
+    <div class="header-content header-responsive">
+      <div class="welcome-text" style="flex: 1; text-align: center;">
+        <ng-container *ngIf="!isEnglish">
+          <h1>Bienvenido a Alquiloando</h1>
+          <p>Tu plataforma de alquileres temporarios</p>
         </ng-container>
         <ng-container *ngIf="isEnglish">
-        <h1>Welcome to Alquiloando</h1>
-        <p>Your temporary rental platform</p>
+          <h1>Welcome to Alquiloando</h1>
+          <p>Your temporary rental platform</p>
         </ng-container>
-    </div>
-    <div class="flag">
-      <button class="lang-toggle" (click)="toggleLanguage()">
-        <img 
-          [src]="isEnglish ? 'assets/en.png' : 'assets/es.png'" 
-          alt="Idioma" 
-          width="24" 
-          height="16"
-          style="vertical-align: middle; margin-right: 8px;"
-        />
-        {{ isEnglish ? 'English' : 'Español' }}
-      </button>
-    </div>
+      </div>
+      <div class="header-actions">
+        <div class="flag">
+          <button class="lang-toggle" (click)="toggleLanguage()">
+            <img
+              [src]="isEnglish ? 'assets/en.png' : 'assets/es.png'"
+              alt="Idioma"
+              width="24"
+              height="16"
+              class="lang-flag"
+            />
+            {{ isEnglish ? 'English' : 'Español' }}
+          </button>
+        </div>
+        <ng-container *ngIf="usuario() as user; else loginBtn">
+          <button nz-button nzType="text" nz-popover
+            [nzPopoverTitle]="'Datos de usuario'"
+            [nzPopoverContent]="userPopoverHeader"
+            class="header-user-btn"
+            [routerLink]="'/usuarios/mi-perfil'">
+            <div class="header-user-info">
+              <img src="assets/anonimo.jpg" alt="Foto usuario" class="user-avatar" />
+              <div class="header-user-info-text">
+                <span class="header-user-name">{{ user.nombre }} {{ user.apellido }}</span>
+                <span class="header-user-role">{{ mostrarPrimerRol(user) }}</span>
+              </div>
+            </div>
+          </button>
+          <ng-template #userPopoverHeader>
+            <div class="user-popover-content">
+              <div><b>Nombre:</b> {{ user.nombre }}</div>
+              <div><b>Apellido:</b> {{ user.apellido }}</div>
+              <div><b>Email:</b> {{ user.correo }}</div>
+              <div><b>Rol:</b> {{ mostrarRoles(user) }}</div>
+
+              <button nz-button nzType="default" [routerLink]="'/usuarios/mi-perfil'" class="logout-btn" style="margin-bottom: 8px;">
+                <span nz-icon nzType="user" nzTheme="outline" class="logout-icon"></span>
+                <span class="logout-text">Mi Perfil</span>
+              </button>
+
+              <hr class="user-popover-divider">
+
+              <button nz-button nzType="default" (click)="auth.logout()" class="logout-btn">
+                <span nz-icon nzType="poweroff" nzTheme="outline" class="logout-icon"></span>
+                <span class="logout-text">Cerrar sesión</span>
+              </button>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-template #loginBtn>
+          <button nz-button nzType="default" [routerLink]="'/iniciar-sesion'" class="login-header-btn">
+            <span nz-icon nzType="user" nzTheme="outline" class="login-header-icon"></span>
+            <span *ngIf="isEnglish" class="label">Log in</span>
+            <span *ngIf="!isEnglish" class="label">Iniciar Sesión</span>
+          </button>
+        </ng-template>
+      </div>
     </div>
   </header>
-  
+
 
   <!-- Contenido -->
   <section >
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
-   
+
   </section>
 </div>

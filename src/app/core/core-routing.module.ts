@@ -36,6 +36,18 @@ const coreRoutes: Routes = [
     loadChildren: () => import('../home/home.module').then((m) => m.HomeModule),
   },
   {
+    path: 'iniciar-sesion',
+    loadChildren: () => import('../auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'empleados',
+    loadChildren: () => import('../empleados/empleados.module').then(m => m.EmpleadosModule)
+  },
+  {
+    path: 'usuarios',
+    loadChildren: () => import('../usuarios/usuarios.module').then(m => m.UsuariosModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',

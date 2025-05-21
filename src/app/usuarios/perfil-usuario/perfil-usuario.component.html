@@ -1,0 +1,31 @@
+<div class="perfil-container">
+  <h2>Mi Perfil</h2>
+  <div *ngIf="usuario() as user">
+    <div class="perfil-grid">
+      <div class="perfil-col">
+        <div class="perfil-row"><b>Nombre:</b> {{ user.nombre }}</div>
+        <div class="perfil-row"><b>Apellido:</b> {{ user.apellido }}</div>
+        <div class="perfil-row"><b>Email:</b> {{ user.correo }}</div>
+        <div class="perfil-row"><b>País:</b> {{ user.pais?.nombre || '-' }}</div>
+      </div>
+      <div class="perfil-col perfil-col-roles">
+        <div class="perfil-row"><b>Roles:</b> {{ mostrarRoles(user) }}</div>
+        <div class="perfil-row"><b>Fecha de Nacimiento:</b> {{ user.fecha_nacimiento ? (user.fecha_nacimiento | date:'dd/MM/yyyy') : '-' }}</div>
+        <div class="perfil-row"><b>Tipo Identificación:</b> {{ user.tipo_identificacion?.nombre || '-' }}</div>
+        <div class="perfil-row"><b>Número Identificación:</b> {{ user.numero_identificacion || '-' }}</div>
+      </div>
+    </div>
+    <hr>
+    <div *ngIf="user.tarjetas && user.tarjetas.length" class="perfil-row perfil-tarjetas" style="flex-basis: 100%; width: 100%;">
+      <b>Tarjetas:</b>
+      <ul>
+        <li *ngFor="let tarjeta of user.tarjetas">
+          {{ tarjeta?.marca?.nombre }} - {{ tarjeta?.tipo?.nombre }} - {{ tarjeta?.numero }} - Fecha Vto. {{ tarjeta?.fecha_vencimiento ? (tarjeta.fecha_vencimiento | date:'dd/MM/yyyy') : '-' }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div *ngIf="!usuario()">
+    <p>No se pudo cargar la información del usuario.</p>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 import {
   NzTableFilterFn,
@@ -25,15 +25,17 @@ export class ReservasComponent {
     { id: 7, fecha_inicio: new Date('2023-11-30'), fecha_fin: new Date('2023-12-05'), estado: 'Confirmada' },
     { id: 8, fecha_inicio: new Date('2023-12-10'), fecha_fin: new Date('2023-12-15'), estado: 'Pendiente' },
   ];
-  
   form!: FormGroup;
   sortEstado = null;
   sortFechaInicio = null;
   sortFechaFin = null;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      dato: ['']
+    });
     console.log(this.reservas);
   }
 
@@ -44,7 +46,6 @@ export class ReservasComponent {
   }
 
   eliminar(id: number) {}
- 
   stadoCompare(a: any, b: any): number {
     const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada'];
     return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);

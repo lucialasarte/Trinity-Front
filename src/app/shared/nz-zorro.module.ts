@@ -11,6 +11,8 @@ import { NzDropDownModule } from "ng-zorro-antd/dropdown";
 import { NzCheckboxModule } from "ng-zorro-antd/checkbox";
 import { NzModalModule } from "ng-zorro-antd/modal";
 import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
+import { NzAlertModule } from "ng-zorro-antd/alert";
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 
 @NgModule({
   declarations: [],
@@ -27,6 +29,8 @@ import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
     NzCheckboxModule,
     NzModalModule,
     NzAutocompleteModule,
+    NzAlertModule,
+    NzPopoverModule
   ],
   exports: [
     NzIconModule,
@@ -41,6 +45,8 @@ import { NzAutocompleteModule } from "ng-zorro-antd/auto-complete";
     NzCheckboxModule,
     NzModalModule,
     NzAutocompleteModule,
+    NzAlertModule,
+    NzPopoverModule
   ]
 })
 export class NzZorroModule {}
