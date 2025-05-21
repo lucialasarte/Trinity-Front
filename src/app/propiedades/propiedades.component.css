@@ -157,3 +157,20 @@ tbody td,th {
   font-weight: bold;
   font-size: 12px;
 }
+
+
+.buttonClass .tooltiptext {
+    visibility: hidden;
+    background-color: #2d3438;
+    color: #fff;
+    text-align: center;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    border-radius: 1px;
+    margin-left: 10px!important;
+    margin-top: -5px!important;
+  }
+  .buttonClass:hover .tooltiptext {
+    visibility: visible;
+  }

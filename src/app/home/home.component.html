@@ -1,1 +1,58 @@
-<p>home works!</p>
+<div class="detalle-container">
+  <nz-card class="buscador-card" nz-form [formGroup]="form">
+    <div nz-row [nzGutter]="16" class="buscador-contenedor">
+      <div nz-col [nzSpan]="6" class="buscador-item">
+        <label>Lugar</label>
+        <input
+          nz-input
+          placeholder="Explorar destinos"
+          formControlName="lugar"
+        />
+      </div>
+
+      <div nz-col [nzSpan]="4" class="buscador-item">
+        <label>Check‑in</label>
+        <nz-date-picker
+          #date
+          formControlName="checkIn"
+          name="checkIn"
+          nzFormat="dd/MM/yyyy"
+          [nzDisabledDate]="disabledCheckInDate"
+          (nzOnChange)="onCheckInChange(date.inputValue)"
+        ></nz-date-picker>
+      </div>
+
+      <div nz-col [nzSpan]="4" class="buscador-item">
+        <label>Check‑out</label>
+        <nz-date-picker
+          formControlName="checkOut"
+          name="checkOut"
+          nzFormat="dd/MM/yyyy"
+          [nzDisabledDate]="disabledCheckOutDate"
+        ></nz-date-picker>
+      </div>
+
+      <div nz-col [nzSpan]="4" class="buscador-item">
+        <label>Huéspedes</label>
+        <nz-input-number
+          formControlName="cantidadPersonas"
+          name="cantidadPersonas"
+          [nzMin]="1"
+          [nzMax]="10"
+          [nzPlaceHolder]="'¿Cuántos?'"
+        ></nz-input-number>
+      </div>
+
+      <div nz-col [nzSpan]="2" class="buscador-boton">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!form.valid"
+          (click)="buscar()"
+        >
+          <i nz-icon nzType="search"></i>
+        </button>
+      </div>
+    </div>
+  </nz-card>
+</div>

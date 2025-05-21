@@ -185,6 +185,15 @@ export class PropiedadesComponent implements OnInit {
     this.isFormValid = valid;
   }
 
+  search(){}
+
+
+  private _initForm() {
+    this.form = this.fb.group({
+      busqueda: [null],
+    });
+  }
+
   private _getPropiedades() {
     this.propiedadesService.getPropiedades().subscribe((data) => {
       this.propiedades = data;
