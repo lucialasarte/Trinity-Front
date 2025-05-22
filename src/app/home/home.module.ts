@@ -10,11 +10,14 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { ReservarInquilinoComponent } from './reservar-inquilino/reservar-inquilino.component';
+import { ReservarInquilinoRoutingModule } from './reservar-inquilino/reservar-inquilino-routing.module';
+import { ReservarEmpleadoComponent } from './reservar-empleado/reservar-empleado.component';
 
 
 
 @NgModule({
-  declarations: [ HomeComponent],
+  declarations: [ HomeComponent, ReservarInquilinoComponent, ReservarEmpleadoComponent, ],
   imports: [
     CommonModule,
     NzZorroModule,
@@ -25,7 +28,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzInputNumberModule,
     NzButtonModule,
     NzCardModule,
-    NzIconModule
+    NzIconModule,
+    ReservarInquilinoRoutingModule
   ]
 })
 export class HomeModule { }

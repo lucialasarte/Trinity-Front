@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Propiedad } from '../propiedades/models/propiedad';
+import { EmpleadosService } from '../empleados/services/empleados.service';
 
 @Component({
   selector: 'app-detalle-propiedad',
@@ -12,7 +14,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DetallePropiedadComponent implements OnInit {
   formCodigo: FormGroup = new FormGroup({});
   propiedadId!: number;
-  propiedad: any;
+  propiedad: Propiedad = new Propiedad();
   reservas: {
     id: number;
     fecha_inicio: Date;
@@ -70,12 +72,14 @@ export class DetallePropiedadComponent implements OnInit {
   ];
 
   imagenes: string[] = [];
+  encargado: any;
 
   constructor(
     private route: ActivatedRoute,
     private propiedadesService: PropiedadesService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private empleadoService: EmpleadosService,
   ) {}
 
   ngOnInit(): void {
@@ -107,8 +111,9 @@ export class DetallePropiedadComponent implements OnInit {
 
   _getPropiedad(id: number) {
     this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-      console.log(data);
       this.propiedad = data;
+      if(this.propiedad.id_encargado){
+      this._getEmpleado(this.propiedad.id_encargado);}
     });
   }
   stadoCompare(a: any, b: any): number {
@@ -120,6 +125,8 @@ export class DetallePropiedadComponent implements OnInit {
     return a.fecha_inicio.getTime() - b.fecha_inicio.getTime();
   }
 
+  editarEncargado() {}
+
   private _cargarImagenes(): void {
     // Asumiendo que las imágenes están en 'assets/'
     this.imagenes = [
@@ -127,5 +134,12 @@ export class DetallePropiedadComponent implements OnInit {
       `assets/propiedades/2.jpeg`,
       `assets/propiedades/3.jpg`,
     ];
+  }
+
+  private _getEmpleado(id: number) {
+    this.empleadoService.getEmpleados().subscribe((data: any[]) => {
+      this.encargado = data.find((empleado) => empleado.id === this.propiedad.id_encargado);
+      console.log(this.encargado);
+    });
   }
 }

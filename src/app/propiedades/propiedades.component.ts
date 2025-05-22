@@ -23,6 +23,8 @@ export class PropiedadesComponent implements OnInit {
   propiedades: any[] = [];
   propiedadesEliminadas: any[] = [];
   isFormValid = false;
+  cargando = true;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -77,7 +79,9 @@ export class PropiedadesComponent implements OnInit {
     this.formPropiedad.form.reset();
   }
 
-  buscarPropiedad() {}
+  buscarPropiedad() {
+    
+  }
 
   eliminar(id: number) {
     this.utilsService.showMessage2({
@@ -200,8 +204,17 @@ export class PropiedadesComponent implements OnInit {
   private _getPropiedades() {
     this.propiedadesService.getPropiedades().subscribe((data) => {
       this.propiedades = data;
-      console.log(this.propiedades);
-    });
+      this.cargando = false;
+    }, (error) => {
+      this.cargando = false;
+      this.utilsService.showMessage({
+        title: 'Error al obtener propiedades',
+        message:
+          'No se pudieron cargar las propiedades. Por favor, intenta nuevamente.',
+        icon: 'error',
+      });
+    }
+  );
   }
 
   private _getPropiedadesEliminadas() {

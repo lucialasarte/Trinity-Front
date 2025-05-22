@@ -1,8 +1,8 @@
 <div class="reserva-header">
   <h2 class="titulo-propiedades" *ngIf="reserva">
     Reserva #{{ reserva.id }}
-    <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
-      {{ reserva.estado }}
+    <span class="estado-badge" [ngClass]="estadoClase(estado)">
+      {{ estado }}
     </span>
   </h2>
 </div>
@@ -85,11 +85,11 @@
         <button
           class="btn-sm"
           (click)="cancelar()"
-          *ngIf="reserva.estado !== 'Finalizada'"
+          *ngIf="estado !== 'Finalizada'"
         >
           Cancelar
         </button>
-        <button class="btn-sm" (click)="subirDocumentacion()">
+        <button *ngIf="propiedad.requiere_documentacion" class="btn-sm" (click)="subirDocumentacion()">
           Subir Documentación
         </button>
         <button
@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <div class="documentacion-container">
+    <div class="documentacion-container" *ngIf="propiedad.requiere_documentacion" >
       <h5>Documentación Adjunta</h5>
       <ul *ngIf="documentos.length > 0">
         <li *ngFor="let doc of documentos">

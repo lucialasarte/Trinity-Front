@@ -33,6 +33,7 @@
       <h2 class="titulo-propiedades">Propiedades</h2>
     </div>
     <div class="table-container">
+      <nz-spin [nzSpinning]="cargando">
       <nz-table
         #propertyTable
         [nzData]="propiedades"
@@ -96,6 +97,7 @@
           </tr>
         </tbody>
       </nz-table>
+      </nz-spin>
 
       <div
         *ngIf="!propiedades || propiedades.length === 0"
