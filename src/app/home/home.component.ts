@@ -30,7 +30,8 @@ export class HomeComponent {
     private propiedadesService: PropiedadesService,
     private utilsService: UtilsService,
     private reservasService: ReservasService,
-    private router: Router
+    private router: Router,
+    private parametricasService: ParametricasService
   ) {}
 
   ngOnInit(): void {
@@ -126,10 +127,10 @@ export class HomeComponent {
     });
   }
   private _get_ciudades() {
-    // this.parametricasService.get_ciudades().subscribe((data) => {
-    //   this.ciudades = data;
-    //   console.log(this.ciudades);
-    // });
+    this.parametricasService.get_ciudades_con_propiedades().subscribe((data) => {
+      this.ciudades = data;
+      console.log(this.ciudades);
+    });
   }
 
   disabledCheckInDate = (current: Date): boolean => {

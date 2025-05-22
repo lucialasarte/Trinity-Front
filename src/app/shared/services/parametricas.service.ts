@@ -35,4 +35,7 @@ export class ParametricasService {
   get_porcentajes(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/politicas`);
   }
+  get_ciudades_con_propiedades(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/ciudadesConPropiedades`);
+  }
 }
