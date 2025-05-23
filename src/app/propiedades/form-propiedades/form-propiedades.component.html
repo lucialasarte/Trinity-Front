@@ -248,7 +248,7 @@
           <nz-form-item>
             <nz-form-label nzFor="banios" nzRequired>Baños</nz-form-label>
             <nz-form-control [nzErrorTip]="baniosErrorTpl">
-              <input nz-input type="number" formControlName="banios" />
+              <input nz-input type="number" formControlName="banios" min="0" max="10" />
               <ng-template #baniosErrorTpl let-control>
                 <span *ngIf="control.hasError('required')"
                   >Este campo es obligatorio.</span
@@ -267,7 +267,7 @@
               >Ambientes</nz-form-label
             >
             <nz-form-control [nzErrorTip]="ambientesErrorTpl">
-              <input nz-input type="number" formControlName="ambientes" />
+              <input nz-input type="number" formControlName="ambientes" min="0" max="10" />
               <ng-template #ambientesErrorTpl let-control>
                 <span *ngIf="control.hasError('required')"
                   >Este campo es obligatorio.</span
@@ -309,7 +309,7 @@
           <nz-form-item>
             <nz-form-label nzFor="cocheras" nzRequired>Cocheras</nz-form-label>
             <nz-form-control [nzErrorTip]="cocherasErrorTpl">
-              <input nz-input type="number" formControlName="cocheras" />
+              <input nz-input type="number" formControlName="cocheras" min="0" max="10" />
               <ng-template #cocherasErrorTpl let-control>
                 <span *ngIf="control.hasError('required')"
                   >Este campo es obligatorio.</span
