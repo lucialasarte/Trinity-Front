@@ -68,7 +68,7 @@
 .propiedades-contenedor {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: justify;
   gap: 16px;
 }
 

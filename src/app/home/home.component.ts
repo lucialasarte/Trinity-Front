@@ -49,13 +49,22 @@ export class HomeComponent {
   }
 
   buscarPropiedad() {
+    this.propiedadesPaginadas = [];
     const form = this.form.getRawValue();
-    console.log('Form:', form);
     let search = new Search(form);
-    console.log('Search:', search);
+
     this.propiedadesService.search(search).subscribe({
       next: (data) => {
-        console.log('Propiedades:', data);
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+          this.utilsService.showMessage({
+            title: 'Sin propiedades',
+            message:
+              'No se encontraron propiedades con los criterios seleccionados.',
+            icon: 'info',
+          });
+          this.propiedades = [];
+          return;
+        }
         this.propiedades = data;
         this.paginaActual = 1;
         this.actualizarPagina();
@@ -76,14 +85,14 @@ export class HomeComponent {
     this.porpiedadParaReservar = propiedad;
   }
   onSubmitReserva() {
-    this.porpiedadParaReservar.requiere_documentacion
+    this.porpiedadParaReservar.requiere_documentacion;
     const reserva = {
       id_propiedad: this.porpiedadParaReservar.id,
       fecha_inicio: this.form.get('checkin')?.value,
       fecha_fin: this.form.get('checkout')?.value,
       cantidad_personas: this.form.get('huespedes')?.value,
       monto_total: this.precioTotal,
-      id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1
+      id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1,
     };
 
     this.reservasService.createReserva(reserva).subscribe({
@@ -127,10 +136,12 @@ export class HomeComponent {
     });
   }
   private _get_ciudades() {
-    this.parametricasService.get_ciudades_con_propiedades().subscribe((data) => {
-      this.ciudades = data;
-      console.log(this.ciudades);
-    });
+    this.parametricasService
+      .get_ciudades_con_propiedades()
+      .subscribe((data) => {
+        this.ciudades = data;
+        console.log(this.ciudades);
+      });
   }
 
   disabledCheckInDate = (current: Date): boolean => {
@@ -147,25 +158,6 @@ export class HomeComponent {
 
   private clearTime(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  }
-
-  buscar(): void {
-    if (this.form.invalid) {
-      this.utilsService.showMessage({
-        title: 'Por favor completá todos los campos obligatorios.',
-      });
-      return;
-    }
-
-    const { checkIn, checkOut } = this.form.value;
-    if (new Date(checkOut) <= new Date(checkIn)) {
-      this.utilsService.showMessage({
-        title: 'La fecha de Check‑out debe ser posterior a la de Check‑in.',
-      });
-      return;
-    }
-
-    console.log('Búsqueda:', this.form.value);
   }
 
   get noches(): number {

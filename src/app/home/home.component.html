@@ -9,7 +9,9 @@
           placeholder="Explorar destinos"
           formControlName="id"
           nzShowSearch
+          [nzAllowClear]="true"
         >
+        
           <nz-option
             *ngFor="let ciudad of ciudades"
             [nzLabel]="ciudad.nombre"
@@ -68,7 +70,7 @@
 </div>
 <!-- TARJETAS BUSQUEDA PROPIEDADES -->
 <div class="propiedades-container">
-  <div class="propiedades-contenedor">
+  <div class="propiedades-contenedor" *ngIf="propiedadesPaginadas.length > 0">
     <div
       *ngFor="let propiedad of propiedadesPaginadas"
       class="propiedad-card"
@@ -123,6 +125,7 @@
         [checkin]="form.get('checkin')?.value"
         [checkout]="form.get('checkout')?.value"
         [huespedes]="form.get('huespedes')?.value"
+        [precioTotal]="precioTotal"
       ></app-reservar-inquilino>
     </div>
 
