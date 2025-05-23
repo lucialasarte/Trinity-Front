@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, OnInit, ViewChild } from '@angular/core';
 import { Form, FormBuilder, FormGroup } from '@angular/forms';
 import { PropiedadesService } from './services/propiedades.service';
 import { Propiedad } from './models/propiedad';
@@ -6,6 +6,7 @@ import { FormPropiedadesComponent } from './form-propiedades/form-propiedades.co
 import { Router } from '@angular/router';
 import { UtilsService } from '../shared/services/utils.service';
 import { ParametricasService } from '../shared/services/parametricas.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-propiedades',
@@ -16,6 +17,7 @@ export class PropiedadesComponent implements OnInit {
   @ViewChild(FormPropiedadesComponent)
   formPropiedad!: FormPropiedadesComponent;
   form!: FormGroup;
+  usuario = computed(() => this.auth.usuarioActual());
 
   // propiedades: any[] = [];
 
@@ -30,7 +32,8 @@ export class PropiedadesComponent implements OnInit {
     private fb: FormBuilder,
     private propiedadesService: PropiedadesService,
     private router: Router,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +42,7 @@ export class PropiedadesComponent implements OnInit {
     });
     this._getPropiedades();
     this._getPropiedadesEliminadas();
+    this.auth.cargarUsuarioDesdeToken();
   }
 
   onSubmitPropiedad() {

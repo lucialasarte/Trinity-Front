@@ -28,7 +28,7 @@
           </div>
           <div class="reserva-item">
             <label>Precio Estadia:</label>
-            <span>{{ reserva.monto_total | currency: 'USD'}}</span>
+            <span>{{ reserva.monto_total | currency : "USD" }}</span>
           </div>
         </div>
       </div>
@@ -39,6 +39,7 @@
       <h3 class="card-title">
         Detalles de la Propiedad
         <button
+          *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
           class="btn btn-secondary"
           (click)="verPropiedad(propiedad.id)"
           style="float: right"
@@ -78,7 +79,7 @@
       </div>
     </div>
 
-    <div class="card acciones-card">
+    <div class="card acciones-card" >
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <button
@@ -95,20 +96,21 @@
         >
           Subir Documentación
         </button>
-        <button
+        <!-- <button
+         *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
           class="btn-sm"
           (click)="confirmarReserva()"
           *ngIf="reserva.estado == 'pendiente'"
         >
           Confirmar Reserva
-        </button>
-        <button
+        </button> -->
+        <!-- <button
           [disabled]="!puedeCalificar"
           class="btn-sm"
           (click)="calificar()"
         >
           Calificar
-        </button>
+        </button> -->
       </div>
     </div>
 

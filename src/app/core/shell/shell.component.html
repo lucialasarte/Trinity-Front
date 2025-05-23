@@ -18,7 +18,7 @@
         </ng-container>
       </div>
       <div class="header-actions">
-        <div class="flag">
+        <!-- <div class="flag">
           <button class="lang-toggle" (click)="toggleLanguage()">
             <img
               [src]="isEnglish ? 'assets/en.png' : 'assets/es.png'"
@@ -29,7 +29,7 @@
             />
             {{ isEnglish ? 'English' : 'Español' }}
           </button>
-        </div>
+        </div> -->
         <ng-container *ngIf="usuario() as user; else loginBtn">
           <button nz-button nzType="text" nz-popover
             [nzPopoverTitle]="'Datos de usuario'"

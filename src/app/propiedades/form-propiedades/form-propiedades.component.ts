@@ -58,7 +58,7 @@ export class FormPropiedadesComponent {
       huespedes: [null, [Validators.required, Validators.min(0)]],
       cocheras: [null, [Validators.required, Validators.min(0)]],
       requiere_documentacion: [false],
-      id_empleado: [null],
+      id_encargado: [null],
     });
 
     this.form.statusChanges.subscribe(() => {

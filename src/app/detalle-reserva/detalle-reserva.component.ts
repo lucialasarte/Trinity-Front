@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { Reserva } from '../reservas/models/reserva';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { Propiedad } from '../propiedades/models/propiedad';
 import { Calificacion } from '../shared/models/calificacion';
 import { UtilsService } from '../shared/services/utils.service';
 import { ReservasService } from '../reservas/services/reservas.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-detalle-reserva',
@@ -19,15 +20,18 @@ export class DetalleReservaComponent {
   calificacion: Calificacion | null = null;
   estado: string = ''; 
   puedeCalificar = false;
+  usuario = computed(() => this.auth.usuarioActual());
 
   constructor(
     private propiedadesService: PropiedadesService,
     private route: ActivatedRoute,
     private utilsService: UtilsService,
     private reservasService: ReservasService,
+    public auth: AuthService,
   ) {}
 
   ngOnInit() {
+    this.auth.cargarUsuarioDesdeToken();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
