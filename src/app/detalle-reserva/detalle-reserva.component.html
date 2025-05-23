@@ -8,7 +8,6 @@
 </div>
 
 <ng-container *ngIf="reserva && propiedad">
-
   <div class="detalle-container">
     <!-- Sección de Detalles de la Reserva -->
     <div class="card">
@@ -89,7 +88,11 @@
         >
           Cancelar
         </button>
-        <button *ngIf="propiedad.requiere_documentacion" class="btn-sm" (click)="subirDocumentacion()">
+        <button
+          *ngIf="propiedad.requiere_documentacion"
+          class="btn-sm"
+          (click)="subirDocumentacion()"
+        >
           Subir Documentación
         </button>
         <button
@@ -99,11 +102,20 @@
         >
           Confirmar Reserva
         </button>
-        <button class="btn-sm" (click)="calificar()">Calificar</button>
+        <button
+          [disabled]="!puedeCalificar"
+          class="btn-sm"
+          (click)="calificar()"
+        >
+          Calificar
+        </button>
       </div>
     </div>
 
-    <div class="documentacion-container" *ngIf="propiedad.requiere_documentacion" >
+    <div
+      class="documentacion-container"
+      *ngIf="propiedad.requiere_documentacion"
+    >
       <h5>Documentación Adjunta</h5>
       <ul *ngIf="documentos.length > 0">
         <li *ngFor="let doc of documentos">

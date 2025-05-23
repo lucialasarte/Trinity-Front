@@ -11,10 +11,10 @@
 .buscador-card {
   border-radius: 40px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.15);
-  /* padding: 16px 24px; */
+  padding: 16px 24px;
   margin: 20px auto;
   max-width: 1000px;
-  padding: 20px;
+  /* padding: 20px ; */
 }
 
 .buscador-item label {
@@ -40,10 +40,11 @@
 
 
 .buscador-boton button {
+  margin-left: 10px;
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  padding: 0;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;

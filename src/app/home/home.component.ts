@@ -76,15 +76,15 @@ export class HomeComponent {
     this.porpiedadParaReservar = propiedad;
   }
   onSubmitReserva() {
+    this.porpiedadParaReservar.requiere_documentacion
     const reserva = {
       id_propiedad: this.porpiedadParaReservar.id,
       fecha_inicio: this.form.get('checkin')?.value,
       fecha_fin: this.form.get('checkout')?.value,
       cantidad_personas: this.form.get('huespedes')?.value,
-      monto_total: this.precioTotal
+      monto_total: this.precioTotal,
+      id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1
     };
-
-    console.log('Reserva:', reserva);
 
     this.reservasService.createReserva(reserva).subscribe({
       next: (data) => {

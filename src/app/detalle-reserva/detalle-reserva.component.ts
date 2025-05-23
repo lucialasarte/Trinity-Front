@@ -16,8 +16,9 @@ export class DetalleReservaComponent {
   reserva: Reserva = new Reserva();
   propiedad: any;
   documentos: any[] = [];
-  calificacion: Calificacion = new Calificacion();
+  calificacion: Calificacion | null = null;
   estado: string = ''; 
+  puedeCalificar = false;
 
   constructor(
     private propiedadesService: PropiedadesService,
@@ -67,6 +68,7 @@ export class DetalleReservaComponent {
           this.estado = 'Finalizada';
       }
       this._getPropiedad(this.reserva.id_propiedad);
+      this.validarCalificacion();
     }, error => {
       this.utilsService.showMessage({
         title: 'Error al obtener propiedades',
@@ -77,6 +79,22 @@ export class DetalleReservaComponent {
     }
     );
   }
+  
+  validarCalificacion(): void {
+  if (!this.reserva?.fecha_fin) return;
+
+  const fechaFin = new Date(this.reserva.fecha_fin); // convierte string a Date
+  const hoy = new Date();
+
+  // Normalizar fechas a medianoche para evitar diferencias horarias
+  fechaFin.setHours(0, 0, 0, 0);
+  hoy.setHours(0, 0, 0, 0);
+
+  const estadiaFinalizada = fechaFin < hoy;
+  const diasDesdeFin = (hoy.getTime() - fechaFin.getTime()) / (1000 * 60 * 60 * 24);
+
+  this.puedeCalificar = estadiaFinalizada && diasDesdeFin <= 14;
+}
 
   estadoClase(estado: string): string {
     switch (estado.toLowerCase()) {

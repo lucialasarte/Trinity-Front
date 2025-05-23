@@ -6,52 +6,85 @@ import {
   NzTableFilterList,
   NzTableModule,
   NzTableSortFn,
-  NzTableSortOrder
+  NzTableSortOrder,
 } from 'ng-zorro-antd/table';
+import { ReservasService } from './services/reservas.service';
+import { Reserva } from './models/reserva';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reservas',
   templateUrl: './reservas.component.html',
-  styleUrls: ['./reservas.component.css']
+  styleUrls: ['./reservas.component.css'],
 })
 export class ReservasComponent {
-  reservas: { id: number; fecha_inicio: Date; fecha_fin: Date; estado: 'Pendiente' | 'Confirmada' | 'Cancelada' }[] = [
-    { id: 1, fecha_inicio: new Date('2023-10-01'), fecha_fin: new Date('2023-10-05'), estado: 'Confirmada' },
-    { id: 2, fecha_inicio: new Date('2023-10-10'), fecha_fin: new Date('2023-10-15'), estado: 'Pendiente' },
-    { id: 3, fecha_inicio: new Date('2023-10-20'), fecha_fin: new Date('2023-10-25'), estado: 'Cancelada' },
-    { id: 4, fecha_inicio: new Date('2023-10-30'), fecha_fin: new Date('2023-11-05'), estado: 'Confirmada' },
-    { id: 5, fecha_inicio: new Date('2023-11-10'), fecha_fin: new Date('2023-11-15'), estado: 'Pendiente' },
-    { id: 6, fecha_inicio: new Date('2023-11-20'), fecha_fin: new Date('2023-11-25'), estado: 'Cancelada' },
-    { id: 7, fecha_inicio: new Date('2023-11-30'), fecha_fin: new Date('2023-12-05'), estado: 'Confirmada' },
-    { id: 8, fecha_inicio: new Date('2023-12-10'), fecha_fin: new Date('2023-12-15'), estado: 'Pendiente' },
-  ];
+
   form!: FormGroup;
   sortEstado = null;
   sortFechaInicio = null;
   sortFechaFin = null;
+  reservas: Array<Reserva> = [];
+  estado: string = '';
+  cargando: boolean = true; 
+  calificacion: any = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private reservasService: ReservasService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      dato: ['']
+      dato: [''],
     });
-    console.log(this.reservas);
+    this._getReservas();
   }
 
   buscarReserva() {}
 
   verReserva(id: number) {
-    // this.router.navigate(['/detalle-reserva', id]);
+    this.router.navigate(['/detalle-reserva', id]);
   }
 
   eliminar(id: number) {}
   stadoCompare(a: any, b: any): number {
-    const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada'];
+    const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada', 'Finalizada'];
     return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);
   }
 
   fechaCompare(a: any, b: any): number {
     return a.fecha_inicio.getTime() - b.fecha_inicio.getTime();
+  }
+
+  private _getReservas() {
+    this.reservasService.get_reservas().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.reservas = data;
+        this.reservas = data.map((reserva: any) => ({
+          ...reserva,
+          estado: this.obtenerEstadoTexto(reserva.id_estado),
+        }));
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error('Error al obtener las reservas:', error);
+      },
+    });
+    
+  }
+
+  private obtenerEstadoTexto(id_estado: number): string {
+    switch (id_estado) {
+      case 1:
+        return 'Confirmada';
+      case 2:
+        return 'Pendiente';
+      case 3:
+        return 'Cancelada';
+      default:
+        return 'Finalizada';
+    }
   }
 }
