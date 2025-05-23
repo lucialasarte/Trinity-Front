@@ -244,11 +244,11 @@
 
       <!-- Baños, Ambientes, Huéspedes y Cocheras -->
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <nz-form-item>
             <nz-form-label nzFor="banios" nzRequired>Baños</nz-form-label>
             <nz-form-control [nzErrorTip]="baniosErrorTpl">
-              <input nz-input type="number" formControlName="banios" />
+              <input nz-input type="number" formControlName="banios" min="0" max="10" />
               <ng-template #baniosErrorTpl let-control>
                 <span *ngIf="control.hasError('required')"
                   >Este campo es obligatorio.</span
@@ -261,13 +261,13 @@
           </nz-form-item>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
           <nz-form-item>
             <nz-form-label nzFor="ambientes" nzRequired
               >Ambientes</nz-form-label
             >
             <nz-form-control [nzErrorTip]="ambientesErrorTpl">
-              <input nz-input type="number" formControlName="ambientes" />
+              <input nz-input type="number" formControlName="ambientes" min="0" max="10" />
               <ng-template #ambientesErrorTpl let-control>
                 <span *ngIf="control.hasError('required')"
                   >Este campo es obligatorio.</span
@@ -280,14 +280,37 @@
           </nz-form-item>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
           <nz-form-item>
             <nz-form-label nzFor="huespedes" nzRequired
               >Huéspedes</nz-form-label
             >
             <nz-form-control [nzErrorTip]="huespedesErrorTpl">
-              <input nz-input type="number" formControlName="huespedes" />
+              <input
+                nz-input
+                type="number"
+                min="1"
+                max="10"
+                formControlName="huespedes"
+              />
               <ng-template #huespedesErrorTpl let-control>
+                <span *ngIf="control.hasError('required')"
+                  >Este campo es obligatorio.</span
+                >
+                <span *ngIf="control.hasError('min')"
+                  >Debe ser mayor o igual a 0.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-md-2">
+          <nz-form-item>
+            <nz-form-label nzFor="cocheras" nzRequired>Cocheras</nz-form-label>
+            <nz-form-control [nzErrorTip]="cocherasErrorTpl">
+              <input nz-input type="number" formControlName="cocheras" min="0" max="10" />
+              <ng-template #cocherasErrorTpl let-control>
                 <span *ngIf="control.hasError('required')"
                   >Este campo es obligatorio.</span
                 >
@@ -301,18 +324,36 @@
 
         <div class="col-md-3">
           <nz-form-item>
-            <nz-form-label nzFor="cocheras" nzRequired>Cocheras</nz-form-label>
-            <nz-form-control [nzErrorTip]="cocherasErrorTpl">
-              <input nz-input type="number" formControlName="cocheras" />
-              <ng-template #cocherasErrorTpl let-control>
-                <span *ngIf="control.hasError('required')"
-                  >Este campo es obligatorio.</span
-                >
-                <span *ngIf="control.hasError('min')"
-                  >Debe ser mayor o igual a 0.</span
-                >
-              </ng-template>
+            <nz-form-label>¿Requiere documentación?</nz-form-label>
+            <nz-form-control>
+              <nz-switch
+                formControlName="requiere_documentacion"
+                [nzCheckedChildren]="'Sí'"
+                [nzUnCheckedChildren]="'No'"
+              >
+              </nz-switch>
             </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <!-- Empleado -->
+      <div class="row">
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label nzFor="id_encargado">Encargado</nz-form-label>
+
+            <nz-select
+              nzPlaceHolder="Seleccionar Encargado"
+              formControlName="id_encargado"
+              nzShowSearch
+            >
+              <nz-option
+                *ngFor="let empleado of empleados"
+                [nzValue]="empleado.id"
+                [nzLabel]="empleado.nombre + ': ' + empleado.correo"
+                
+              ></nz-option>
+            </nz-select>
           </nz-form-item>
         </div>
       </div>

@@ -20,7 +20,10 @@ export class Propiedad {
   huespedes: number;
   cocheras: number;
   id_pol_reserva: number;
+  pol_reserva: string;
   is_habilitada: boolean;
+  requiere_documentacion: boolean;
+  id_encargado: number;
 
   constructor(obj?: any) {
     this.id = obj && obj.id || null;
@@ -45,6 +48,9 @@ export class Propiedad {
     this.entre_calles = obj && obj.entre_calles || null;
     this.ciudad = obj && obj.ciudad || null;
     this.is_habilitada = obj && obj.is_habilitada || false;
+    this.requiere_documentacion = obj && obj.requiere_documentacion || false;
+    this.id_encargado = obj && obj.id_encargado || null;
+    this.pol_reserva = obj && obj.pol_reserva || null;
   }	
 
 }

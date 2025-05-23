@@ -21,7 +21,11 @@
         </button>
       </div>
     </div>
-    <div class="col-md-2" style="padding-left: 20px">
+    <div
+      class="col-md-2"
+      style="padding-left: 20px"
+      *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
+    >
       <button (click)="showModal()" class="btn btn-primary">
         <i class="fa fa-plus"></i> Agregar Propiedad
       </button>
@@ -33,69 +37,72 @@
       <h2 class="titulo-propiedades">Propiedades</h2>
     </div>
     <div class="table-container">
-      <nz-table
-        #propertyTable
-        [nzData]="propiedades"
-        [nzPageSize]="4"
-        [nzFrontPagination]="true"
-        [nzSize]="'small'"
-      >
-        <thead>
-          <tr>
-            <th>Propiedad</th>
-            <th>Tipo Propiedad</th>
-            <th>Localidad</th>
-            <th>Ciudad</th>
-            <th>Precio por Noche (USD)</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let propiedad of propertyTable.data">
-            <td>{{ propiedad.nombre }}</td>
-            <td>{{ propiedad.tipo }}</td>
-            <td>{{ propiedad.ciudad }}</td>
-            <td>{{ propiedad.ciudad }}</td>
-            <td>{{ propiedad.precioNoche | currency : "USD" : "symbol" }}</td>
-            <td>
-              <span
-                [ngClass]="{
-                  'badge-confirmada': propiedad.is_habilitada,
-                  'badge-cancelada': !propiedad.is_habilitada
-                }"
-              >
-                {{ propiedad.is_habilitada ? "Habilitada" : "Deshabilitada" }}
-              </span>
-            </td>
+      <nz-spin [nzSpinning]="cargando">
+        <nz-table
+          #propertyTable
+          [nzData]="propiedades"
+          [nzPageSize]="4"
+          [nzFrontPagination]="true"
+          [nzSize]="'small'"
+        >
+          <thead>
+            <tr>
+              <th>Propiedad</th>
+              <th>Tipo Propiedad</th>
+              <th>Localidad</th>
+              <th>Ciudad</th>
+              <th>Precio por Noche (USD)</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let propiedad of propertyTable.data">
+              <td>{{ propiedad.nombre }}</td>
+              <td>{{ propiedad.tipo }}</td>
+              <td>{{ propiedad.ciudad }}</td>
+              <td>{{ propiedad.ciudad }}</td>
+              <td>{{ propiedad.precioNoche | currency : "USD" : "symbol" }}</td>
+              <td>
+                <span
+                  [ngClass]="{
+                    'badge-confirmada': propiedad.is_habilitada,
+                    'badge-cancelada': !propiedad.is_habilitada
+                  }"
+                >
+                  {{ propiedad.is_habilitada ? "Habilitada" : "Deshabilitada" }}
+                </span>
+              </td>
 
-            <td>
-              <button
-                (click)="verPropiedad(propiedad.id)"
-                class="btn btn-success btn-sm"
-              >
-                <i class="fa fa-eye"></i> Ver
-              </button>
-              <button
-                (click)="eliminar(propiedad.id)"
-                class="btn btn-danger btn-sm"
-              >
-                <i class="fa fa-trash"></i> Eliminar
-              </button>
-              <button
-                (click)="cambiarEstado(propiedad)"
-                class="btn btn-warning btn-sm"
-              >
-                <i
-                  class="fa"
-                  [ngClass]="propiedad.is_habilitada ? 'fa-ban' : 'fa-play'"
-                ></i>
-                {{ propiedad.is_habilitada ? "Deshabilitar" : "Habilitar" }}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+              <td>
+                <button
+                  (click)="verPropiedad(propiedad.id)"
+                  class="btn btn-success btn-sm"
+                >
+                  <i class="fa fa-eye"></i> Ver
+                </button>
+                <button
+                  *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
+                  (click)="eliminar(propiedad.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <i class="fa fa-trash"></i> Eliminar
+                </button>
+                <button
+                  (click)="cambiarEstado(propiedad)"
+                  class="btn btn-warning btn-sm"
+                >
+                  <i
+                    class="fa"
+                    [ngClass]="propiedad.is_habilitada ? 'fa-ban' : 'fa-play'"
+                  ></i>
+                  {{ propiedad.is_habilitada ? "Deshabilitar" : "Habilitar" }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-spin>
 
       <div
         *ngIf="!propiedades || propiedades.length === 0"

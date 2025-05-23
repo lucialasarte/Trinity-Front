@@ -4,7 +4,7 @@
 
 <ng-container>
   <div class="detalle-container">
-    <div class="card">
+    <div class="card" style="width: 50%">
       <h3 class="card-title">
         Información de la Propiedad
         <button
@@ -81,11 +81,17 @@
           <p>
             Política de Reserva: <strong>{{ propiedad.pol_reserva }}</strong>
           </p>
+          <p>
+            Encargado: <strong>{{ encargado.nombre }}</strong>
+            <button class="editCod" (click)="editarEncargado()">
+              <i class="fa fa-pencil" style="margin: 0px"></i>
+            </button>
+          </p>
         </div>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" >
       <h3 class="card-title" style="padding-bottom: 26px">
         Reservas de la Propiedad
       </h3>

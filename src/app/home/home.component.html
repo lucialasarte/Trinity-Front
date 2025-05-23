@@ -1,1 +1,141 @@
-<p>home works!</p>
+<!-- FORM BUSQUEDA -->
+
+<div class="detalle-container">
+  <nz-card class="buscador-card" nz-form [formGroup]="form">
+    <div nz-row [nzGutter]="16" class="buscador-contenedor">
+      <div nz-col [nzSpan]="8" class="buscador-item">
+        <label>Lugar</label>
+        <nz-select
+          placeholder="Explorar destinos"
+          formControlName="id"
+          nzShowSearch
+          [nzAllowClear]="true"
+        >
+        
+          <nz-option
+            *ngFor="let ciudad of ciudades"
+            [nzLabel]="ciudad.nombre"
+            [nzValue]="ciudad.id"
+          ></nz-option>
+        </nz-select>
+      </div>
+
+      <div nz-col [nzSpan]="5" class="buscador-item">
+        <label>Check‑in</label>
+        <nz-date-picker
+          #date
+          formControlName="checkin"
+          name="checkin"
+          nzFormat="dd/MM/yyyy"
+          nzPlaceHolder="¿Desde?"
+          [nzDisabledDate]="disabledCheckInDate"
+          (nzOnChange)="onCheckInChange(date.inputValue)"
+        ></nz-date-picker>
+      </div>
+
+      <div nz-col [nzSpan]="5" class="buscador-item">
+        <label>Check‑out</label>
+        <nz-date-picker
+          formControlName="checkout"
+          name="checkout"
+          nzFormat="dd/MM/yyyy"
+          nzPlaceHolder="¿Hasta?"
+          [nzDisabledDate]="disabledCheckOutDate"
+        ></nz-date-picker>
+      </div>
+
+      <div nz-col [nzSpan]="4" class="buscador-item">
+        <label>Huéspedes</label>
+        <nz-input-number
+          formControlName="huespedes"
+          name="huespedes"
+          [nzMin]="1"
+          [nzMax]="10"
+          [nzPlaceHolder]="'¿Cuántos?'"
+        ></nz-input-number>
+      </div>
+
+      <div nz-col [nzSpan]="2" class="buscador-boton">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!form.valid"
+          (click)="buscarPropiedad()"
+        >
+          <i nz-icon nzType="search"></i>
+        </button>
+      </div>
+    </div>
+  </nz-card>
+</div>
+<!-- TARJETAS BUSQUEDA PROPIEDADES -->
+<div class="propiedades-container">
+  <div class="propiedades-contenedor" *ngIf="propiedadesPaginadas.length > 0">
+    <div
+      *ngFor="let propiedad of propiedadesPaginadas"
+      class="propiedad-card"
+      (click)="verPropiedad(propiedad)"
+    >
+      <nz-card [nzTitle]="propiedad.nombre" [nzCover]="coverTemplate">
+        <ng-template #coverTemplate>
+          <img
+            alt="imagen propiedad"
+            [src]="propiedad.imagenUrl || 'assets/propiedades/1.jpeg'"
+          />
+        </ng-template>
+        <p class="descripcion-recortada" [title]="propiedad.descripcion">
+          {{ propiedad.descripcion }}
+        </p>
+
+        <div class="grid-detalles">
+          <p>
+            <strong>Precio: </strong
+            >{{ propiedad.precioNoche | currency : "USD" }}
+          </p>
+          <div><strong>Ambientes:</strong> {{ propiedad.ambientes }}</div>
+          <div><strong>Huéspedes:</strong> {{ propiedad.huespedes }}</div>
+          <div><strong>Baños:</strong> {{ propiedad.banios }}</div>
+          <div><strong>Cocheras:</strong> {{ propiedad.cocheras }}</div>
+          <div><strong>Piso:</strong> {{ propiedad.piso }}</div>
+          <div><strong>Tipo:</strong> {{ propiedad.tipo }}</div>
+        </div>
+      </nz-card>
+    </div>
+  </div>
+  <div class="paginador-centrado">
+    <nz-pagination
+      [(nzPageIndex)]="paginaActual"
+      [nzTotal]="propiedades.length"
+      [nzPageSize]="pageSize"
+      (nzPageIndexChange)="actualizarPagina()"
+    ></nz-pagination>
+  </div>
+</div>
+<!-- MODAL RESERVA -->
+<div *ngIf="isVisible" class="modal-reserva">
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    (nzOnCancel)="handleCancelReserva()"
+    [nzWidth]="'60%'"
+    [nzTitle]="'Realizar Reserva'"
+  >
+    <div *nzModalContent>
+      <app-reservar-inquilino
+        [propiedad]="porpiedadParaReservar"
+        [checkin]="form.get('checkin')?.value"
+        [checkout]="form.get('checkout')?.value"
+        [huespedes]="form.get('huespedes')?.value"
+        [precioTotal]="precioTotal"
+      ></app-reservar-inquilino>
+    </div>
+
+    <div *nzModalFooter>
+      <button class="btn-cancel" nz-button (click)="handleCancelReserva()">
+        Cancelar
+      </button>
+      <button class="btn-guardar" nz-button (click)="onSubmitReserva()">
+        Reservar
+      </button>
+    </div>
+  </nz-modal>
+</div>

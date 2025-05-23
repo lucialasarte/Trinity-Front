@@ -142,7 +142,7 @@ button {
 
 .detalle-grid {
   display: flex;
-  gap: 40px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 

@@ -28,6 +28,7 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     NzZorroModule,
     CoreRoutingModule
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [ShellComponent],

@@ -10,7 +10,9 @@ import { NgModule } from "@angular/core"
         CommonModule,
         PropiedadesRoutingModule,
         NzZorroModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        
+
     ],
     exports: [],
 })

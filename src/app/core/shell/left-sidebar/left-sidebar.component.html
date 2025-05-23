@@ -33,7 +33,7 @@
         <span *ngIf="!isEnglish" class="label">Propiedades</span>
       </button>
     </li>
-    <li>
+    <li *ngIf="auth.usuarioActual()">
       <button [routerLink]="'/reservas'" routerLinkActive="active">
         <span class="icon">📅</span>
         <span *ngIf="isEnglish" class="label">Reservations</span>

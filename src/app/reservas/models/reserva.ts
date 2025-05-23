@@ -13,10 +13,9 @@ export class Reserva {
   monto_pagado: number;
   monto_total: number;
   // huespedes: Array<Huesped>;
-//   fecha_cancelacion?: Date;
+  //   fecha_cancelacion?: Date;
   documentacion: Array<Documento>;
   id_usuario_carga?: number;
-
   constructor(obj?: any) {
     this.id = (obj && obj.id) || null;
     this.id_propiedad = (obj && obj.id_propiedad) || null;
@@ -35,6 +34,7 @@ export class Reserva {
     //     ? new Date(obj.fecha_cancelacion)
     //     : undefined;
     this.documentacion = obj && obj.documentacion ? [...obj.documentacion] : [];
+    this.estado = (obj && obj.estado) || null;
   }
 
   get cantidad_noches(): number {

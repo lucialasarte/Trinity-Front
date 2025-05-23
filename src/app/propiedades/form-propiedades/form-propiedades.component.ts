@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TipoPropiedad } from '../models/tipoPropiedad';
 import { PropiedadesService } from '../services/propiedades.service';
 import { ParametricasService } from 'src/app/shared/services/parametricas.service';
+import { EmpleadosService } from 'src/app/empleados/services/empleados.service';
 
 @Component({
   selector: 'app-form-propiedades',
@@ -16,14 +17,15 @@ export class FormPropiedadesComponent {
   tipoPropiedades: Array<TipoPropiedad> = [];
   politicasReserva: Array<any> = [];
 
-  partidos: Array<any> = [];
   provincias: Array<any> = [];
   ciudades: Array<any> = [];
+  empleados: Array<any> = [];
 
   constructor(
     private fb: FormBuilder,
-    private propiedadesService: PropiedadesService,
-    private parametricasService: ParametricasService
+    private parametricasService: ParametricasService,
+    private empleadoService: EmpleadosService
+    
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +33,7 @@ export class FormPropiedadesComponent {
     this._getTiposPropiedades();
     this._get_provincias();
     this._getPorcentajes();
+    this._getEmpleados();
   }
 
   private _initForm() {
@@ -54,6 +57,8 @@ export class FormPropiedadesComponent {
       ambientes: [null, [Validators.required, Validators.min(0)]],
       huespedes: [null, [Validators.required, Validators.min(0)]],
       cocheras: [null, [Validators.required, Validators.min(0)]],
+      requiere_documentacion: [false],
+      id_encargado: [null],
     });
 
     this.form.statusChanges.subscribe(() => {
@@ -95,6 +100,12 @@ export class FormPropiedadesComponent {
   private _getPorcentajes() {
     this.parametricasService.get_porcentajes().subscribe((data) => {
       this.politicasReserva = data;
+    });
+  }
+  private _getEmpleados() {
+    this.empleadoService.getEmpleados().subscribe((data) => {
+      this.empleados = data;
+      console.log(this.empleados);
     });
   }
 }

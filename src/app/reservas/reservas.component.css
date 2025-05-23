@@ -143,6 +143,14 @@ button {
 }
 
 .badge-pendiente {
+  background-color: #ffc107; /* Gris */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
+}
+.badge-finalizada {
   background-color: #6c757d; /* Gris */
   color: white;
   padding: 5px 10px;

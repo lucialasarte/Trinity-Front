@@ -28,6 +28,7 @@
       <h2 class="titulo-reservas">Reservas</h2>
     </div>
     <div class="table-container">
+      <nz-spin [nzSpinning]="cargando">
       <nz-table
         #reservaTable
         [nzData]="reservas"
@@ -56,7 +57,8 @@
                 [ngClass]="{
                   'badge-confirmada': reserva.estado === 'Confirmada',
                   'badge-pendiente': reserva.estado === 'Pendiente',
-                  'badge-cancelada': reserva.estado === 'Cancelada'
+                  'badge-cancelada': reserva.estado === 'Cancelada',
+                   'badge-finalizada': reserva.estado === 'Finalizada'
                 }"
               >
                 {{ reserva.estado }}
@@ -72,15 +74,17 @@
                 <i class="fa fa-eye"></i> Ver reserva
               </button>
               <button
+                *ngIf="reserva.estado === 'Pendiente' || reserva.estado === 'Confirmada'"
                 (click)="eliminar(reserva.id)"
                 class="btn btn-danger btn-sm"
               >
-                <i class="fa fa-trash"></i> Eliminar
+                <i class="fa fa-trash"></i> Cancelar reserva
               </button>
             </td>
           </tr>
         </tbody>
       </nz-table>
+      </nz-spin>
 
       <div
         *ngIf="!reservas || reservas.length === 0"

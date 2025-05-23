@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, OnInit, ViewChild } from '@angular/core';
 import { Form, FormBuilder, FormGroup } from '@angular/forms';
 import { PropiedadesService } from './services/propiedades.service';
 import { Propiedad } from './models/propiedad';
@@ -6,6 +6,7 @@ import { FormPropiedadesComponent } from './form-propiedades/form-propiedades.co
 import { Router } from '@angular/router';
 import { UtilsService } from '../shared/services/utils.service';
 import { ParametricasService } from '../shared/services/parametricas.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-propiedades',
@@ -16,6 +17,7 @@ export class PropiedadesComponent implements OnInit {
   @ViewChild(FormPropiedadesComponent)
   formPropiedad!: FormPropiedadesComponent;
   form!: FormGroup;
+  usuario = computed(() => this.auth.usuarioActual());
 
   // propiedades: any[] = [];
 
@@ -23,12 +25,15 @@ export class PropiedadesComponent implements OnInit {
   propiedades: any[] = [];
   propiedadesEliminadas: any[] = [];
   isFormValid = false;
+  cargando = true;
+  
 
   constructor(
     private fb: FormBuilder,
     private propiedadesService: PropiedadesService,
     private router: Router,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +42,7 @@ export class PropiedadesComponent implements OnInit {
     });
     this._getPropiedades();
     this._getPropiedadesEliminadas();
+    this.auth.cargarUsuarioDesdeToken();
   }
 
   onSubmitPropiedad() {
@@ -77,7 +83,9 @@ export class PropiedadesComponent implements OnInit {
     this.formPropiedad.form.reset();
   }
 
-  buscarPropiedad() {}
+  buscarPropiedad() {
+    
+  }
 
   eliminar(id: number) {
     this.utilsService.showMessage2({
@@ -188,11 +196,29 @@ export class PropiedadesComponent implements OnInit {
     this.isFormValid = valid;
   }
 
+  search(){}
+
+
+  private _initForm() {
+    this.form = this.fb.group({
+      busqueda: [null],
+    });
+  }
+
   private _getPropiedades() {
     this.propiedadesService.getPropiedades().subscribe((data) => {
       this.propiedades = data;
-      console.log(this.propiedades);
-    });
+      this.cargando = false;
+    }, (error) => {
+      this.cargando = false;
+      this.utilsService.showMessage({
+        title: 'Error al obtener propiedades',
+        message:
+          'No se pudieron cargar las propiedades. Por favor, intenta nuevamente.',
+        icon: 'error',
+      });
+    }
+  );
   }
 
   private _getPropiedadesEliminadas() {
