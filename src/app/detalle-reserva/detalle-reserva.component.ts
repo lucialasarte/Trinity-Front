@@ -90,7 +90,7 @@ export class DetalleReservaComponent {
   fechaFin.setHours(0, 0, 0, 0);
   hoy.setHours(0, 0, 0, 0);
 
-  const estadiaFinalizada = fechaFin < hoy;
+  const estadiaFinalizada = fechaFin <= hoy;
   const diasDesdeFin = (hoy.getTime() - fechaFin.getTime()) / (1000 * 60 * 60 * 24);
 
   this.puedeCalificar = estadiaFinalizada && diasDesdeFin <= 14;
