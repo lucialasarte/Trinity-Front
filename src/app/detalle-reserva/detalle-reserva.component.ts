@@ -28,6 +28,7 @@ export class DetalleReservaComponent {
     private utilsService: UtilsService,
     private reservasService: ReservasService,
     public auth: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -46,7 +47,10 @@ export class DetalleReservaComponent {
   calificar() {}
   cancelar() {}
   subirDocumentacion() {}
-  verPropiedad(id:number){}
+  verPropiedad(id:number){
+
+    this.router.navigate(['/detalle-propiedad', id]);
+  }
 
   private _getPropiedad(id: number) {
     this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
@@ -54,6 +58,7 @@ export class DetalleReservaComponent {
       this.propiedad = data;
     });
   }
+  
   private _getReserva(id: number) {
     this.reservasService.get_reserva_id(id).subscribe((data) => {
       console.log(data);
@@ -112,4 +117,24 @@ export class DetalleReservaComponent {
         return 'badge-otros';
     }
   }
+
+  get noches(): number {
+  const checkin = this.reserva.fecha_inicio;
+  const checkout = this.reserva.fecha_fin;
+
+  if (!checkin || !checkout) return 0;
+
+  const checkinDate = new Date(checkin);
+  const checkoutDate = new Date(checkout);
+
+  // Normalizar a medianoche (00:00:00)
+  checkinDate.setHours(0, 0, 0, 0);
+  checkoutDate.setHours(0, 0, 0, 0);
+
+  const diffMs = checkoutDate.getTime() - checkinDate.getTime();
+  const diffDias = diffMs / (1000 * 60 * 60 * 24);
+
+  return diffDias > 0 ? diffDias : 0;
+}
+
 }

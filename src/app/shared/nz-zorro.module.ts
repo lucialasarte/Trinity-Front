@@ -17,6 +17,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzSpinModule } from "ng-zorro-antd/spin";
 import { NzPaginationModule } from "ng-zorro-antd/pagination";
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import {  NzCardModule } from "ng-zorro-antd/card";
 
 @NgModule({
   declarations: [],
@@ -38,7 +39,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     NzSwitchModule,
     NzSpinModule,
     NzPaginationModule,
-    NzDividerModule
+    NzDividerModule,
+    NzCardModule
   ],
   exports: [
     NzIconModule,
@@ -58,7 +60,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     NzSwitchModule,
     NzSpinModule,
     NzPaginationModule,
-    NzDividerModule
+    NzDividerModule,
+    NzCardModule
   ]
 })
 export class NzZorroModule {}

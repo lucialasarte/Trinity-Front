@@ -1,10 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Propiedad } from '../propiedades/models/propiedad';
 import { EmpleadosService } from '../empleados/services/empleados.service';
+import { HttpClient } from '@angular/common/http';
+import { ParametricasService } from '../shared/services/parametricas.service';
+import { forkJoin } from 'rxjs';
+import { ImagenesService } from '../shared/services/imagenes.service';
+import { ReservasService } from '../reservas/services/reservas.service';
+import { UtilsService } from '../shared/services/utils.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-detalle-propiedad',
@@ -12,67 +25,29 @@ import { EmpleadosService } from '../empleados/services/empleados.service';
   styleUrls: ['./detalle-propiedad.component.css'],
 })
 export class DetallePropiedadComponent implements OnInit {
-  formCodigo: FormGroup = new FormGroup({});
+  @ViewChild('inputImagen') inputImagen!: ElementRef<HTMLInputElement>;
+  formCodigo!: FormGroup;
   propiedadId!: number;
   propiedad: Propiedad = new Propiedad();
-  reservas: {
-    id: number;
-    fecha_inicio: Date;
-    fecha_fin: Date;
-    estado: 'Pendiente' | 'Confirmada' | 'Cancelada';
-  }[] = [
-    {
-      id: 1,
-      fecha_inicio: new Date('2023-10-01'),
-      fecha_fin: new Date('2023-10-05'),
-      estado: 'Confirmada',
-    },
-    {
-      id: 2,
-      fecha_inicio: new Date('2023-10-10'),
-      fecha_fin: new Date('2023-10-15'),
-      estado: 'Pendiente',
-    },
-    {
-      id: 3,
-      fecha_inicio: new Date('2023-10-20'),
-      fecha_fin: new Date('2023-10-25'),
-      estado: 'Cancelada',
-    },
-    {
-      id: 4,
-      fecha_inicio: new Date('2023-10-30'),
-      fecha_fin: new Date('2023-11-05'),
-      estado: 'Confirmada',
-    },
-    {
-      id: 5,
-      fecha_inicio: new Date('2023-11-10'),
-      fecha_fin: new Date('2023-11-15'),
-      estado: 'Pendiente',
-    },
-    {
-      id: 6,
-      fecha_inicio: new Date('2023-11-20'),
-      fecha_fin: new Date('2023-11-25'),
-      estado: 'Cancelada',
-    },
-    {
-      id: 7,
-      fecha_inicio: new Date('2023-11-30'),
-      fecha_fin: new Date('2023-12-05'),
-      estado: 'Confirmada',
-    },
-    {
-      id: 8,
-      fecha_inicio: new Date('2023-12-10'),
-      fecha_fin: new Date('2023-12-15'),
-      estado: 'Pendiente',
-    },
-  ];
+  reservas: any[] = [];
 
   imagenes: string[] = [];
+  imagenesPaginadas: string[] = [];
+  imagenesConId: { id: number; url: string }[] = [];
+
+  paginaActual = 1;
+  imagenesPorPagina = 4;
+  totalPaginas = 1;
+
   encargado: any;
+  empleados: any[] = [];
+  cargando: boolean = true;
+  apiUrl = 'http://localhost:5000/propiedades';
+  isModalVisible: boolean = false;
+  modalTitle: string = '';
+  formEmpleado!: FormGroup;
+  codigo: boolean = false;
+  usuario = computed(() => this.auth.usuarioActual());
 
   constructor(
     private route: ActivatedRoute,
@@ -80,6 +55,9 @@ export class DetallePropiedadComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private empleadoService: EmpleadosService,
+    private reservasService: ReservasService,
+    private utilsService: UtilsService,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -90,7 +68,6 @@ export class DetallePropiedadComponent implements OnInit {
         this._getPropiedad(this.propiedadId);
       }
     });
-    this._cargarImagenes();
     this.formCodigo = this.fb.group({
       codigo: [null, Validators.required],
     });
@@ -100,22 +77,65 @@ export class DetallePropiedadComponent implements OnInit {
     this.router.navigate(['/detalle-reserva', id]);
   }
 
-  editarCodigoAcceso() {}
+  handleCancel() {
+    this.isModalVisible = false;
+    this.codigo = false;
+  }
+
+  editarCodigoAcceso() {
+    this.codigo = true;
+    this.modalTitle = 'Editar código de acceso';
+    this._initFormCodigo();
+    this.isModalVisible = true;
+  }
+  editarEncargado() {
+    this._getEmpleados();
+    this.modalTitle = 'Editar código de acceso';
+    this._initFormEncargado();
+    this.isModalVisible = true;
+  }
+  onSubmitForm() {
+    if (this.codigo) {
+      const codigo = this.formCodigo.get('codigo')?.value;
+      this.propiedadesService.editarCodigo(this.propiedadId, codigo).subscribe({
+        next: () => {
+          this.utilsService.showMessage({
+            title: 'Código editado',
+            message: 'El código fue editado correctamente.',
+            icon: 'success',
+          });
+          this._getPropiedad(this.propiedadId);
+        },
+        error: (error) => {
+          console.error('Error al editar el código:', error);
+        },
+      });
+    } else {
+      // const id_encargado = this.formEmpleado.get('id_encargado')?.value;
+      // this.propiedadesService
+      //   .editarEncargado(this.propiedadId, id_encargado)
+      //   .subscribe({
+      //     next: () => {
+      //       this.utilsService.showMessage({
+      //         title: 'Encargado editado',
+      //         message: 'El encargado fue editado correctamente.',
+      //         icon: 'success',
+      //       });
+      //       this._getPropiedad(this.propiedadId);
+      //     },
+      //     error: (error) => {
+      //       console.error('Error al editar el encargado:', error);
+      //     },
+      //   });
+    }
+  }
 
   updatePropiedad(id: number) {}
 
   estadoFilterFn = (filter: string[], item: any): boolean => {
-  return filter.length === 0 || filter.includes(item.estado);
-};
+    return filter.length === 0 || filter.includes(item.estado);
+  };
 
-
-  _getPropiedad(id: number) {
-    this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-      this.propiedad = data;
-      if(this.propiedad.id_encargado){
-      this._getEmpleado(this.propiedad.id_encargado);}
-    });
-  }
   stadoCompare(a: any, b: any): number {
     const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada'];
     return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);
@@ -125,21 +145,168 @@ export class DetallePropiedadComponent implements OnInit {
     return a.fecha_inicio.getTime() - b.fecha_inicio.getTime();
   }
 
-  editarEncargado() {}
+  abrirSelectorImagen(): void {
+    this.inputImagen.nativeElement.click();
+  }
 
-  private _cargarImagenes(): void {
-    // Asumiendo que las imágenes están en 'assets/'
-    this.imagenes = [
-      `assets/propiedades/1.jpeg`,
-      `assets/propiedades/2.jpeg`,
-      `assets/propiedades/3.jpg`,
-    ];
+  onImagenSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      const id = this.propiedadId.toString();
+      this.propiedadesService.subirImagen(formData, id).subscribe({
+        next: () => {
+          this.utilsService.showMessage({
+            title: 'Imagen subida con éxito',
+            message: 'La imagen se ha subido correctamente.',
+            icon: 'success',
+          });
+          this._getPropiedad(this.propiedadId);
+        },
+        error: (error) => {
+          console.error('Error al subir la imagen:', error);
+        },
+      });
+      formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+      });
+    }
+
+    // Limpio el input para permitir volver a subir la misma imagen si se desea
+    input.value = '';
+  }
+
+  private _getPropiedad(id: number) {
+    this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
+      this.propiedad = data;
+      this._getReservas(this.propiedad.id);
+      this._cargarImagenes(this.propiedad.imagenes);
+      if (this.propiedad.id_encargado) {
+        this._getEmpleado(this.propiedad.id_encargado);
+      }
+    });
   }
 
   private _getEmpleado(id: number) {
     this.empleadoService.getEmpleados().subscribe((data: any[]) => {
-      this.encargado = data.find((empleado) => empleado.id === this.propiedad.id_encargado);
-      console.log(this.encargado);
+      this.encargado = data.find(
+        (empleado) => empleado.id === this.propiedad.id_encargado
+      );
+    });
+    console.log(this.encargado);
+  }
+
+  private _cargarImagenes(imagenObjs: { id: number }[]): void {
+    if (!imagenObjs?.length) {
+      this.imagenesConId = [];
+      this.imagenes = [];
+      this.imagenesPaginadas = [];
+      this.totalPaginas = 1;
+      return;
+    }
+
+    this.imagenesConId = imagenObjs.map((img) => ({
+      id: img.id,
+      url: `${this.apiUrl}/imagen/${img.id}`,
+    }));
+
+    this.totalPaginas = Math.ceil(
+      this.imagenesConId.length / this.imagenesPorPagina
+    );
+    this.actualizarImagenesPaginadas();
+  }
+  cambiarPagina(nuevaPagina: number) {
+    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPaginas) {
+      this.paginaActual = nuevaPagina;
+      this.actualizarImagenesPaginadas();
+    }
+  }
+
+  actualizarImagenesPaginadas() {
+    const inicio = (this.paginaActual - 1) * this.imagenesPorPagina;
+    const fin = inicio + this.imagenesPorPagina;
+    this.imagenesPaginadas = this.imagenesConId
+      .slice(inicio, fin)
+      .map((img) => img.url);
+  }
+
+  eliminarImagen(imagenUrl: string) {
+    const imagen = this.imagenesConId.find((img) => img.url === imagenUrl);
+    if (!imagen) return;
+
+    this.utilsService.showMessage({
+      title: '¿Estás seguro?',
+      message: '¿Querés eliminar esta imagen?',
+      icon: 'warning',
+      confirmButtonText: 'Si, eliminar!',
+      cancelButtonText: 'Cancelar',
+      showConfirmButton: true,
+      showCancelButton: true,
+      actionOnConfirm: () => {
+        this.propiedadesService.eliminarImagen(imagen.id).subscribe({
+          next: () => {
+            this.utilsService.showMessage({
+              title: 'Imagen eliminada',
+              message: 'La imagen fue eliminada correctamente.',
+              icon: 'success',
+            });
+
+            // Actualizamos el array
+            this.imagenesConId = this.imagenesConId.filter(
+              (img) => img.id !== imagen.id
+            );
+            this.totalPaginas = Math.ceil(
+              this.imagenesConId.length / this.imagenesPorPagina
+            );
+            if (this.paginaActual > this.totalPaginas) {
+              this.paginaActual = this.totalPaginas;
+            }
+            this.actualizarImagenesPaginadas();
+          },
+          error: (err) => {
+            console.error('Error al eliminar imagen:', err);
+            this.utilsService.showMessage({
+              title: 'Error',
+              message: 'No se pudo eliminar la imagen.',
+              icon: 'error',
+            });
+          },
+        });
+      },
+    });
+  }
+
+  private _getReservas(id: number) {
+    this.cargando = true;
+    this.reservasService.getReservasByPropiedad(id).subscribe({
+      next: (data) => {
+        this.reservas = data;
+        this.cargando = false;
+      },
+      error: (error) => {
+        ``;
+        console.error('Error al obtener reservas:', error);
+      },
+    });
+  }
+
+  private _initFormEncargado() {
+    this.formEmpleado = this.fb.group({
+      id_encargado: [this.encargado.id, Validators.required],
+    });
+  }
+  private _initFormCodigo() {
+    this.formCodigo = this.fb.group({
+      codigo: [this.propiedad.codigoAcceso, [Validators.pattern(/^\d{4}$/)]],
+    });
+  }
+  private _getEmpleados() {
+    this.empleadoService.getEmpleados().subscribe((data) => {
+      this.empleados = data;
+      console.log(this.empleados);
     });
   }
 }

@@ -19,13 +19,6 @@
         <span *ngIf="!isEnglish" class="label">Inicio</span>
       </button>
     </li>
-    <!-- <li *ngIf="!usuario()">
-      <button [routerLink]="'/iniciar-sesion'" routerLinkActive="active">
-        <span class="icon">👤</span>
-        <span *ngIf="isEnglish" class="label">Log in</span>
-        <span *ngIf="!isEnglish" class="label">Iniciar Sesión</span>
-      </button>
-    </li> -->
     <li *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades">
       <button [routerLink]="'/propiedades'" routerLinkActive="active">
         <span class="icon">🏘️</span>
@@ -40,26 +33,15 @@
         <span *ngIf="!isEnglish" class="label">Reservas</span>
       </button>
     </li>
+
+<!--     
     <li *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados">
       <button [routerLink]="'/empleados'" routerLinkActive="active">
         <span class="icon">👥 </span>
         <span *ngIf="isEnglish" class="label">Employees</span>
         <span *ngIf="!isEnglish" class="label">Empleados</span>
       </button>
-    </li>
-    <!-- <li>
-      <button [routerLink]="'/usuarios/mi-perfil'" routerLinkActive="active">
-        <span class="icon">⚙️</span>
-        <span *ngIf="isEnglish" class="label">My Profile</span>
-        <span *ngIf="!isEnglish" class="label">Mi Perfil</span>
-      </button>
     </li> -->
-    <!-- <li *ngIf="usuario()">
-      <button (click)="auth.logout()">
-        <span class="icon">🚪</span>
-        <span *ngIf="isEnglish" class="label">Log out</span>
-        <span *ngIf="!isEnglish" class="label">Cerrar sesión</span>
-      </button>
-    </li> -->
+    
   </ul>
 </nav>

@@ -50,6 +50,7 @@ export class PropiedadesComponent implements OnInit {
     let propiedad = new Propiedad(form);
     propiedad.precioNoche = Number(form.precioNoche);
     propiedad.is_habilitada = true;
+    propiedad.requiere_documentacion = false;
 
     this.propiedadesService.createPropiedad(propiedad).subscribe({
       next: () => {
@@ -192,12 +193,12 @@ export class PropiedadesComponent implements OnInit {
   deshabilitar(propiedad: Propiedad) {
     this._habilitar(propiedad);
   }
+
   onFormValidityChange(valid: boolean): void {
     this.isFormValid = valid;
   }
 
   search(){}
-
 
   private _initForm() {
     this.form = this.fb.group({
