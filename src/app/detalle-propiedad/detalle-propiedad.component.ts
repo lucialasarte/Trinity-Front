@@ -306,7 +306,7 @@ export class DetallePropiedadComponent implements OnInit {
     });
   }
   private _getEmpleados() {
-    this.empleadoService.getEmpleados().subscribe((data) => {
+    this.empleadoService.getEncargados().subscribe((data) => {
       this.empleados = data;
       console.log(this.empleados);
     });
