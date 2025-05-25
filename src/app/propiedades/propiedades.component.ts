@@ -111,6 +111,7 @@ export class PropiedadesComponent implements OnInit {
               icon: 'success',
             });
             this._getPropiedades();
+            this._getPropiedadesEliminadas();
           },
           error: (error) => {
             this.utilsService.showMessage({
@@ -124,7 +125,7 @@ export class PropiedadesComponent implements OnInit {
         });
       },
       actionOnCancel: () => {
-        this.propiedadesService.eliminar_propiedad(id).subscribe({
+        this.propiedadesService.eliminar_con_reservas(id).subscribe({
           next: (data) => {
             this.utilsService.showMessage({
               title: 'Propiedad deshabilitada',
@@ -132,6 +133,7 @@ export class PropiedadesComponent implements OnInit {
               icon: 'success',
             });
             this._getPropiedades();
+            this._getPropiedadesEliminadas();
           },
           error: (error) => {
             this.utilsService.showMessage({

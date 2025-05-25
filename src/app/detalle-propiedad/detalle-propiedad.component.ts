@@ -96,7 +96,7 @@ export class DetallePropiedadComponent implements OnInit {
   }
   onSubmitForm() {
     if (this.codigo) {
-      const codigo = this.formCodigo.get('codigo')?.value;
+      const codigo = this.formCodigo.get('codigoAcceso')?.value;
       this.propiedadesService.editarCodigo(this.propiedadId, codigo).subscribe({
         next: () => {
           this.utilsService.showMessage({
@@ -105,28 +105,30 @@ export class DetallePropiedadComponent implements OnInit {
             icon: 'success',
           });
           this._getPropiedad(this.propiedadId);
+          this.isModalVisible = false;
         },
         error: (error) => {
           console.error('Error al editar el código:', error);
         },
       });
     } else {
-      // const id_encargado = this.formEmpleado.get('id_encargado')?.value;
-      // this.propiedadesService
-      //   .editarEncargado(this.propiedadId, id_encargado)
-      //   .subscribe({
-      //     next: () => {
-      //       this.utilsService.showMessage({
-      //         title: 'Encargado editado',
-      //         message: 'El encargado fue editado correctamente.',
-      //         icon: 'success',
-      //       });
-      //       this._getPropiedad(this.propiedadId);
-      //     },
-      //     error: (error) => {
-      //       console.error('Error al editar el encargado:', error);
-      //     },
-      //   });
+      const id_encargado = this.formEmpleado.get('id_encargado')?.value;
+      this.propiedadesService
+        .asignarEncargado(this.propiedadId, id_encargado)
+        .subscribe({
+          next: () => {
+            this.utilsService.showMessage({
+              title: 'Encargado editado',
+              message: 'El encargado fue editado correctamente.',
+              icon: 'success',
+            });
+            this._getPropiedad(this.propiedadId);
+          },
+          error: (error) => {
+            console.error('Error al editar el encargado:', error);
+          },
+        });
+        this.isModalVisible = false;
     }
   }
 
@@ -300,7 +302,7 @@ export class DetallePropiedadComponent implements OnInit {
   }
   private _initFormCodigo() {
     this.formCodigo = this.fb.group({
-      codigo: [this.propiedad.codigoAcceso, [Validators.pattern(/^\d{4}$/)]],
+      codigoAcceso: [this.propiedad.codigoAcceso, [Validators.pattern(/^\d{4}$/)]],
     });
   }
   private _getEmpleados() {
