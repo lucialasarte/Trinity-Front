@@ -8,6 +8,7 @@
       <h3 class="card-title">
         Información de la Propiedad
         <button
+          *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
           class="btn btn-secondary"
           (click)="updatePropiedad(propiedad.id)"
           style="float: right"
@@ -81,8 +82,8 @@
           <p>
             Política de Reserva: <strong>{{ propiedad.pol_reserva }}</strong>
           </p>
-          <p>
-            Encargado: <strong>{{ encargado.nombre }}</strong>
+          <p *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados">
+            Encargado: <strong>{{ encargado?.nombre }}</strong>
             <button class="editCod" (click)="editarEncargado()">
               <i class="fa fa-pencil" style="margin: 0px"></i>
             </button>
@@ -91,100 +92,203 @@
       </div>
     </div>
 
-    <div class="card" >
+    <div class="card">
       <h3 class="card-title" style="padding-bottom: 26px">
         Reservas de la Propiedad
       </h3>
       <div class="table-container">
-        <nz-table
-          #reservaTable
-          [nzData]="reservas"
-          [nzPageSize]="5"
-          [nzFrontPagination]="true"
-          [nzSize]="'small'"
-        >
-          <thead>
-            <tr>
-              <th
-                nzShowSort
-                nzColumnKey="estado"
-                [nzSortFn]="stadoCompare"
-                [nzFilters]="[
-                  { text: 'Confirmada', value: 'Confirmada' },
-                  { text: 'Pendiente', value: 'Pendiente' },
-                  { text: 'Cancelada', value: 'Cancelada' }
-                ]"
-                [nzFilterFn]="estadoFilterFn"
-              >
-                Estado
-              </th>
-              <th
-                nzShowSort
-                nzColumnKey="fecha_inicio"
-                [nzSortFn]="fechaCompare"
-              >
-                Fecha de Inicio
-              </th>
-              <th nzShowSort nzColumnKey="fecha_fin" [nzSortFn]="fechaCompare">
-                Fecha de Fin
-              </th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let reserva of reservaTable.data">
-              <td>
-                <span
-                  [ngClass]="{
-                    'badge-confirmada': reserva.estado === 'Confirmada',
-                    'badge-pendiente': reserva.estado === 'Pendiente',
-                    'badge-cancelada': reserva.estado === 'Cancelada'
-                  }"
+        <nz-spin [nzSpinning]="cargando">
+          <nz-table
+            #reservaTable
+            [nzData]="reservas"
+            [nzPageSize]="5"
+            [nzFrontPagination]="true"
+            [nzSize]="'small'"
+          >
+            <thead>
+              <tr>
+                <th
+                  nzShowSort
+                  nzColumnKey="estado"
+                  [nzSortFn]="stadoCompare"
+                  [nzFilters]="[
+                    { text: 'Confirmada', value: 'Confirmada' },
+                    { text: 'Pendiente', value: 'Pendiente' },
+                    { text: 'Cancelada', value: 'Cancelada' },
+                    { text: 'Finalizada', value: 'Finalizada' }
+                  ]"
+                  [nzFilterFn]="estadoFilterFn"
                 >
-                  {{ reserva.estado }}
-                </span>
-              </td>
-              <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
-              <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
-              <td>
-                <button
-                  (click)="verReserva(reserva.id)"
-                  class="btn btn-primary btn-sm"
+                  Estado
+                </th>
+                <th
+                  nzShowSort
+                  nzColumnKey="fecha_inicio"
+                  [nzSortFn]="fechaCompare"
                 >
-                  <i class="fa fa-eye"></i> Ver reserva
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
-
-        <div
-          *ngIf="!reservas || reservas.length === 0"
-          class="mensaje-sin-reservas"
-        >
-          No hay reservas.
-        </div>
+                  Fecha de Inicio
+                </th>
+                <th
+                  nzShowSort
+                  nzColumnKey="fecha_fin"
+                  [nzSortFn]="fechaCompare"
+                >
+                  Fecha de Fin
+                </th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reserva of reservaTable.data">
+                <td>
+                  <span
+                    [ngClass]="{
+                      'badge-confirmada': reserva.estado === 'Confirmada',
+                      'badge-pendiente': reserva.estado === 'Pendiente',
+                      'badge-cancelada': reserva.estado === 'Cancelada',
+                      'badge-otros': reserva.estado === 'Finalizada'
+                    }"
+                  >
+                    {{ reserva.estado }}
+                  </span>
+                </td>
+                <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+                <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
+                <td>
+                  <button
+                    (click)="verReserva(reserva.id)"
+                    class="btn btn-primary btn-sm"
+                  >
+                    <i class="fa fa-eye"></i> Ver reserva
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <div
+            *ngIf="!reservas || reservas.length === 0"
+            class="mensaje-sin-reservas"
+          >
+            No hay reservas.
+          </div>
+        </nz-spin>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card-imagenes">
       <span>
-        <button class="btn"><i class="fa fa-plus"></i> Cargar Imagen</button>
+        <button (click)="abrirSelectorImagen()" class="btn">
+          <i class="fa fa-plus"></i> Cargar Imagen
+        </button>
+        <input
+          type="file"
+          #inputImagen
+          accept="image/*"
+          style="display: none"
+          (change)="onImagenSeleccionada($event)"
+        />
       </span>
-      <nz-carousel *ngIf="imagenes.length" class="carousel-limited">
-        <div nz-carousel-content *ngFor="let imagen of imagenes">
-          <div class="imagen-contenedor">
-            <button class="boton-cerrar">
-              <i class="fa fa-close"></i>
-            </button>
-            <img
-              [src]="imagen"
-              alt="Imagen de la propiedad"
-              class="imagen-propiedad"
-            />
-          </div>
+
+      <div *ngIf="imagenesConId.length" class="imagenes-grid">
+        <div class="imagen-wrapper" *ngFor="let imagen of imagenesPaginadas">
+          <button class="boton-cerrar" (click)="eliminarImagen(imagen)">
+            <i class="fa fa-close"></i>
+          </button>
+          <img
+            [src]="imagen"
+            alt="Imagen de la propiedad"
+            class="imagen-propiedad"
+          />
         </div>
-      </nz-carousel>
+      </div>
+
+      <div class="paginacion" *ngIf="totalPaginas > 1">
+        <button
+          (click)="cambiarPagina(paginaActual - 1)"
+          [disabled]="paginaActual === 1"
+        >
+          Anterior
+        </button>
+        <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+        <button
+          (click)="cambiarPagina(paginaActual + 1)"
+          [disabled]="paginaActual === totalPaginas"
+        >
+          Siguiente
+        </button>
+      </div>
     </div>
   </div>
 </ng-container>
+
+
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  [nzTitle]="modalTitle"
+  [nzWidth]="800"
+  (nzOnCancel)="handleCancel()"
+>
+  <div *nzModalContent>
+    <!-- Empleado -->
+      <div class="row" *ngIf="!codigo">
+          <form nz-form [formGroup]="formEmpleado" nzLayout="vertical">
+        <div class="col-md-6">
+          <nz-form-item>
+            <nz-form-label nzFor="id_encargado">Encargado</nz-form-label>
+
+            <nz-select
+              nzPlaceHolder="Seleccionar Encargado"
+              formControlName="id_encargado"
+              nzShowSearch
+            >
+              <nz-option
+                *ngFor="let empleado of empleados"
+                [nzValue]="empleado.id"
+                [nzLabel]="empleado.nombre + ': ' + empleado.correo"
+                
+              ></nz-option>
+            </nz-select>
+          </nz-form-item>
+        
+        </div>
+        </form>
+      </div>
+
+      <div class="row" *ngIf="codigo">
+        <form nz-form [formGroup]="formCodigo" nzLayout="vertical">
+        
+        <div class="col-md-3">
+          <nz-form-item>
+            <nz-form-label nzFor="codigoAcceso">Código de Acceso</nz-form-label>
+            <nz-form-control [nzErrorTip]="codigoAccesoErrorTpl">
+              <input
+                nz-input
+                type="text"
+                formControlName="codigoAcceso"
+                maxlength="4"
+              />
+              <ng-template #codigoAccesoErrorTpl let-control>
+                <span *ngIf="control.hasError('pattern')"
+                  >El código de acceso debe ser exactamente 4 dígitos.</span
+                >
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        </form>
+      </div>
+  </div>
+
+  <div *nzModalFooter>
+    <button class="btn-cancel" nz-button (click)="handleCancel()">
+      Cancelar  
+    </button>
+    <button
+      [disabled]="codigo ? !formCodigo.valid : !formEmpleado.valid"
+      class="btn-aceptar"
+      nz-button
+      (click)="onSubmitForm()"
+    > Aceptar
+    </button>
+  </div>
+</nz-modal>

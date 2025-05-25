@@ -38,4 +38,6 @@ export class ParametricasService {
   get_ciudades_con_propiedades(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/ciudadesConPropiedades`);
   }
+  
+
 }

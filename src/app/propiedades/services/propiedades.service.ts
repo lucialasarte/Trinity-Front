@@ -34,13 +34,48 @@ export class PropiedadesService {
     return this.http.patch<any[]>(`${this.apiUrl}/cambiarEstado/${id}`, {});
   }
 
-  eliminar_propiedad(id: number) {
-    return this.http.patch<any[]>(`${this.apiUrl}/eliminar/${id}`, {});
+  eliminar_propiedad(prop_id: number) {
+    return this.http.patch<any[]>(`${this.apiUrl}/eliminar/${prop_id}`, {});
+  }
+  eliminar_con_reservas(prop_id: number) {
+    return this.http.patch<any[]>(`${this.apiUrl}/eliminarConReservas/${prop_id}`, {});
   }
 
   search(params: any): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/search`, {
       params,
     });
+  }
+
+  getImagenPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/imagen/${id}`);
+  }
+
+  subirImagen(formData: FormData, idPropiedad: string): Observable<string> {
+    return this.http.post<string>(
+      `${this.apiUrl}/imagen?id_propiedad=${idPropiedad}`,
+      formData
+    );
+  }
+
+  eliminarImagen(id: number) {
+    return this.http.delete(`${this.apiUrl}/deleteImagen?id_imagen=${id}`);
+  }
+  
+
+  editarCodigo(id: number, codigoAcceso: string) {
+    return this.http.patch<any>(`${this.apiUrl}/editarCodigo`, {
+      id,
+      codigoAcceso,
+    });
+  }
+  asignarEncargado(
+    id_propiedad: number,
+    id_encargado: number
+  ): Observable<any> {
+    return this.http.patch<any>(
+      `${this.apiUrl}/setEncargado?id_propiedad=${id_propiedad}&id_encargado=${id_encargado}`,
+      {}
+    );
   }
 }

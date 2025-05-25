@@ -1,6 +1,6 @@
 <ng-container>
   <div class="row" style="padding-top: 20px">
-    <div class="content-form">
+    <!-- <div class="content-form">
       <h2 class="titulo-form">Buscar Propiedad</h2>
       <div class="d-flex align-items-center">
         <form
@@ -20,16 +20,7 @@
           <i class="fa fa-search"></i> Buscar
         </button>
       </div>
-    </div>
-    <div
-      class="col-md-2"
-      style="padding-left: 20px"
-      *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
-    >
-      <button (click)="showModal()" class="btn btn-primary">
-        <i class="fa fa-plus"></i> Agregar Propiedad
-      </button>
-    </div>
+    </div> -->
   </div>
 
   <div class="row" style="padding-top: 20px">
@@ -110,6 +101,15 @@
       >
         No hay propiedades.
       </div>
+    </div>
+    <div
+      class="col-md-2"
+      style="padding-left: 20px"
+      *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
+    >
+      <button (click)="showModal()" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Agregar Propiedad
+      </button>
     </div>
   </div>
 

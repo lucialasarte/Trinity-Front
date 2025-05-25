@@ -1,6 +1,7 @@
 <ng-container>
   <div class="row" style="padding-top: 20px">
-    <div class="content-form">
+
+    <!-- <div class="content-form">
       <h2 class="titulo-form">Buscar Reserva</h2>
       <div class="d-flex align-items-center">
         <form
@@ -20,7 +21,7 @@
           <i class="fa fa-search"></i> Buscar
         </button>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div class="row" style="padding-top: 20px">
@@ -29,61 +30,79 @@
     </div>
     <div class="table-container">
       <nz-spin [nzSpinning]="cargando">
-      <nz-table
-        #reservaTable
-        [nzData]="reservas"
-        [nzPageSize]="5"
-        [nzFrontPagination]="true"
-        [nzSize]="'small'"
-      >
-        <thead>
-          <tr style="background-color: antiquewhite">
-            <th nzShowSort nzColumnKey="estado" [nzSortFn]="stadoCompare">
-              Estado
-            </th>
-            <th nzShowSort nzColumnKey="fecha_inicio" [nzSortFn]="fechaCompare">
-              Fecha de Inicio
-            </th>
-            <th nzShowSort nzColumnKey="fecha_fin" [nzSortFn]="fechaCompare">
-              Fecha de Fin
-            </th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let reserva of reservaTable.data">
-            <td>
-              <span
-                [ngClass]="{
-                  'badge-confirmada': reserva.estado === 'Confirmada',
-                  'badge-pendiente': reserva.estado === 'Pendiente',
-                  'badge-cancelada': reserva.estado === 'Cancelada',
-                   'badge-finalizada': reserva.estado === 'Finalizada'
-                }"
+        <nz-table
+          #reservaTable
+          [nzData]="reservas"
+          [nzPageSize]="5"
+          [nzFrontPagination]="true"
+          [nzSize]="'small'"
+        >
+          <thead>
+            <tr style="background-color: antiquewhite">
+              <th
+                nzShowSort
+                nzColumnKey="estado"
+                [nzFilters]="[
+                  { text: 'Confirmada', value: 'Confirmada' },
+                  { text: 'Pendiente', value: 'Pendiente' },
+                  { text: 'Cancelada', value: 'Cancelada' },
+                  { text: 'Finalizada', value: 'Finalizada' }
+                ]"
+                [nzFilterFn]="estadoFilterFn"
+                [nzSortFn]="stadoCompare"
               >
-                {{ reserva.estado }}
-              </span>
-            </td>
-            <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
-            <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
-            <td>
-              <button
-                (click)="verReserva(reserva.id)"
-                class="btn btn-primary btn-sm"
+                Estado
+              </th>
+              <th
+                nzShowSort
+                nzColumnKey="fecha_inicio"
+                [nzSortFn]="fechaCompare"
               >
-                <i class="fa fa-eye"></i> Ver reserva
-              </button>
-              <button
-                *ngIf="reserva.estado === 'Pendiente' || reserva.estado === 'Confirmada'"
-                (click)="eliminar(reserva.id)"
-                class="btn btn-danger btn-sm"
-              >
-                <i class="fa fa-trash"></i> Cancelar reserva
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+                Fecha de Inicio
+              </th>
+              <th nzShowSort nzColumnKey="fecha_fin" [nzSortFn]="fechaCompare">
+                Fecha de Fin
+              </th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reserva of reservaTable.data">
+              <td>
+                <span
+                  [ngClass]="{
+                    'badge-confirmada': reserva.estado === 'Confirmada',
+                    'badge-pendiente': reserva.estado === 'Pendiente',
+                    'badge-cancelada': reserva.estado === 'Cancelada',
+                    'badge-finalizada': reserva.estado === 'Finalizada'
+                  }"
+                >
+                  {{ reserva.estado }}
+                </span>
+              </td>
+              <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+              <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
+              <td style="text-align: left;">
+                <button
+                  (click)="verReserva(reserva.id)"
+                  class="btn btn-primary btn-sm"
+                >
+                  <i class="fa fa-eye"></i> Ver reserva
+                </button>
+                <button
+                  *ngIf="
+                    reserva.estado === 'Pendiente' ||
+                    reserva.estado === 'Confirmada'
+                  "
+                  (click)="eliminar(reserva.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <i class="fa fa-trash"></i> Cancelar reserva
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
       </nz-spin>
 
       <div

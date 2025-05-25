@@ -57,7 +57,7 @@ export class FormPropiedadesComponent {
       ambientes: [null, [Validators.required, Validators.min(0)]],
       huespedes: [null, [Validators.required, Validators.min(0)]],
       cocheras: [null, [Validators.required, Validators.min(0)]],
-      requiere_documentacion: [false],
+      // requiere_documentacion: [false],
       id_encargado: [null],
     });
 

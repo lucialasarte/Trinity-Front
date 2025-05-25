@@ -23,4 +23,8 @@ export class ReservasService {
   get_reservas() {
     return this.http.get<Reserva[]>(`${this.apiUrl}/`);
   }
+
+  getReservasByPropiedad(id: number) {
+    return this.http.get<Reserva[]>(`${this.apiUrl}/propiedad/${id}`);
+  }
 }

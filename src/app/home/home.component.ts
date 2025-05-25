@@ -161,19 +161,24 @@ export class HomeComponent {
   }
 
   get noches(): number {
-    const checkin = this.form.get('checkin')?.value;
-    const checkout = this.form.get('checkout')?.value;
+  const checkin = this.form.get('checkin')?.value;
+  const checkout = this.form.get('checkout')?.value;
 
-    if (!checkin || !checkout) return 0;
+  if (!checkin || !checkout) return 0;
 
-    const checkinDate = new Date(checkin);
-    const checkoutDate = new Date(checkout);
+  const checkinDate = new Date(checkin);
+  const checkoutDate = new Date(checkout);
 
-    const diffMs = checkoutDate.getTime() - checkinDate.getTime();
-    const diffDias = diffMs / (1000 * 60 * 60 * 24);
+  // Normalizar a medianoche (00:00:00)
+  checkinDate.setHours(0, 0, 0, 0);
+  checkoutDate.setHours(0, 0, 0, 0);
 
-    return diffDias > 0 ? diffDias : 0;
-  }
+  const diffMs = checkoutDate.getTime() - checkinDate.getTime();
+  const diffDias = diffMs / (1000 * 60 * 60 * 24);
+
+  return diffDias > 0 ? diffDias : 0;
+}
+
 
   get precioTotal(): number {
     if (!this.porpiedadParaReservar?.precioNoche) return 0;
