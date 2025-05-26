@@ -79,13 +79,13 @@
       </div>
     </div>
 
-    <div class="card acciones-card" >
+    <div class="card acciones-card">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <button
           class="btn-sm"
-          (click)="cancelar()"
-          *ngIf="estado !== 'Finalizada'"
+          (click)="cancelar(this.reserva.id)"
+          *ngIf="estado !== 'Finalizada' && estado !== 'Cancelada'"
         >
           Cancelar
         </button>
