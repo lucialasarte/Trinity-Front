@@ -148,6 +148,15 @@ button {
   font-size: 12px;
 }
 
+.badge-eliminada {
+  background-color: #f5222d;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+
 .titulo-general {
   font-size: 28px;
   font-weight: bold;

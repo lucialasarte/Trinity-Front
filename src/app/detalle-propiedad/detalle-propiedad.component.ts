@@ -128,7 +128,7 @@ export class DetallePropiedadComponent implements OnInit {
             console.error('Error al editar el encargado:', error);
           },
         });
-        this.isModalVisible = false;
+      this.isModalVisible = false;
     }
   }
 
@@ -302,7 +302,10 @@ export class DetallePropiedadComponent implements OnInit {
   }
   private _initFormCodigo() {
     this.formCodigo = this.fb.group({
-      codigoAcceso: [this.propiedad.codigoAcceso, [Validators.pattern(/^\d{4}$/)]],
+      codigoAcceso: [
+        this.propiedad.codigoAcceso,
+        [Validators.pattern(/^\d{4}$/)],
+      ],
     });
   }
   private _getEmpleados() {

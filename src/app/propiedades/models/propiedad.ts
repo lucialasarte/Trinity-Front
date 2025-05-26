@@ -25,6 +25,7 @@ export class Propiedad {
   requiere_documentacion: boolean;
   id_encargado: number;
   imagenes: Array<any>;
+  delete_at: Date | null;
 
   constructor(obj?: any) {
     this.id = obj && obj.id || null;
@@ -53,6 +54,7 @@ export class Propiedad {
     this.id_encargado = obj && obj.id_encargado || null;
     this.pol_reserva = obj && obj.pol_reserva || null;
     this.imagenes = obj && obj.imagenes || [];
+    this.delete_at = obj && obj.delete_at || null;
   }	
 
 }
