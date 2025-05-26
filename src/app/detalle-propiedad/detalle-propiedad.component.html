@@ -243,7 +243,7 @@
       <form nz-form [formGroup]="formEmpleado" nzLayout="vertical">
         <div class="col-md-6">
           <nz-form-item>
-            <nz-form-label nzFor="id_encargado">Encargado</nz-form-label>
+            <nz-form-label nzRequired nzFor="id_encargado">Encargado</nz-form-label>
 
             <nz-select
               nzPlaceHolder="Seleccionar Encargado"
@@ -265,7 +265,7 @@
       <form nz-form [formGroup]="formCodigo" nzLayout="vertical">
         <div class="col-md-3">
           <nz-form-item>
-            <nz-form-label nzFor="codigoAcceso">Código de Acceso</nz-form-label>
+            <nz-form-label nzRequired nzFor="codigoAcceso">Código de Acceso</nz-form-label>
             <nz-form-control [nzErrorTip]="codigoAccesoErrorTpl">
               <input
                 nz-input

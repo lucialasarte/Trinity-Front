@@ -304,7 +304,13 @@ export class DetallePropiedadComponent implements OnInit {
     this.formCodigo = this.fb.group({
       codigoAcceso: [
         this.propiedad.codigoAcceso,
-        [Validators.pattern(/^\d{4}$/)],
+        [
+          Validators.required,
+          Validators.pattern(/^\d{4}$/),
+          // opcionales pero explícitos:
+          Validators.minLength(4),
+          Validators.maxLength(4),
+        ],
       ],
     });
   }
