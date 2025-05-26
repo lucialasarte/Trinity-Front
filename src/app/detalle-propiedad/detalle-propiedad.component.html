@@ -87,7 +87,7 @@
             Entre Calles: <strong>{{ propiedad.entre_calles }}</strong>
           </p>
           <p>
-            Precio por Noche: <strong>U$D{{ propiedad.precioNoche }}</strong>
+            Precio por Noche: <strong>U$D{{ propiedad.precioNoche | number:'1.2-2'}}</strong>
           </p>
           <p>
             Política de Reserva: <strong>{{ propiedad.pol_reserva }}</strong>

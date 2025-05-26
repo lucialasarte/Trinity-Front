@@ -27,8 +27,8 @@
             <span>{{ this.noches }}</span>
           </div>
           <div class="reserva-item">
-            <label>Precio Estadia:</label>
-            <span>{{ reserva.monto_total | currency : "USD" }}</span>
+            <label>Precio Estadia: </label>
+            <span>U$D{{ reserva.monto_total | number:'1.2-2' }}</span>
           </div>
         </div>
       </div>

@@ -1,7 +1,6 @@
-
 <div class="modal-contenido">
   <img
-    [src]=" 'assets/propiedades/1.jpeg'"
+    [src]="propiedad.fotoPerfil"
     alt="imagen propiedad"
     class="imagen-propiedad"
   />
@@ -10,24 +9,40 @@
   <p>{{ propiedad.descripcion }}</p>
 
   <div class="grid-detalles">
-    <p><strong>Precio por noche:</strong> {{ propiedad.precioNoche | currency: 'USD' }}</p>
+    <p>
+      <strong>Precio por noche:</strong>U$D
+      {{ propiedad.precioNoche | number:'1.2-2'}}
+    </p>
     <p><strong>Ambientes:</strong> {{ propiedad.ambientes }}</p>
     <p><strong>Baños:</strong> {{ propiedad.banios }}</p>
     <p><strong>Cocheras:</strong> {{ propiedad.cocheras }}</p>
     <p><strong>Piso:</strong> {{ propiedad.piso }}</p>
     <p><strong>Tipo:</strong> {{ propiedad.tipo }}</p>
-    <p><strong>Dirección:</strong> Calle {{ propiedad.calle }} entre {{ propiedad.entre_calles }}</p>
-    <p><strong>Provincia:</strong> {{ propiedad.provincia }} - {{ propiedad.ciudad }}</p>
+    <p>
+      <strong>Dirección:</strong> Calle {{ propiedad.calle }} entre
+      {{ propiedad.entre_calles }}
+    </p>
+    <p>
+      <strong>Provincia:</strong> {{ propiedad.provincia }} -
+      {{ propiedad.ciudad }}
+    </p>
+  </div>
+  <div class="politica-cancelacion">
+    <p>
+      Una vez realizada la reserva, no se realizan reintegros en caso de
+      cancelación por parte del usuario, sin excepción. Solo se efectuarán
+      reembolsos si la cancelación es realizada por la empresa. Recomendamos
+      revisar cuidadosamente toda la información antes de confirmar la
+      operación.
+    </p>
   </div>
 
   <nz-divider></nz-divider>
 
   <div class="datos-reserva">
-    <p><strong>Check-in:</strong> {{ checkin | date: 'dd/MM/yyyy' }}</p>
-    <p><strong>Check-out:</strong> {{ checkout | date: 'dd/MM/yyyy' }}</p>
+    <p><strong>Check-in:</strong> {{ checkin | date : "dd/MM/yyyy" }}</p>
+    <p><strong>Check-out:</strong> {{ checkout | date : "dd/MM/yyyy" }}</p>
     <p><strong>Huéspedes:</strong> {{ huespedes }}</p>
-    <p ><strong>Total estadía:</strong> {{ precioTotal | currency: 'USD' }}</p>
+    <p><strong>Total estadía:</strong> U$D{{ precioTotal | number:'1.2-2' }}</p>
   </div>
-
-
 </div>
