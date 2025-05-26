@@ -38,7 +38,10 @@ export class PropiedadesService {
     return this.http.patch<any[]>(`${this.apiUrl}/eliminar/${prop_id}`, {});
   }
   eliminar_con_reservas(prop_id: number) {
-    return this.http.patch<any[]>(`${this.apiUrl}/eliminarConReservas/${prop_id}`, {});
+    return this.http.patch<any[]>(
+      `${this.apiUrl}/eliminarConReservas/${prop_id}`,
+      {}
+    );
   }
 
   search(params: any): Observable<any[]> {
@@ -61,7 +64,6 @@ export class PropiedadesService {
   eliminarImagen(id: number) {
     return this.http.delete(`${this.apiUrl}/deleteImagen?id_imagen=${id}`);
   }
-  
 
   editarCodigo(id: number, codigoAcceso: string) {
     return this.http.patch<any>(`${this.apiUrl}/editarCodigo`, {
@@ -77,5 +79,8 @@ export class PropiedadesService {
       `${this.apiUrl}/setEncargado?id_propiedad=${id_propiedad}&id_encargado=${id_encargado}`,
       {}
     );
+  }
+  imagenPerfil(id_propiedad: number) {
+    return this.http.get<any>(`${this.apiUrl}/imagenPerfil/${id_propiedad}`);
   }
 }

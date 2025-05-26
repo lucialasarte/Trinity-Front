@@ -102,7 +102,7 @@ export class PropiedadesComponent implements OnInit {
       confirmButtonText: 'Cancelar Reservas',
       cancelButtonColor: '#d33',
       actionOnConfirm: () => {
-        this.propiedadesService.eliminar_propiedad(id).subscribe({
+        this.propiedadesService.eliminar_con_reservas(id).subscribe({
           next: (data) => {
             this.utilsService.showMessage({
               title: 'Reservas canceladas',
@@ -125,7 +125,7 @@ export class PropiedadesComponent implements OnInit {
         });
       },
       actionOnCancel: () => {
-        this.propiedadesService.eliminar_con_reservas(id).subscribe({
+        this.propiedadesService.eliminar_propiedad(id).subscribe({
           next: (data) => {
             this.utilsService.showMessage({
               title: 'Propiedad deshabilitada',

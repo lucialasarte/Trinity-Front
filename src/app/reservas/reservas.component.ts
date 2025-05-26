@@ -11,6 +11,7 @@ import {
 import { ReservasService } from './services/reservas.service';
 import { Reserva } from './models/reserva';
 import { Router } from '@angular/router';
+import { UtilsService } from '../shared/services/utils.service';
 
 @Component({
   selector: 'app-reservas',
@@ -27,10 +28,12 @@ export class ReservasComponent {
   cargando: boolean = true;
   calificacion: any = [];
 
+
   constructor(
     private fb: FormBuilder,
     private reservasService: ReservasService,
-    private router: Router
+    private router: Router,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +49,40 @@ export class ReservasComponent {
     this.router.navigate(['/detalle-reserva', id]);
   }
 
-  eliminar(id: number) {}
+  eliminar(id: number) {
+    if(id){
+    this.utilsService.showMessage({
+      title: '¿Estás seguro?',
+      message: '¿Querés cancelar esta reserva?',
+      icon: 'warning',
+      confirmButtonText: 'Si, cancelar!',
+      cancelButtonText: 'Cancelar',
+      showConfirmButton: true,
+      showCancelButton: true,
+      actionOnConfirm: () => {
+        this.reservasService.cancelarReserva(id).subscribe({
+          next: () => {
+            this.utilsService.showMessage({
+              title: 'Reserva cancelada',
+              message: 'La reserva fue cancelada correctamente.',
+              icon: 'success',
+            });
+
+            this._getReservas();
+          },
+          error: (err) => {
+            console.error('Error al cancelar la reserva:', err);
+            this.utilsService.showMessage({
+              title: 'Error',
+              message: 'No se pudo cancelar la reserva.',
+              icon: 'error',
+            });
+          },
+        });
+      },
+    });
+    }
+  }
   stadoCompare(a: any, b: any): number {
     const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada', 'Finalizada'];
     return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);

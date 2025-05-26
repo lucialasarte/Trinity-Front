@@ -27,4 +27,8 @@ export class ReservasService {
   getReservasByPropiedad(id: number) {
     return this.http.get<Reserva[]>(`${this.apiUrl}/propiedad/${id}`);
   }
+
+  cancelarReserva(id: number) {
+    return this.http.patch<any>(`${this.apiUrl}/cancelar/${id}`, {});
+  }
 }

@@ -128,7 +128,7 @@ export class DetallePropiedadComponent implements OnInit {
             console.error('Error al editar el encargado:', error);
           },
         });
-        this.isModalVisible = false;
+      this.isModalVisible = false;
     }
   }
 
@@ -302,11 +302,20 @@ export class DetallePropiedadComponent implements OnInit {
   }
   private _initFormCodigo() {
     this.formCodigo = this.fb.group({
-      codigoAcceso: [this.propiedad.codigoAcceso, [Validators.pattern(/^\d{4}$/)]],
+      codigoAcceso: [
+        this.propiedad.codigoAcceso,
+        [
+          Validators.required,
+          Validators.pattern(/^\d{4}$/),
+          // opcionales pero explícitos:
+          Validators.minLength(4),
+          Validators.maxLength(4),
+        ],
+      ],
     });
   }
   private _getEmpleados() {
-    this.empleadoService.getEmpleados().subscribe((data) => {
+    this.empleadoService.getEncargados().subscribe((data) => {
       this.empleados = data;
       console.log(this.empleados);
     });

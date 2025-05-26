@@ -79,8 +79,11 @@
       <nz-card [nzTitle]="propiedad.nombre" [nzCover]="coverTemplate">
         <ng-template #coverTemplate>
           <img
+           *ngIf="propiedad.fotoPerfil"
             alt="imagen propiedad"
-            [src]="propiedad.imagenUrl || 'assets/propiedades/1.jpeg'"
+            [src]="propiedad.fotoPerfil || 'assets/propiedades/1.jpeg'"
+            width="120"
+            class="imagen-propiedad"
           />
         </ng-template>
         <p class="descripcion-recortada" [title]="propiedad.descripcion">
@@ -88,10 +91,10 @@
         </p>
 
         <div class="grid-detalles">
-          <p>
-            <strong>Precio: </strong
-            >{{ propiedad.precioNoche | currency : "USD" }}
-          </p>
+          <div>
+            <strong>Precio por noche: </strong
+            >U$D{{ propiedad.precioNoche  | number:'1.2-2'}}
+            </div>
           <div><strong>Ambientes:</strong> {{ propiedad.ambientes }}</div>
           <div><strong>Huéspedes:</strong> {{ propiedad.huespedes }}</div>
           <div><strong>Baños:</strong> {{ propiedad.banios }}</div>

@@ -42,7 +42,7 @@
               <th>Tipo Propiedad</th>
               <th>Localidad</th>
               <th>Ciudad</th>
-              <th>Precio por Noche (USD)</th>
+              <th>Precio por Noche </th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -53,7 +53,7 @@
               <td>{{ propiedad.tipo }}</td>
               <td>{{ propiedad.ciudad }}</td>
               <td>{{ propiedad.ciudad }}</td>
-              <td>{{ propiedad.precioNoche | currency : "USD" : "symbol" }}</td>
+              <td>U$D {{ propiedad.precioNoche | number:'1.2-2' }}</td>
               <td>
                 <span
                   [ngClass]="{
@@ -135,7 +135,7 @@
             <th>Tipo Propiedad</th>
             <th>Localidad</th>
             <th>Ciudad</th>
-            <th>Precio por Noche (USD)</th>
+            <th>Precio por Noche </th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -145,7 +145,7 @@
             <td>{{ propiedad.tipo }}</td>
             <td>{{ propiedad.ciudad }}</td>
             <td>{{ propiedad.ciudad }}</td>
-            <td>{{ propiedad.precioNoche | currency : "USD" : "symbol" }}</td>
+            <td>U$D {{ propiedad.precioNoche  | number:'1.2-2'}}</td>
 
             <td>
               <button

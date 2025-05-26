@@ -111,3 +111,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+.imagen-propiedad {
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  /* border-radius: 10px; */
+}

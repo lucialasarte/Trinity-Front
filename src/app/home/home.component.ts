@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { UtilsService } from '../shared/services/utils.service';
@@ -8,6 +8,8 @@ import { Propiedad } from '../propiedades/models/propiedad';
 
 import { ReservasService } from '../reservas/services/reservas.service';
 import { Router } from '@angular/router';
+import { forkJoin, map } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +26,8 @@ export class HomeComponent {
   propiedadesPaginadas: any[] = [];
   isVisible = false;
   porpiedadParaReservar: Propiedad = new Propiedad();
+  apiUrl = 'http://localhost:5000/propiedades';
+  usuario = computed(() => this.auth.usuarioActual);
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +35,8 @@ export class HomeComponent {
     private utilsService: UtilsService,
     private reservasService: ReservasService,
     private router: Router,
-    private parametricasService: ParametricasService
+    private parametricasService: ParametricasService,
+    public auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +71,9 @@ export class HomeComponent {
           return;
         }
         this.propiedades = data;
+        this.propiedades.forEach((propiedad) => {
+          propiedad.fotoPerfil = this.apiUrl + '/imagenPerfil/' + propiedad.id;
+        });
         this.paginaActual = 1;
         this.actualizarPagina();
       },
@@ -81,8 +89,10 @@ export class HomeComponent {
   }
 
   verPropiedad(propiedad: Propiedad) {
-    this.isVisible = true;
-    this.porpiedadParaReservar = propiedad;
+    if (!this.auth.usuarioActual()?.permisos?.gestionar_propiedades) {
+      this.isVisible = true;
+      this.porpiedadParaReservar = propiedad;
+    }
   }
   onSubmitReserva() {
     this.porpiedadParaReservar.requiere_documentacion;
@@ -161,24 +171,23 @@ export class HomeComponent {
   }
 
   get noches(): number {
-  const checkin = this.form.get('checkin')?.value;
-  const checkout = this.form.get('checkout')?.value;
+    const checkin = this.form.get('checkin')?.value;
+    const checkout = this.form.get('checkout')?.value;
 
-  if (!checkin || !checkout) return 0;
+    if (!checkin || !checkout) return 0;
 
-  const checkinDate = new Date(checkin);
-  const checkoutDate = new Date(checkout);
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
 
-  // Normalizar a medianoche (00:00:00)
-  checkinDate.setHours(0, 0, 0, 0);
-  checkoutDate.setHours(0, 0, 0, 0);
+    // Normalizar a medianoche (00:00:00)
+    checkinDate.setHours(0, 0, 0, 0);
+    checkoutDate.setHours(0, 0, 0, 0);
 
-  const diffMs = checkoutDate.getTime() - checkinDate.getTime();
-  const diffDias = diffMs / (1000 * 60 * 60 * 24);
+    const diffMs = checkoutDate.getTime() - checkinDate.getTime();
+    const diffDias = diffMs / (1000 * 60 * 60 * 24);
 
-  return diffDias > 0 ? diffDias : 0;
-}
-
+    return diffDias > 0 ? diffDias : 0;
+  }
 
   get precioTotal(): number {
     if (!this.porpiedadParaReservar?.precioNoche) return 0;

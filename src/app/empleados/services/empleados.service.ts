@@ -14,5 +14,9 @@ export class EmpleadosService {
     return this.http.get<any[]>(`${this.apiUrl}/empleados`);
   }
 
+  getEncargados() {
+    return this.http.get<any[]>(`${this.apiUrl}/encargados`);
+  }
+
   
 }
