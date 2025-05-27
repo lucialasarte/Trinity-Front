@@ -80,6 +80,7 @@
                   <i class="fa fa-trash"></i> Eliminar
                 </button>
                 <button
+                [disabled]="!propiedad.imagenes || propiedad.imagenes.length === 0"
                   (click)="cambiarEstado(propiedad)"
                   class="btn btn-warning btn-sm"
                 >

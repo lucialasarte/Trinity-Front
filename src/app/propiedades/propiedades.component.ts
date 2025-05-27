@@ -49,7 +49,7 @@ export class PropiedadesComponent implements OnInit {
     const form = this.formPropiedad.form.getRawValue();
     let propiedad = new Propiedad(form);
     propiedad.precioNoche = Number(form.precioNoche);
-    propiedad.is_habilitada = true;
+    propiedad.is_habilitada = false;
     propiedad.requiere_documentacion = false;
 
     this.propiedadesService.createPropiedad(propiedad).subscribe({
