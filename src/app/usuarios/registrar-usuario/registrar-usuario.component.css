@@ -1,0 +1,77 @@
+.tarjetas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.tarjeta-row {
+  flex: 1 1 45%;
+  min-width: 320px;
+  max-width: 48%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  background: #f6faff;
+  border-radius: 10px;
+  padding: 14px 12px 10px 12px;
+  box-shadow: 0 2px 8px #0001;
+  border: 1px solid #e6f7ff;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.tarjeta-row nz-select,
+.tarjeta-row input {
+  min-width: 110px;
+  flex: 1 1 40%;
+  margin-bottom: 0;
+}
+
+.tarjeta-row input[type="date"] {
+  min-width: 120px;
+}
+
+.tarjeta-row .eliminar-tarjeta-btn {
+  margin-left: auto;
+  color: #ff4d4f;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px;
+}
+
+.tarjeta-row .eliminar-tarjeta-btn:hover {
+  color: #d9363e;
+}
+
+button[nztype="dashed"] {
+  margin-top: 12px;
+  width: 100%;
+  border-style: dashed;
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.cerrar-tarjeta-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2px 4px;
+  color: #ff4d4f;
+  transition: color 0.2s;
+}
+
+
+

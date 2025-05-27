@@ -13,6 +13,10 @@ export class AuthService {
   // Su tipo es Usuario para exponer todos los datos completos del usuario autenticado.
   usuarioActual = signal<Usuario | null>(null);
 
+  /**
+   * Devuelve true si hay un usuario autenticado actualmente.
+   * Útil para guards y lógica de UI.
+   */
   // Devuelve true si hay un usuario autenticado (getter para guards)
   isLoggedIn(): boolean {
     return !!this.usuarioActual();
@@ -24,7 +28,7 @@ export class AuthService {
   ) {}
 
   /**
-   * Realiza login contra el backend, guarda el token y obtiene el usuario completo
+   * Realiza login contra el backend, guarda el token y obtiene el usuario completo.
    * @param correo Email del usuario
    * @param password Contraseña
    * @returns Observable con la respuesta del backend
@@ -33,7 +37,7 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, { correo, password }).pipe(
       tap(response => {
         if (response.token) {
-          localStorage.setItem('jwt_token', response.token); // Guarda el token JWT
+          this.setToken(response.token); // Guarda el token JWT
           // Decodifica el token para extraer el id de usuario
           const payload = JSON.parse(atob(response.token.split('.')[1]));
           const userId = payload.sub || payload.identity || payload.id;
@@ -48,19 +52,12 @@ export class AuthService {
   }
 
   /**
-   * Cierra la sesión: elimina el token, limpia el usuario y redirige al login
+   * Cierra la sesión: elimina el token, limpia el usuario y redirige al login.
    */
   logout() {
     localStorage.removeItem('jwt_token'); // Elimina el token JWT
     this.usuarioActual.set(null); // Limpia el usuario actual
     this.router.navigate(['/iniciar-sesion']); // Redirige al login
-  }
-
-  /**
-   * Obtiene el token JWT almacenado (o null si no existe)
-   */
-  getToken(): string | null {
-    return localStorage.getItem('jwt_token');
   }
 
   /**
@@ -74,31 +71,87 @@ export class AuthService {
    */
   cargarUsuarioDesdeToken() {
     const token = this.getToken(); // Obtiene el token actual
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica el payload del JWT
-        const userId = payload.sub || payload.identity || payload.id; // Extrae el id de usuario
-        if (userId) {
-          this.cargarUsuarioPorId(Number(userId));
-          return;
-        }
-      } catch (e) {
-        // Token inválido
-      }
+    if (token && this.decodificarTokenYSetearUsuario(token)) {
+      return;
     }
-    // Si no hay token válido, limpiar usuario y redirigir
+    // Si no hay token válido, limpiar usuario pero NO redirigir automáticamente
     this.usuarioActual.set(null);
-    this.router.navigate(['/iniciar-sesion']);
+    // No redirigir aquí, deja que los guards o componentes lo manejen si es necesario
   }
 
   /**
-   * Obtiene el usuario completo por id y actualiza el signal usuarioActual
+   * Realiza login programático con un token JWT recibido (por ejemplo, tras registro o login social).
+   * Guarda el token, decodifica el userId y carga el usuario completo.
+   * Si se provee el usuario completo, lo setea directamente sin llamar a la API.
+   * @param token JWT recibido del backend
+   * @param usuarioCompleto (opcional) usuario ya resuelto desde el backend
+   */
+  loginConToken(token: string, usuarioCompleto?: Usuario) {
+    this.setToken(token);
+    this.decodificarTokenYSetearUsuario(token, usuarioCompleto);
+  }
+
+  /**
+   * Obtiene el usuario completo por id y actualiza el signal usuarioActual.
    * @param userId id del usuario
    */
   private cargarUsuarioPorId(userId: number) {
     this.http.get<Usuario>(`${environment.apiUrl}/usuarios/${userId}`).subscribe((usuario: Usuario) => {
       this.usuarioActual.set(usuario);
+      console.log(usuario);
+
     });
+  }
+
+  /**
+   * Decodifica un token JWT, extrae el userId y carga el usuario correspondiente.
+   * Si se provee el usuario completo, lo setea directamente sin llamar a la API.
+   * @param token JWT a decodificar
+   * @param usuarioCompleto (opcional) usuario ya resuelto desde el backend
+   * @returns true si el usuario fue cargado correctamente, false si el token es inválido
+   */
+  private decodificarTokenYSetearUsuario(token: string, usuarioCompleto?: Usuario): boolean {
+    try {
+      if (usuarioCompleto) {
+        this.usuarioActual.set(usuarioCompleto);
+        return true;
+      }
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.sub || payload.identity || payload.id;
+      if (userId) {
+        this.cargarUsuarioPorId(Number(userId));
+        return true;
+      }
+    } catch (e) {
+      // Token inválido
+    }
+    return false;
+  }
+
+  /**
+   * Obtiene el token JWT almacenado (o null si no existe).
+   * @returns El token JWT o null
+   */
+  getToken(): string | null {
+    return localStorage.getItem('jwt_token');
+  }
+
+  /**
+   * Guarda el token JWT en localStorage.
+   * @param token El token JWT a guardar
+   */
+  setToken(token: string) {
+    localStorage.setItem('jwt_token', token);
+  }
+
+  /**
+   * Fuerza la recarga del usuario actual desde la API usando su id.
+   */
+  refrescarUsuarioActual() {
+    const usuario = this.usuarioActual();
+    if (usuario && usuario.id) {
+      this.cargarUsuarioPorId(usuario.id);
+    }
   }
 }
 

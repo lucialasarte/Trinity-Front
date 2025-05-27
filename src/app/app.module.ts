@@ -10,10 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtInterceptor } from './auth/jwt.interceptor';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { NzZorroModule } from './shared/nz-zorro.module';
 import { CoreRoutingModule } from './core/core-routing.module';
-import { EmpleadosComponent } from './empleados/empleados.component';
-import { DetalleReservaComponent } from './detalle-reserva/detalle-reserva.component';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 registerLocaleData(en);
 
@@ -27,14 +27,18 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     NzZorroModule,
-    CoreRoutingModule
-
+    CoreRoutingModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [ShellComponent],
   providers: [
+    provideNgxMask(),
     { provide: NZ_I18N, useValue: en_US },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideNgxMask(),
   ]
 })
 export class AppModule { }

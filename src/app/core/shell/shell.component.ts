@@ -1,5 +1,8 @@
 import { Component, OnInit, computed } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { RegistrarUsuarioComponent } from 'src/app/usuarios/registrar-usuario/registrar-usuario.component';
+import { Router } from '@angular/router';
 
 /**
  * Define la estuctura o maqueta del sitio. definiendo un orden entre los componentes principales del template.
@@ -13,7 +16,11 @@ export class ShellComponent implements OnInit {
   isEnglish: boolean = false;
   // Signal computado que obtiene el usuario actual desde AuthService
   usuario = computed(() => this.auth.usuarioActual());
-  constructor(public auth: AuthService) {}
+  constructor(
+    public auth: AuthService,
+    private modal: NzModalService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.auth.cargarUsuarioDesdeToken();
@@ -21,6 +28,22 @@ export class ShellComponent implements OnInit {
 
   toggleLanguage() {
     this.isEnglish = !this.isEnglish;
+  }
+
+  abrirModalRegistroUsuario() {
+    const modalRef = this.modal.create({
+      nzTitle: 'Registrar usuario',
+      nzContent: RegistrarUsuarioComponent,
+      nzWidth: 700,
+      nzFooter: null,
+      nzMaskClosable: false // Evita cierre al hacer clic fuera del modal
+    });
+    modalRef.afterClose.subscribe((usuarioCreado) => {
+      if (usuarioCreado && usuarioCreado.access_token) {
+        this.auth.loginConToken(usuarioCreado.access_token, usuarioCreado.usuario);
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   // Función auxiliar para mostrar los roles como string

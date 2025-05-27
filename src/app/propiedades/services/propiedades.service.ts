@@ -4,12 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Search } from '../models/search';
 import { Propiedad } from '../models/propiedad';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropiedadesService {
-  private apiUrl = 'http://localhost:5000/propiedades';
+  private apiUrl = environment.apiUrl + '/propiedades';
 
   constructor(private http: HttpClient) {}
 

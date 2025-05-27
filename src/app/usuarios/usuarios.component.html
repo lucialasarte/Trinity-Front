@@ -1,14 +1,20 @@
 <div class="usuarios-container">
   <h2>Usuarios</h2>
+  <button nz-button nzType="primary" (click)="abrirModalRegistroUsuario()" class="boton-crear-usuario">
+    <span nz-icon nzType="user-add"></span> Crear usuario
+  </button>
+
   <div *ngIf="loading">Cargando...</div>
   <div *ngIf="error">{{ error }}</div>
-  <table *ngIf="!loading && !error">
+  <table *ngIf="!loading && !error" class="tabla-usuarios">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nombre</th>
         <th>Correo</th>
         <th>Rol</th>
+        <th>Tipo Identificación</th>
+        <th>Número Identificación</th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +28,8 @@
           </ng-container>
           <ng-template #sinRol>-</ng-template>
         </td>
+        <td>{{ usuario.tipo_identificacion?.nombre || '-' }}</td>
+        <td>{{ usuario.numero_identificacion || '-' }}</td>
       </tr>
     </tbody>
   </table>

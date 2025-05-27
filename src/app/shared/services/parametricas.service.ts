@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParametricasService {
-  private apiUrl = 'http://localhost:5000/parametricas';
+  private apiUrl = environment.apiUrl + '/parametricas';
 
   constructor(private http: HttpClient) {}
 
@@ -38,6 +39,36 @@ export class ParametricasService {
   get_ciudades_con_propiedades(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/ciudadesConPropiedades`);
   }
-  
+
+  // Obtener roles
+  get_roles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/roles`);
+  }
+
+  // Obtener tipos de identificación
+  get_tipos_identificacion(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-identificacion`);
+  }
+
+  // Obtener países
+  get_paises(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/paises`);
+  }
+
+  // Crear país
+  create_pais(nombre: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/paises`, { nombre });
+  }
+
+  // Obtener marcas de tarjeta
+  get_marcas_tarjeta(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/marcas-tarjeta`);
+  }
+
+  // Obtener tipos de tarjeta
+  get_tipos_tarjeta(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tipos-tarjeta`);
+  }
+
 
 }

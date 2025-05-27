@@ -20,9 +20,54 @@
       <b>Tarjetas:</b>
       <ul>
         <li *ngFor="let tarjeta of user.tarjetas">
-          {{ tarjeta?.marca?.nombre }} - {{ tarjeta?.tipo?.nombre }} - {{ tarjeta?.numero }} - Fecha Vto. {{ tarjeta?.fecha_vencimiento ? (tarjeta.fecha_vencimiento | date:'dd/MM/yyyy') : '-' }}
+          {{ tarjeta?.marca?.nombre }} - {{ tarjeta?.tipo?.nombre }} - {{ tarjeta?.numero }} - Fecha Inicio. {{ tarjeta?.fecha_inicio ?? '-' }} - Fecha Vto. {{ tarjeta?.fecha_vencimiento ?? '-' }}
         </li>
       </ul>
+    </div>
+    <hr>
+    <!-- <div class="perfil-row">
+      <b>Foto de perfil actual:</b>
+      <ng-container *ngIf="fotoPerfilUrl && fotoPerfilUrl !== 'assets/anonimo.jpg'; else noFotoPerfil">
+        <img [src]="fotoPerfilUrl" alt="Foto de perfil" style="max-width: 120px; max-height: 120px; border-radius: 50%; border: 1px solid #ccc; margin-left: 12px;" />
+      </ng-container>
+      <ng-template #noFotoPerfil>
+        <span style="color: #b0b0b0; margin-left: 12px;">No cargada. Puede cargarla abajo.</span>
+      </ng-template>
+    </div>
+    <div class="perfil-row">
+      <label style="margin-bottom: 0;">
+        <input #fotoPerfilInput type="file" accept="image/*" style="display:none" (change)="onFileChange($event); onSubmitFotos()" [disabled]="subiendoDoc" />
+        <button nz-button nzType="primary" type="button" (click)="fotoPerfilInput.click()" [disabled]="subiendoDoc">
+          <ng-container *ngIf="!subiendoDoc">Actualizar foto de perfil</ng-container>
+          <ng-container *ngIf="subiendoDoc">Guardando...</ng-container>
+        </button>
+      </label>
+    </div>
+    <hr>-->
+    <div class="perfil-row" style="flex-direction: column; align-items: flex-start;">
+      <b style="margin-bottom: 8px; display: block;">Documentos adjuntos:</b>
+      <ng-container *ngIf="imagenesDocIds.length > 0">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start;">
+          <ng-container *ngFor="let id of imagenesDocIds; let i = index">
+            <div style="position: relative; display: flex; align-items: center; min-width: 260px; min-height: 260px; margin-bottom: 8px;">
+              <img [src]="getDocUrl(id)" alt="Documento {{i+1}}" style="width: 360px; height: 260px; object-fit: cover; border: 1.5px solid #ccc; border-radius: 10px; display: block;" />
+              <button (click)="onDeleteDoc(id)" style="position: absolute; top: 10px; right: 10px; background: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; box-shadow: 0 1px 4px #0002; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 0; opacity: 0.92;">
+                <span style="font-size: 22px; color: #d32f2f; line-height: 1;">&times;</span>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <!-- Botón para agregar documento solo si hay menos de 2 documentos cargados -->
+      <div *ngIf="imagenesDocIds.length < 2" style="margin-top: 18px;">
+        <label style="margin-bottom: 0;">
+          <input #nuevoDocInput type="file" accept="image/*" style="display:none" (change)="onAddDoc($event)" [disabled]="subiendoDoc" />
+          <button nz-button nzType="primary" type="button" (click)="nuevoDocInput.click()" [disabled]="subiendoDoc">
+            <ng-container *ngIf="!subiendoDoc">Agregar documento</ng-container>
+            <ng-container *ngIf="subiendoDoc">Guardando...</ng-container>
+          </button>
+        </label>
+      </div>
     </div>
   </div>
   <div *ngIf="!usuario()">
