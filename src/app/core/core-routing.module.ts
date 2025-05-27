@@ -2,6 +2,9 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NgModule } from '@angular/core';
+import { NoPermisoHomeGuard } from '../guards/NoPermisoHomeGuard';
+import { RedireccionInicialGuard } from '../guards/RedireccionInicialGuard';
+import { NoPermisoDetallePropGuard } from '../guards/NoPermisoDetallePropGuard';
 
 const coreRoutes: Routes = [
   {
@@ -17,6 +20,7 @@ const coreRoutes: Routes = [
       import('../detalle-propiedad/detalle-propiedad.module').then(
         (m) => m.DetallePropiedadModule
       ),
+    canActivate: [NoPermisoDetallePropGuard],
   },
 
   {
@@ -25,6 +29,7 @@ const coreRoutes: Routes = [
       import('../propiedades/propiedades.module').then(
         (m) => m.PropiedadesModule
       ),
+    canActivate: [NoPermisoDetallePropGuard],
   },
   {
     path: 'reservas',
@@ -34,22 +39,26 @@ const coreRoutes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('../home/home.module').then((m) => m.HomeModule),
+    canActivate: [NoPermisoHomeGuard],
   },
   {
     path: 'iniciar-sesion',
-    loadChildren: () => import('../auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('../auth/auth.module').then((m) => m.AuthModule),
   },
   {
     path: 'empleados',
-    loadChildren: () => import('../empleados/empleados.module').then(m => m.EmpleadosModule)
+    loadChildren: () =>
+      import('../empleados/empleados.module').then((m) => m.EmpleadosModule),
   },
   {
     path: 'usuarios',
-    loadChildren: () => import('../usuarios/usuarios.module').then(m => m.UsuariosModule)
+    loadChildren: () =>
+      import('../usuarios/usuarios.module').then((m) => m.UsuariosModule),
   },
   {
     path: '',
-    redirectTo: 'home',
+    component: NotFoundComponent, 
+    canActivate: [RedireccionInicialGuard], 
     pathMatch: 'full',
   },
   {
@@ -63,9 +72,11 @@ const coreRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(coreRoutes, {
-            scrollPositionRestoration: 'top'
-        })],
+  imports: [
+    RouterModule.forRoot(coreRoutes, {
+      scrollPositionRestoration: 'top',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class CoreRoutingModule {}

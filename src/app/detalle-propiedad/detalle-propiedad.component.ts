@@ -108,7 +108,13 @@ export class DetallePropiedadComponent implements OnInit {
           this.isModalVisible = false;
         },
         error: (error) => {
-          console.error('Error al editar el código:', error);
+          this.utilsService.showMessage({
+            title: 'Error al editar el código',
+            message:
+              error.error.error ||
+              'No se pudo editar el código. Por favor, intente nuevamente.',
+            icon: 'error',
+          });
         },
       });
     } else {
@@ -125,13 +131,18 @@ export class DetallePropiedadComponent implements OnInit {
             this._getPropiedad(this.propiedadId);
           },
           error: (error) => {
-            console.error('Error al editar el encargado:', error);
+            this.utilsService.showMessage({
+              title: 'Error al editar el encargado',
+              message:
+                error.error.error ||
+                'No se pudo editar el encargado. Por favor, intente nuevamente.',
+              icon: 'error',
+            });
           },
         });
       this.isModalVisible = false;
     }
   }
-
   updatePropiedad(id: number) {}
 
   estadoFilterFn = (filter: string[], item: any): boolean => {
@@ -169,7 +180,13 @@ export class DetallePropiedadComponent implements OnInit {
           this._getPropiedad(this.propiedadId);
         },
         error: (error) => {
-          console.error('Error al subir la imagen:', error);
+          this.utilsService.showMessage({
+            title: 'Error al subir la imagen',
+            message:
+              error.error.error ||
+              'No se pudo subir la imagen. Por favor, intente nuevamente.',
+            icon: 'error',
+          });
         },
       });
       formData.forEach((value, key) => {
@@ -185,7 +202,7 @@ export class DetallePropiedadComponent implements OnInit {
     this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
       this.propiedad = data;
       this._getReservas(this.propiedad.id);
-      this._cargarImagenes(this.propiedad.imagenes);
+      this._cargarImagenes(this.propiedad.id_imagenes);
       if (this.propiedad.id_encargado) {
         this._getEmpleado(this.propiedad.id_encargado);
       }
@@ -201,7 +218,7 @@ export class DetallePropiedadComponent implements OnInit {
     console.log(this.encargado);
   }
 
-  private _cargarImagenes(imagenObjs: { id: number }[]): void {
+  private _cargarImagenes(imagenObjs: [number]): void {
     if (!imagenObjs?.length) {
       this.imagenesConId = [];
       this.imagenes = [];
@@ -211,8 +228,8 @@ export class DetallePropiedadComponent implements OnInit {
     }
 
     this.imagenesConId = imagenObjs.map((img) => ({
-      id: img.id,
-      url: `${this.apiUrl}/imagen/${img.id}`,
+      id: img,
+      url: `${this.apiUrl}/imagen/${img}`,
     }));
 
     this.totalPaginas = Math.ceil(
@@ -236,49 +253,57 @@ export class DetallePropiedadComponent implements OnInit {
   }
 
   eliminarImagen(imagenUrl: string) {
-    const imagen = this.imagenesConId.find((img) => img.url === imagenUrl);
-    if (!imagen) return;
+    if (this.propiedad.id_imagenes.length === 1) {
+      this.utilsService.showMessage({
+        title: 'No se puede eliminar',
+        message: 'La propiedad debe tener al menos una imagen.',
+        icon: 'warning',
+      });
+    } else {
+      const imagen = this.imagenesConId.find((img) => img.url === imagenUrl);
+      if (!imagen) return;
 
-    this.utilsService.showMessage({
-      title: '¿Estás seguro?',
-      message: '¿Querés eliminar esta imagen?',
-      icon: 'warning',
-      confirmButtonText: 'Si, eliminar!',
-      cancelButtonText: 'Cancelar',
-      showConfirmButton: true,
-      showCancelButton: true,
-      actionOnConfirm: () => {
-        this.propiedadesService.eliminarImagen(imagen.id).subscribe({
-          next: () => {
-            this.utilsService.showMessage({
-              title: 'Imagen eliminada',
-              message: 'La imagen fue eliminada correctamente.',
-              icon: 'success',
-            });
+      this.utilsService.showMessage({
+        title: '¿Estás seguro?',
+        message: '¿Querés eliminar esta imagen?',
+        icon: 'warning',
+        confirmButtonText: 'Si, eliminar!',
+        cancelButtonText: 'Cancelar',
+        showConfirmButton: true,
+        showCancelButton: true,
+        actionOnConfirm: () => {
+          this.propiedadesService.eliminarImagen(imagen.id).subscribe({
+            next: () => {
+              this.utilsService.showMessage({
+                title: 'Imagen eliminada',
+                message: 'La imagen fue eliminada correctamente.',
+                icon: 'success',
+              });
 
-            // Actualizamos el array
-            this.imagenesConId = this.imagenesConId.filter(
-              (img) => img.id !== imagen.id
-            );
-            this.totalPaginas = Math.ceil(
-              this.imagenesConId.length / this.imagenesPorPagina
-            );
-            if (this.paginaActual > this.totalPaginas) {
-              this.paginaActual = this.totalPaginas;
-            }
-            this.actualizarImagenesPaginadas();
-          },
-          error: (err) => {
-            console.error('Error al eliminar imagen:', err);
-            this.utilsService.showMessage({
-              title: 'Error',
-              message: 'No se pudo eliminar la imagen.',
-              icon: 'error',
-            });
-          },
-        });
-      },
-    });
+              // Actualizamos el array
+              this.imagenesConId = this.imagenesConId.filter(
+                (img) => img.id !== imagen.id
+              );
+              this.totalPaginas = Math.ceil(
+                this.imagenesConId.length / this.imagenesPorPagina
+              );
+              if (this.paginaActual > this.totalPaginas) {
+                this.paginaActual = this.totalPaginas;
+              }
+              this.actualizarImagenesPaginadas();
+            },
+            error: (err) => {
+              console.error('Error al eliminar imagen:', err);
+              this.utilsService.showMessage({
+                title: 'Error',
+                message: 'No se pudo eliminar la imagen.',
+                icon: 'error',
+              });
+            },
+          });
+        },
+      });
+    }
   }
 
   private _getReservas(id: number) {
@@ -289,8 +314,12 @@ export class DetallePropiedadComponent implements OnInit {
         this.cargando = false;
       },
       error: (error) => {
-        ``;
-        console.error('Error al obtener reservas:', error);
+        this.utilsService.showMessage({
+          title: 'Error al obtener reservas',
+          message:
+            'No se pudieron cargar las reservas. Por favor, intente nuevamente.',
+          icon: 'error',
+        });
       },
     });
   }
@@ -314,10 +343,20 @@ export class DetallePropiedadComponent implements OnInit {
       ],
     });
   }
+
   private _getEmpleados() {
-    this.empleadoService.getEncargados().subscribe((data) => {
-      this.empleados = data;
-      console.log(this.empleados);
+    this.empleadoService.getEmpleados().subscribe({
+      next: (data) => {
+        this.empleados = data;
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al obtener empleados',
+          message:
+            'No se pudieron cargar los empleados. Por favor, intente nuevamente.',
+          icon: 'error',
+        });
+      },
     });
   }
 }
