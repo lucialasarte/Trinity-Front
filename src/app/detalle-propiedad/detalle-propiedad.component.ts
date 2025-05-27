@@ -185,7 +185,7 @@ export class DetallePropiedadComponent implements OnInit {
     this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
       this.propiedad = data;
       this._getReservas(this.propiedad.id);
-      this._cargarImagenes(this.propiedad.imagenes);
+      this._cargarImagenes(this.propiedad.id_imagenes);
       if (this.propiedad.id_encargado) {
         this._getEmpleado(this.propiedad.id_encargado);
       }
@@ -201,7 +201,7 @@ export class DetallePropiedadComponent implements OnInit {
     console.log(this.encargado);
   }
 
-  private _cargarImagenes(imagenObjs: { id: number }[]): void {
+  private _cargarImagenes(imagenObjs: [number]): void {
     if (!imagenObjs?.length) {
       this.imagenesConId = [];
       this.imagenes = [];
@@ -211,8 +211,8 @@ export class DetallePropiedadComponent implements OnInit {
     }
 
     this.imagenesConId = imagenObjs.map((img) => ({
-      id: img.id,
-      url: `${this.apiUrl}/imagen/${img.id}`,
+      id: img,
+      url: `${this.apiUrl}/imagen/${img}`,
     }));
 
     this.totalPaginas = Math.ceil(
