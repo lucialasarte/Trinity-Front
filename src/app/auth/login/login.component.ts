@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   form: FormGroup;
@@ -20,7 +20,7 @@ export class LoginComponent {
   ) {
     this.form = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -32,12 +32,19 @@ export class LoginComponent {
     this.auth.login(correo, password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/']);
+        const esEmpleado =
+          this.auth.usuarioActual()?.permisos?.gestionar_propiedades;
+
+        if (esEmpleado) {
+          this.router.navigate(['/propiedades']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         this.error = err?.error?.mensaje || 'Credenciales inválidas';
-      }
+      },
     });
   }
 }

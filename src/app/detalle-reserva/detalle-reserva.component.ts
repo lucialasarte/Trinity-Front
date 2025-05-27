@@ -92,35 +92,20 @@ export class DetalleReservaComponent {
   }
 
   private _getReserva(id: number) {
-    this.reservasService.get_reserva_id(id).subscribe(
-      (data) => {
-        console.log(data);
+    this.reservasService.get_reserva_id(id).subscribe({
+      next: (data) => {
         this.reserva = data;
-        switch (data.id_estado) {
-          case 1:
-            this.estado = 'Confirmada';
-            break;
-          case 2:
-            this.estado = 'Pendiente';
-            break;
-          case 3:
-            this.estado = 'Cancelada';
-            break;
-          default:
-            this.estado = 'Finalizada';
-        }
         this._getPropiedad(this.reserva.id_propiedad);
         this.validarCalificacion();
       },
-      (error) => {
+      error: (error) => {
         this.utilsService.showMessage({
-          title: 'Error al obtener propiedades',
-          message:
-            'No se pudieron cargar las propiedades. Por favor, intenta nuevamente.',
+          title: 'Error al obtener la reserva',
+          message: error.error.error || 'No se pudo cargar la reserva.',
           icon: 'error',
         });
-      }
-    );
+      },
+    });
   }
 
   validarCalificacion(): void {

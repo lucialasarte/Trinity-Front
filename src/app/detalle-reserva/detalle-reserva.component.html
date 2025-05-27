@@ -1,8 +1,8 @@
 <div class="reserva-header">
   <h2 class="titulo-propiedades" *ngIf="reserva">
     Reserva #{{ reserva.id }}
-    <span class="estado-badge" [ngClass]="estadoClase(estado)">
-      {{ estado }}
+    <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
+      {{ reserva.estado }}
     </span>
   </h2>
 </div>
@@ -85,7 +85,7 @@
         <button
           class="btn-sm"
           (click)="cancelar(this.reserva.id)"
-          *ngIf="estado !== 'Finalizada' && estado !== 'Cancelada'"
+          *ngIf="reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada'"
         >
           Cancelar
         </button>

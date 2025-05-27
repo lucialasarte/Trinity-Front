@@ -5,7 +5,6 @@ import { Propiedad } from './models/propiedad';
 import { FormPropiedadesComponent } from './form-propiedades/form-propiedades.component';
 import { Router } from '@angular/router';
 import { UtilsService } from '../shared/services/utils.service';
-import { ParametricasService } from '../shared/services/parametricas.service';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -26,7 +25,6 @@ export class PropiedadesComponent implements OnInit {
   propiedadesEliminadas: any[] = [];
   isFormValid = false;
   cargando = true;
-  
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +36,7 @@ export class PropiedadesComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      dato: ['']
+      dato: [''],
     });
     this._getPropiedades();
     this._getPropiedadesEliminadas();
@@ -64,10 +62,10 @@ export class PropiedadesComponent implements OnInit {
         this.isVisible = false;
       },
       error: (err) => {
-        console.error('Error al crear la propiedad:', err);
         this.utilsService.showMessage({
           title: 'Error al crear la propiedad',
           message:
+            err.error.error ||
             'No se pudo crear la propiedad. Por favor, intente nuevamente.',
           icon: 'error',
         });
@@ -84,9 +82,7 @@ export class PropiedadesComponent implements OnInit {
     this.formPropiedad.form.reset();
   }
 
-  buscarPropiedad() {
-    
-  }
+  buscarPropiedad() {}
 
   eliminar(id: number) {
     this.utilsService.showMessage2({
@@ -103,7 +99,7 @@ export class PropiedadesComponent implements OnInit {
       cancelButtonColor: '#d33',
       actionOnConfirm: () => {
         this.propiedadesService.eliminar_con_reservas(id).subscribe({
-          next: (data) => {
+          next: () => {
             this.utilsService.showMessage({
               title: 'Reservas canceladas',
               message:
@@ -200,7 +196,7 @@ export class PropiedadesComponent implements OnInit {
     this.isFormValid = valid;
   }
 
-  search(){}
+  search() {}
 
   private _initForm() {
     this.form = this.fb.group({
@@ -209,19 +205,21 @@ export class PropiedadesComponent implements OnInit {
   }
 
   private _getPropiedades() {
-    this.propiedadesService.getPropiedades().subscribe((data) => {
-      this.propiedades = data;
-      this.cargando = false;
-    }, (error) => {
-      this.cargando = false;
-      this.utilsService.showMessage({
-        title: 'Error al obtener propiedades',
-        message:
-          'No se pudieron cargar las propiedades. Por favor, intenta nuevamente.',
-        icon: 'error',
-      });
-    }
-  );
+    this.propiedadesService.getPropiedades().subscribe(
+      (data) => {
+        this.propiedades = data;
+        this.cargando = false;
+      },
+      (error) => {
+        this.cargando = false;
+        this.utilsService.showMessage({
+          title: 'Error al obtener propiedades',
+          message:
+            'No se pudieron cargar las propiedades. Por favor, intenta nuevamente.',
+          icon: 'error',
+        });
+      }
+    );
   }
 
   private _getPropiedadesEliminadas() {
