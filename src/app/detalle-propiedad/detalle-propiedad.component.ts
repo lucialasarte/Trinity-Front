@@ -131,7 +131,6 @@ export class DetallePropiedadComponent implements OnInit {
       this.isModalVisible = false;
     }
   }
-
   updatePropiedad(id: number) {}
 
   estadoFilterFn = (filter: string[], item: any): boolean => {
@@ -236,6 +235,13 @@ export class DetallePropiedadComponent implements OnInit {
   }
 
   eliminarImagen(imagenUrl: string) {
+    if(this.propiedad.id_imagenes.length === 1) {
+      this.utilsService.showMessage({
+        title: 'No se puede eliminar',
+        message: 'La propiedad debe tener al menos una imagen.',
+        icon: 'warning',
+      });
+    }else{
     const imagen = this.imagenesConId.find((img) => img.url === imagenUrl);
     if (!imagen) return;
 
@@ -278,7 +284,7 @@ export class DetallePropiedadComponent implements OnInit {
           },
         });
       },
-    });
+    });}
   }
 
   private _getReservas(id: number) {
