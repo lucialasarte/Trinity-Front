@@ -194,18 +194,47 @@ export class DetallePropiedadComponent implements OnInit {
       });
     }
 
-    // Limpio el input para permitir volver a subir la misma imagen si se desea
     input.value = '';
   }
 
-  private _getPropiedad(id: number) {
-    this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-      this.propiedad = data;
-      this._getReservas(this.propiedad.id);
-      this._cargarImagenes(this.propiedad.id_imagenes);
-      if (this.propiedad.id_encargado) {
-        this._getEmpleado(this.propiedad.id_encargado);
-      }
+  // private _getPropiedad(id: number) {
+  //   this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
+  //     this.propiedad = data;
+  //     this._getReservas(this.propiedad.id);
+  //     this._cargarImagenes(this.propiedad.id_imagenes);
+  //     if (this.propiedad.id_encargado) {
+  //       this._getEmpleado(this.propiedad.id_encargado);
+  //     }
+  //   });
+  // }
+  
+   private _getPropiedad(id: number) {
+    this.propiedadesService.get_propiedad_id(id).subscribe({
+      next: (data) => {
+        this.propiedad = data;
+        this._getReservas(this.propiedad.id);
+        this._cargarImagenes(this.propiedad.id_imagenes);
+        if (this.propiedad.id_encargado) {
+          this._getEmpleado(this.propiedad.id_encargado);
+        }
+      },
+      error: (error) => {
+
+        const errorMessage = error.error?.error || 'No se pudo cargar la propiedad. Por favor, intenta nuevamente.';
+
+        this.utilsService.showMessage({
+          title: 'Error al cargar propiedad',
+          message: errorMessage,
+          icon: 'error',
+        });
+        if (error.status === 422) {
+          if (this.auth.usuarioActual()?.permisos?.gestionar_propiedades) {
+            this.router.navigate(['/propiedades']); 
+          } else {
+            this.router.navigate(['/home']); 
+          }
+        }
+      },
     });
   }
 

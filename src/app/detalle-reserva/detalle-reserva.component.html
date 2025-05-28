@@ -79,7 +79,7 @@
       </div>
     </div>
 
-    <div class="card acciones-card">
+    <div class="card acciones-card" *ngIf="reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada'">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <button
@@ -89,13 +89,13 @@
         >
           Cancelar
         </button>
-        <button
+        <!-- <button
           *ngIf="propiedad.requiere_documentacion"
           class="btn-sm"
           (click)="subirDocumentacion()"
         >
           Subir Documentación
-        </button>
+        </button> -->
         <!-- <button
          *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
           class="btn-sm"
@@ -114,7 +114,7 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="documentacion-container"
       *ngIf="propiedad.requiere_documentacion"
     >
@@ -157,6 +157,6 @@
         <label>Ubicación:</label>
         <nz-rate [ngModel]="calificacion.ubicacion" disabled></nz-rate>
       </div>
-    </div>
+    </div> -->
   </div>
 </ng-container>

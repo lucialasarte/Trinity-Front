@@ -121,7 +121,7 @@ export class HomeComponent {
         console.error('Error al crear la reserva:', error);
         this.utilsService.showMessage({
           title: 'Error al crear la reserva',
-          message:
+          message:error.error.error ||
             'No se pudo crear la reserva. Por favor, intenta nuevamente.',
           icon: 'error',
         });

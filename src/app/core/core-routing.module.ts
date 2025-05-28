@@ -2,9 +2,9 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NgModule } from '@angular/core';
-import { NoPermisoHomeGuard } from '../guards/NoPermisoHomeGuard';
-import { RedireccionInicialGuard } from '../guards/RedireccionInicialGuard';
-import { NoPermisoDetallePropGuard } from '../guards/NoPermisoDetallePropGuard';
+// import { NoPermisoHomeGuard } from '../guards/NoPermisoHomeGuard';
+// import { RedireccionInicialGuard } from '../guards/RedireccionInicialGuard';
+// import { NoPermisoDetallePropGuard } from '../guards/NoPermisoDetallePropGuard';
 
 const coreRoutes: Routes = [
   {
@@ -20,7 +20,7 @@ const coreRoutes: Routes = [
       import('../detalle-propiedad/detalle-propiedad.module').then(
         (m) => m.DetallePropiedadModule
       ),
-    canActivate: [NoPermisoDetallePropGuard],
+    // canActivate: [NoPermisoDetallePropGuard],
   },
 
   {
@@ -29,7 +29,7 @@ const coreRoutes: Routes = [
       import('../propiedades/propiedades.module').then(
         (m) => m.PropiedadesModule
       ),
-    canActivate: [NoPermisoDetallePropGuard],
+    // canActivate: [NoPermisoDetallePropGuard],
   },
   {
     path: 'reservas',
@@ -39,7 +39,7 @@ const coreRoutes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('../home/home.module').then((m) => m.HomeModule),
-    canActivate: [NoPermisoHomeGuard],
+    // canActivate: [NoPermisoHomeGuard],
   },
   {
     path: 'iniciar-sesion',
@@ -55,12 +55,13 @@ const coreRoutes: Routes = [
     loadChildren: () =>
       import('../usuarios/usuarios.module').then((m) => m.UsuariosModule),
   },
-  {
-    path: '',
-    component: NotFoundComponent, 
-    canActivate: [RedireccionInicialGuard], 
-    pathMatch: 'full',
-  },
+  // {
+  //   path: '',
+  //   component: NotFoundComponent,
+  //   canActivate: [RedireccionInicialGuard],
+  //   pathMatch: 'full',
+  // },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'not-found',
     component: NotFoundComponent,

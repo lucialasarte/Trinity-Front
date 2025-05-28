@@ -28,7 +28,6 @@ export class ReservasComponent {
   cargando: boolean = true;
   calificacion: any = [];
 
-
   constructor(
     private fb: FormBuilder,
     private reservasService: ReservasService,
@@ -50,37 +49,37 @@ export class ReservasComponent {
   }
 
   eliminar(id: number) {
-    if(id){
-    this.utilsService.showMessage({
-      title: '¿Estás seguro?',
-      message: '¿Querés cancelar esta reserva?',
-      icon: 'warning',
-      confirmButtonText: 'Si, cancelar!',
-      cancelButtonText: 'Cancelar',
-      showConfirmButton: true,
-      showCancelButton: true,
-      actionOnConfirm: () => {
-        this.reservasService.cancelarReserva(id).subscribe({
-          next: () => {
-            this.utilsService.showMessage({
-              title: 'Reserva cancelada',
-              message: 'La reserva fue cancelada correctamente.',
-              icon: 'success',
-            });
+    if (id) {
+      this.utilsService.showMessage({
+        title: '¿Estás seguro?',
+        message: '¿Querés cancelar esta reserva?',
+        icon: 'warning',
+        confirmButtonText: 'Si, cancelar!',
+        cancelButtonText: 'Cancelar',
+        showConfirmButton: true,
+        showCancelButton: true,
+        actionOnConfirm: () => {
+          this.reservasService.cancelarReserva(id).subscribe({
+            next: () => {
+              this.utilsService.showMessage({
+                title: 'Reserva cancelada',
+                message: 'La reserva fue cancelada correctamente.',
+                icon: 'success',
+              });
 
-            this._getReservas();
-          },
-          error: (err) => {
-            console.error('Error al cancelar la reserva:', err);
-            this.utilsService.showMessage({
-              title: 'Error',
-              message: 'No se pudo cancelar la reserva.',
-              icon: 'error',
-            });
-          },
-        });
-      },
-    });
+              this._getReservas();
+            },
+            error: (err) => {
+              console.error('Error al cancelar la reserva:', err);
+              this.utilsService.showMessage({
+                title: 'Error',
+                message: 'No se pudo cancelar la reserva.',
+                icon: 'error',
+              });
+            },
+          });
+        },
+      });
     }
   }
   stadoCompare(a: any, b: any): number {
@@ -91,6 +90,7 @@ export class ReservasComponent {
   fechaCompare(a: any, b: any): number {
     return a.fecha_inicio.getTime() - b.fecha_inicio.getTime();
   }
+
   estadoFilterFn = (filter: string[], item: any): boolean => {
     return filter.length === 0 || filter.includes(item.estado);
   };
@@ -107,7 +107,13 @@ export class ReservasComponent {
         this.cargando = false;
       },
       error: (error) => {
-        console.error('Error al obtener las reservas:', error);
+        this.utilsService.showMessage({
+          title: 'Error al cargar reservas',
+          message:
+            error.error.error ||
+            'No se pudieron cargar las reservas. Por favor, intenta nuevamente.',
+          icon: 'error',
+        });
       },
     });
   }
