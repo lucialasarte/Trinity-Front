@@ -158,6 +158,27 @@
   background: #bae7ff;
   color: #096dd9;
 }
+.register-header-btn {
+  background: #1890ff;
+  color: #fff;
+  border: 1.5px solid #1890ff;
+  border-radius: 22px;
+  font-weight: 600;
+  padding: 0 18px;
+  height: 36px;
+  margin-left: 8px;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.10);
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+.register-header-btn:hover, .register-header-btn:focus {
+  background: #40a9ff;
+  color: #fff;
+  border-color: #40a9ff;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.18);
+}
+.register-header-btn .anticon {
+  margin-right: 4px;
+}
 .header-user-info {
   display: flex;
   align-items: center;

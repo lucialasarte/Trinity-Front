@@ -1,0 +1,327 @@
+<nz-spin [nzSpinning]="creandoUsuario">
+  <form nz-form [formGroup]="form" class="form-usuario">
+    <h6>Datos usuario</h6>
+    <div nz-row [nzGutter]="16">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="nombre" nzRequired>Nombre</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="nombreErrorTpl">
+            <input nz-input formControlName="nombre" placeholder="Nombre" autocomplete="off" />
+            <ng-template #nombreErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">El nombre es obligatorio.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="apellido" nzRequired>Apellido</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="apellidoErrorTpl">
+            <input nz-input formControlName="apellido" placeholder="Apellido" autocomplete="off" />
+            <ng-template #apellidoErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">El apellido es obligatorio.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="16">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="correo" nzRequired>Email</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="correoErrorTpl">
+            <input nz-input formControlName="correo" placeholder="Correo electrónico" autocomplete="off" />
+            <ng-template #correoErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">El email es obligatorio.</span>
+              <span *ngIf="control.hasError('email')">El email no es válido.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="password_hash" nzRequired>Contraseña</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="passwordErrorTpl">
+            <input nz-input type="password" formControlName="password_hash" placeholder="Contraseña" />
+            <ng-template #passwordErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">La contraseña es obligatoria.</span>
+              <span *ngIf="control.hasError('minlength')">La contraseña debe tener al menos 6 caracteres.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="16">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="tipo_identificacion" nzRequired>Tipo Identificación</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="tipoIdErrorTpl">
+            <nz-select formControlName="tipo_identificacion" nzPlaceHolder="Seleccione tipo">
+              <nz-option *ngFor="let tipo of tiposIdentificacion" [nzValue]="tipo.id" [nzLabel]="tipo.nombre"></nz-option>
+            </nz-select>
+            <ng-template #tipoIdErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">El tipo de identificación es obligatorio.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="numero_identificacion" nzRequired>Número Identificación</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="numIdErrorTpl">
+            <input nz-input
+              formControlName="numero_identificacion"
+              placeholder="Número de identificación"
+              autocomplete="off"
+              [mask]="'0*'"
+              [dropSpecialCharacters]="false"
+            />
+            <ng-template #numIdErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">El número de identificación es obligatorio.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="16">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="fecha_nacimiento" nzRequired>Fecha de Nacimiento</nz-form-label>
+          <nz-form-control [nzSpan]="24"[nzErrorTip]="fechaNacErrorTpl">
+            <input nz-input type="date" formControlName="fecha_nacimiento" autocomplete="off" />
+            <ng-template #fechaNacErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">La fecha de nacimiento es obligatoria.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="pais" nzRequired>País</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="paisErrorTpl">
+            <nz-select formControlName="pais" nzPlaceHolder="Seleccione país">
+              <nz-option *ngFor="let pais of paises" [nzValue]="pais.id" [nzLabel]="pais.nombre"></nz-option>
+            </nz-select>
+            <ng-template #paisErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">El país es obligatorio.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="16" *ngIf="tieneSesion">
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzFor="roles" nzRequired>Roles</nz-form-label>
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="rolesErrorTpl">
+            <nz-select formControlName="roles" nzMode="multiple" nzPlaceHolder="Seleccione roles">
+              <nz-option *ngFor="let rol of roles" [nzValue]="rol.id" [nzLabel]="rol.nombre"></nz-option>
+            </nz-select>
+            <ng-template #rolesErrorTpl let-control>
+              <span *ngIf="control.hasError('required')">Al menos un rol es obligatorio.</span>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <br>
+    <h6>Tarjeta de crédito</h6>
+    <div formArrayName="tarjetas">
+      <div nz-row [nzGutter]="16" *ngIf="tarjetas.controls.length > 0">
+        <div nz-col nzSpan="24" *ngFor="let tarjeta of tarjetas.controls; let i = index" [formGroupName]="i">
+          <nz-card class="card-hover-border" style="position: relative; margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+            <!-- <button nz-button nzType="text" (mouseenter)="tarjetaHoverIndex = i" (mouseleave)="tarjetaHoverIndex = null" (click)="eliminarTarjeta(i)" class="cerrar-tarjeta-btn" style="position: absolute; top: 8px; right: 8px; z-index: 2;">
+              <span nz-icon nzType="close"></span>
+            </button> -->
+
+            <!-- <div nz-row [nzGutter]="8">
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Marca</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="marcaErrorTpl">
+                    <nz-select formControlName="marca" nzPlaceHolder="Marca">
+                      <nz-option *ngFor="let marca of marcasTarjeta" [nzValue]="marca.id" [nzLabel]="marca.nombre"></nz-option>
+                    </nz-select>
+                    <ng-template #marcaErrorTpl let-control>
+                      <span *ngIf="control.hasError('required')">La marca es obligatoria.</span>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Tipo</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="tipoTarjetaErrorTpl">
+                    <nz-select formControlName="tipo" nzPlaceHolder="Tipo" [nzDefaultValue]="1">
+                      <nz-option *ngFor="let tipo of tiposTarjeta" [nzValue]="tipo.id" [nzLabel]="tipo.nombre"></nz-option>
+                    </nz-select>
+                    <ng-template #tipoTarjetaErrorTpl let-control>
+                      <span *ngIf="control.hasError('required')">El tipo es obligatorio.</span>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> -->
+
+            <div nz-row [nzGutter]="8">
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Número</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="numeroTarjetaErrorTpl">
+                    <input nz-input
+                      formControlName="numero"
+                      placeholder="Número"
+                      autocomplete="off"
+                      [mask]="'0*'"
+                      [dropSpecialCharacters]="false"
+                    />
+                    <ng-template #numeroTarjetaErrorTpl let-control>
+                      <span *ngIf="control.hasError('required')">El número de tarjeta es obligatorio.</span>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Nombre del Titular</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="nombreTitularErrorTpl">
+                    <input nz-input formControlName="nombre_titular" placeholder="Nombre del Titular" autocomplete="off" />
+                    <ng-template #nombreTitularErrorTpl let-control>
+                      <span *ngIf="control.hasError('required')">El nombre del titular es obligatorio.</span>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <div nz-row [nzGutter]="8">
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Fecha Inicio</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="fechaInicioErrorTpl">
+                    <input type="text"
+                      class="ant-input"
+                      formControlName="fecha_inicio"
+                      placeholder="mm/aaaa"
+                      autocomplete="off"
+                      maxlength="7"
+                      [mask]="'00/0000'"
+                      [dropSpecialCharacters]="false"
+                      (blur)="onFechaInicioBlur($event, i)"
+                    />
+                    <ng-template #fechaInicioErrorTpl let-control>
+                      <ng-container *ngIf="control?.touched && control?.invalid">
+                        <span *ngIf="control.hasError('invalidDate')">
+                          Ingrese un mes válido (01-12) y un año de 4 cifras.
+                        </span>
+                        <span *ngIf="control.hasError('required')">
+                          Este campo es obligatorio.
+                        </span>
+                      </ng-container>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Fecha Vencimiento</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="fechaVencErrorTpl">
+                    <input type="text"
+                      class="ant-input"
+                      formControlName="fecha_vencimiento"
+                      placeholder="mm/aaaa"
+                      autocomplete="off"
+                      maxlength="7"
+                      [mask]="'00/0000'"
+                      [dropSpecialCharacters]="false"
+                      (blur)="onFechaVencimientoBlur($event, i)"
+                    />
+                    <ng-template #fechaVencErrorTpl let-control>
+                      <ng-container *ngIf="control?.touched && control?.invalid">
+                        <span *ngIf="control.hasError('required')">
+                          La fecha de vencimiento es obligatoria.
+                        </span>
+                        <span *ngIf="control.hasError('invalidDate')">
+                          Ingrese un mes válido (01-12) y un año de 4 cifras.
+                        </span>
+                      </ng-container>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <div nz-row [nzGutter]="8">
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Marca</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="marcaErrorTpl">
+                    <nz-select formControlName="marca" nzPlaceHolder="Marca">
+                      <nz-option *ngFor="let marca of marcasTarjeta" [nzValue]="marca.id" [nzLabel]="marca.nombre"></nz-option>
+                    </nz-select>
+                    <ng-template #marcaErrorTpl let-control>
+                      <span *ngIf="control.hasError('required')">La marca es obligatoria.</span>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">CVV</nz-form-label>
+                  <nz-form-control [nzSpan]="24" [nzErrorTip]="cvvErrorTpl">
+                    <input nz-input
+                      type="number"
+                      formControlName="cvv"
+                      placeholder="CVV"
+                      autocomplete="off"
+                      [mask]="'000'"
+                      [dropSpecialCharacters]="false"
+                    />
+                    <ng-template #cvvErrorTpl let-control>
+                      <span *ngIf="control.hasError('required')">El CVV es obligatorio.</span>
+                      <span *ngIf="control.hasError('invalidCvv')">El CVV debe tener 3 dígitos.</span>
+                    </ng-template>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <!-- <div nz-row [nzGutter]="8">
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Anverso</nz-form-label>
+                  <nz-form-control [nzSpan]="24">
+                    <input type="file"
+                      accept="image/*"
+                      (change)="onFileChange($event, i, 'anverso_url')"
+                    />
+                    <img *ngIf="getFormControlValue(tarjeta, 'anverso_url')"
+                      [src]="getFormControlValue(tarjeta, 'anverso_url')"
+                      alt="Anverso"
+                      style="max-width: 100px; display: block; margin-top: 6px;"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="24">Reverso</nz-form-label>
+                  <nz-form-control [nzSpan]="24">
+                    <input type="file" accept="image/*"
+                      (change)="onFileChange($event, i, 'reverso_url')"
+                    />
+                    <img *ngIf="getFormControlValue(tarjeta, 'reverso_url')"
+                      [src]="getFormControlValue(tarjeta, 'reverso_url')"
+                      alt="Reverso"
+                      style="max-width: 100px; display: block; margin-top: 6px;"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div> -->
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: right; margin-top: 24px;">
+      <button nz-button nzType="primary" (click)="onSubmit()" [disabled]="form.invalid">Registrar Usuario</button>
+    </div>
+  </form>
+</nz-spin>

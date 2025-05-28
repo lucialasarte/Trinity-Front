@@ -71,6 +71,11 @@
             <span *ngIf="isEnglish" class="label">Log in</span>
             <span *ngIf="!isEnglish" class="label">Iniciar Sesión</span>
           </button>
+          <button nz-button nzType="primary" class="register-header-btn" (click)="abrirModalRegistroUsuario()" style="margin-left: 8px;">
+            <span nz-icon nzType="user-add" nzTheme="outline"></span>
+            <span *ngIf="isEnglish" class="label">Register</span>
+            <span *ngIf="!isEnglish" class="label">Registrarse</span>
+          </button>
         </ng-template>
       </div>
     </div>
