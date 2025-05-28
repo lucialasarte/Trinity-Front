@@ -38,16 +38,19 @@ input[nz-input] {
 
 button.login-btn {
   width: 100%;
-  padding: 12px 0;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
+  text-align: center;
   border-radius: 6px;
-  margin-top: 10px;
+  margin-top: 15px;
   background: linear-gradient(90deg, #2C3E50 60%, #4b79a1 100%);
   color: #FFF4E6;
   font-weight: 600;
   letter-spacing: 1px;
   box-shadow: 0 2px 8px #0001;
   transition: background 0.2s;
+  padding-bottom: 40px;
+  align-items: center;
+  
 }
 button.login-btn:hover:not(:disabled) {
   background: linear-gradient(90deg, #4b79a1 0%, #2C3E50 100%);

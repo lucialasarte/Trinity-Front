@@ -74,4 +74,50 @@ button[nztype="dashed"] {
 }
 
 
+.imagen-wrapper {
+  position: relative;
+  padding: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
+.imagen-propiedad {
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  /* border-radius: 10px; */
+}
+
+.boton-cerrar {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+}
+
+.boton-cerrar:hover {
+  background-color: #c23939;
+}
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* de 6 a 4 */
+  gap: 20px; /* un poco más de separación */
+  margin-top: 1rem;
+}
+.card-imagenes{
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  width: 100%;
+}

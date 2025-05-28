@@ -154,9 +154,15 @@ export class DetallePropiedadComponent implements OnInit {
     return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);
   }
 
-  fechaCompare(a: any, b: any): number {
-    return a.fecha_inicio.getTime() - b.fecha_inicio.getTime();
-  }
+  fechaInicioCompare = (a: any, b: any): number => {
+    return (
+      new Date(a.fecha_inicio).getTime() - new Date(b.fecha_inicio).getTime()
+    );
+  };
+
+  fechaFinCompare = (a: any, b: any): number => {
+    return new Date(a.fecha_fin).getTime() - new Date(b.fecha_fin).getTime();
+  };
 
   abrirSelectorImagen(): void {
     this.inputImagen.nativeElement.click();
@@ -282,7 +288,7 @@ export class DetallePropiedadComponent implements OnInit {
   }
 
   eliminarImagen(imagenUrl: string) {
-    if (this.propiedad.id_imagenes.length === 1) {
+    if (this.imagenesConId.length === 1) {
       this.utilsService.showMessage({
         title: 'No se puede eliminar',
         message: 'La propiedad debe tener al menos una imagen.',
@@ -308,8 +314,6 @@ export class DetallePropiedadComponent implements OnInit {
                 message: 'La imagen fue eliminada correctamente.',
                 icon: 'success',
               });
-
-              // Actualizamos el array
               this.imagenesConId = this.imagenesConId.filter(
                 (img) => img.id !== imagen.id
               );
@@ -345,7 +349,7 @@ export class DetallePropiedadComponent implements OnInit {
       error: (error) => {
         this.utilsService.showMessage({
           title: 'Error al obtener reservas',
-          message:
+          message:error.error.error ||
             'No se pudieron cargar las reservas. Por favor, intente nuevamente.',
           icon: 'error',
         });
@@ -365,7 +369,6 @@ export class DetallePropiedadComponent implements OnInit {
         [
           Validators.required,
           Validators.pattern(/^\d{4}$/),
-          // opcionales pero explícitos:
           Validators.minLength(4),
           Validators.maxLength(4),
         ],

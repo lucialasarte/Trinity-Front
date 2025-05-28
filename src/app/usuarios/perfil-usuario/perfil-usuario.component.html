@@ -6,25 +6,59 @@
         <div class="perfil-row"><b>Nombre:</b> {{ user.nombre }}</div>
         <div class="perfil-row"><b>Apellido:</b> {{ user.apellido }}</div>
         <div class="perfil-row"><b>Email:</b> {{ user.correo }}</div>
-        <div class="perfil-row"><b>País:</b> {{ user.pais?.nombre || '-' }}</div>
+        <div class="perfil-row">
+          <b>País:</b> {{ user.pais?.nombre || "-" }}
+        </div>
       </div>
       <div class="perfil-col perfil-col-roles">
-        <div class="perfil-row"><b>Roles:</b> {{ mostrarRoles(user) }}</div>
-        <div class="perfil-row"><b>Fecha de Nacimiento:</b> {{ user.fecha_nacimiento ? (user.fecha_nacimiento | date:'dd/MM/yyyy') : '-' }}</div>
-        <div class="perfil-row"><b>Tipo Identificación:</b> {{ user.tipo_identificacion?.nombre || '-' }}</div>
-        <div class="perfil-row"><b>Número Identificación:</b> {{ user.numero_identificacion || '-' }}</div>
+        <!-- <div class="perfil-row"><b>Roles:</b> {{ mostrarRoles(user) }}</div> -->
+        <div class="perfil-row">
+          <b>Fecha de Nacimiento:</b>
+          {{
+            user.fecha_nacimiento
+              ? (user.fecha_nacimiento | date : "dd/MM/yyyy")
+              : "-"
+          }}
+        </div>
+        <div class="perfil-row">
+          <b>Tipo Identificación:</b> {{ user.tipo_identificacion?.nombre }}
+        </div>
+        <div class="perfil-row">
+          <b>Número Identificación:</b> {{ user.numero_identificacion || "-" }}
+        </div>
       </div>
     </div>
-    <hr>
-    <div *ngIf="user.tarjetas && user.tarjetas.length" class="perfil-row perfil-tarjetas" style="flex-basis: 100%; width: 100%;">
-      <b>Tarjetas:</b>
-      <ul>
-        <li *ngFor="let tarjeta of user.tarjetas">
-          {{ tarjeta?.marca?.nombre }} - {{ tarjeta?.tipo?.nombre }} - {{ tarjeta?.numero }} - Fecha Inicio. {{ tarjeta?.fecha_inicio ?? '-' }} - Fecha Vto. {{ tarjeta?.fecha_vencimiento ?? '-' }}
-        </li>
-      </ul>
+    
+    <div *ngIf="!user.permisos?.gestionar_propiedades">
+      <hr />
+    <div *ngIf="user.tarjetas.length > 0" class="perfil-pago">
+      <div class="perfil-row"><b>Datos de Pago</b></div>
+      <div class="perfil-grid">
+        <div class="perfil-col">
+          <div class="perfil-row">
+            <b>Número de Tarjeta:</b> **** **** ****
+            {{ user.tarjetas[0].numero.toString().slice(-4) }}
+          </div>
+        </div>
+        <div class="perfil-col">
+          <div class="perfil-row">
+            <b>Fecha de Vencimiento:</b>
+            {{ user.tarjetas[0].fecha_vencimiento || "-" }}
+          </div>
+        </div>
+      </div>
     </div>
-    <hr>
+     <hr />
+</div>
+   <div *ngIf="user?.id_imagenes" class="imagenes-grid">
+        <div class="imagen-wrapper" *ngFor="let imagen of user.id_imagenes">
+          <img
+            [src]="'http://localhost:5000/usuarios/imagenDoc/' + imagen"
+            alt="imagen-propiedad"
+            class="imagen-propiedad"
+          />
+        </div>
+      </div>
     <!-- <div class="perfil-row">
       <b>Foto de perfil actual:</b>
       <ng-container *ngIf="fotoPerfilUrl && fotoPerfilUrl !== 'assets/anonimo.jpg'; else noFotoPerfil">
@@ -44,7 +78,7 @@
       </label>
     </div>
     <hr>-->
-    <div class="perfil-row" style="flex-direction: column; align-items: flex-start;">
+    <!-- <div class="perfil-row" style="flex-direction: column; align-items: flex-start;">
       <b style="margin-bottom: 8px; display: block;">Documentos adjuntos:</b>
       <ng-container *ngIf="imagenesDocIds.length > 0">
         <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start;">
@@ -59,7 +93,7 @@
         </div>
       </ng-container>
       <!-- Botón para agregar documento solo si hay menos de 2 documentos cargados -->
-      <div *ngIf="imagenesDocIds.length < 2" style="margin-top: 18px;">
+    <!-- <div *ngIf="imagenesDocIds.length < 2" style="margin-top: 18px;">
         <label style="margin-bottom: 0;">
           <input #nuevoDocInput type="file" accept="image/*" style="display:none" (change)="onAddDoc($event)" [disabled]="subiendoDoc" />
           <button nz-button nzType="primary" type="button" (click)="nuevoDocInput.click()" [disabled]="subiendoDoc">
@@ -68,9 +102,10 @@
           </button>
         </label>
       </div>
+    </div> 
+  </div> -->
+    <div *ngIf="!usuario()">
+      <p>No se pudo cargar la información del usuario.</p>
     </div>
-  </div>
-  <div *ngIf="!usuario()">
-    <p>No se pudo cargar la información del usuario.</p>
   </div>
 </div>

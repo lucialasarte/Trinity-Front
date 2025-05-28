@@ -3,17 +3,18 @@
   margin: 40px auto;
   background: #fff;
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.1);
   padding: 56px 64px 48px 64px;
   border: 1px solid #f0f0f0;
 }
 
 .perfil-container h2 {
   text-align: center;
-  color: #2C3E50;
+  color: #2c3e50;
   font-size: 2.1em;
   margin-bottom: 28px;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
+  margin-top: 0;
 }
 
 .perfil-row {
@@ -22,12 +23,12 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  color: #2C3E50;
+  color: #2c3e50;
 }
 
 .perfil-row b {
   min-width: 170px;
-  color: #8D8D8D;
+  color: #8d8d8d;
   font-weight: 500;
 }
 
@@ -88,4 +89,46 @@
     max-width: 98vw;
     padding: 18px 6px;
   }
+}
+
+.perfil-pago {
+  margin-top: 24px;
+}
+.perfil-row ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  justify-content: center;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.card-imagenes {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  width: 100%;
+}
+
+.imagen-wrapper {
+  position: relative;
+  padding: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.imagen-propiedad {
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
 }

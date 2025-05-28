@@ -19,7 +19,7 @@
         <td>{{ empleado?.apellido }}</td>
         <td>{{ empleado?.correo }}</td>
         <td>{{ mostrarRoles(empleado) }}</td>
-        <td>{{ empleado?.tipo_identificacion?.nombre || '-' }}</td>
+        <td>{{ empleado?.tipo_identificacion || '-' }}</td>
         <td>{{ empleado?.numero_identificacion || '-' }}</td>
         <td>{{ empleado?.fecha_nacimiento ? (empleado.fecha_nacimiento | date:'dd/MM/yyyy') : '-' }}</td>
         <td>{{ empleado?.pais?.nombre || '-' }}</td>

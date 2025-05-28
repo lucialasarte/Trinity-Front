@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'trinity-shell',
   templateUrl: './shell.component.html',
-  styleUrls: ['./shell.component.css']
+  styleUrls: ['./shell.component.css'],
 })
 export class ShellComponent implements OnInit {
   isEnglish: boolean = false;
@@ -34,13 +34,16 @@ export class ShellComponent implements OnInit {
     const modalRef = this.modal.create({
       nzTitle: 'Registrar usuario',
       nzContent: RegistrarUsuarioComponent,
-      nzWidth: 700,
+      nzWidth: 1000,
       nzFooter: null,
-      nzMaskClosable: false // Evita cierre al hacer clic fuera del modal
+      nzMaskClosable: false, // Evita cierre al hacer clic fuera del modal
     });
     modalRef.afterClose.subscribe((usuarioCreado) => {
       if (usuarioCreado && usuarioCreado.access_token) {
-        this.auth.loginConToken(usuarioCreado.access_token, usuarioCreado.usuario);
+        this.auth.loginConToken(
+          usuarioCreado.access_token,
+          usuarioCreado.usuario
+        );
         this.router.navigate(['/']);
       }
     });

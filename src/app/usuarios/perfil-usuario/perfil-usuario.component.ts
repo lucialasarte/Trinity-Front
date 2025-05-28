@@ -1,10 +1,11 @@
-import { Component, computed, effect } from '@angular/core';
+import { Component, computed, effect, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UsuariosService } from '../services/usuarios.service';
 import Swal from 'sweetalert2';
 import { SafeUrl } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { Usuario } from '../models/usuario';
 
 @Component({
   selector: 'app-perfil-usuario',
@@ -18,7 +19,9 @@ export class PerfilUsuarioComponent {
   imagenesDocIds: number[] = [];
   fotoPerfilUrl: SafeUrl | string | null = null;
   subiendoDoc = false;
-
+  user !: Usuario;
+  apiUrl = 'http://localhost:5000/usuarios';
+  imagenUrls: string[] = [];
   // Inyección del AuthService como público para acceso en plantilla
   constructor(
     public auth: AuthService,
@@ -34,28 +37,28 @@ export class PerfilUsuarioComponent {
     });
     // Efecto reactivo: cada vez que cambia el usuario, refresca las imágenes
     effect(() => {
-      this.cargarImagenesUsuario();
+      // this.cargarImagenesUsuario();
     });
   }
+  
+  // cargarImagenesUsuario() {
+  //   const usuario = this.usuario();
+  //   if (!usuario) return;
 
-  cargarImagenesUsuario() {
-    const usuario = this.usuario();
-    if (!usuario) return;
+  //   // Foto de perfil
+  //   if (usuario.id_imagen) {
+  //     this.fotoPerfilUrl = `${environment.apiUrl}/imagenes/id/${usuario.id_imagen}`;
+  //   } else if (usuario.imagen) {
+  //     this.fotoPerfilUrl = `${environment.apiUrl}/${usuario.imagen}`;
+  //   } else {
+  //     this.fotoPerfilUrl = 'assets/anonimo.jpg';
+  //   }
 
-    // Foto de perfil
-    if (usuario.id_imagen) {
-      this.fotoPerfilUrl = `${environment.apiUrl}/imagenes/id/${usuario.id_imagen}`;
-    } else if (usuario.imagen) {
-      this.fotoPerfilUrl = `${environment.apiUrl}/${usuario.imagen}`;
-    } else {
-      this.fotoPerfilUrl = 'assets/anonimo.jpg';
-    }
-
-    // Documentos
-    this.imagenesDocIds = Array.isArray(usuario.imagenes_doc)
-      ? usuario.imagenes_doc.map((img: { id: number }) => img.id)
-      : [];
-  }
+  //   // Documentos
+  //   this.imagenesDocIds = Array.isArray(usuario.imagenes_id)
+  //     ? usuario.imagenes_id.map((img: { id: number }) => img.id)
+  //     : [];
+  // }
 
   // Función auxiliar para mostrar los roles como string
   mostrarRoles(user: any): string {

@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormArray,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { Usuario } from '../models/usuario';
 import { ParametricasService } from '../../shared/services/parametricas.service';
 import { Pais } from '../models/pais';
@@ -14,13 +21,18 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { RolEnum } from '../enums/rol.enum';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import Swal from 'sweetalert2';
+import { mayorDeEdadValidator } from 'src/app/shared/models/validatorMayor';
+import { fechaNoVencidaValidator } from 'src/app/shared/models/validadorVenida';
+import { passwordValidator } from 'src/app/shared/models/passwordValidator';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 
 @Component({
   selector: 'app-registrar-usuario',
   templateUrl: './registrar-usuario.component.html',
-  styleUrls: ['./registrar-usuario.component.css']
+  styleUrls: ['./registrar-usuario.component.css'],
 })
 export class RegistrarUsuarioComponent implements OnInit {
+  @ViewChild('inputImagen') inputImagen!: ElementRef<HTMLInputElement>;
   form!: FormGroup;
   tarjetaHoverIndex: number | null = null;
   paises: Pais[] = [];
@@ -30,6 +42,10 @@ export class RegistrarUsuarioComponent implements OnInit {
   tiposTarjeta: TipoTarjeta[] = [];
   creandoUsuario = false; // Nueva propiedad
   tieneSesion = false;
+  imagenes: { id: number; url: string }[] = [];
+  rol: number[] = [3];
+
+  apiUrl = 'http://localhost:5000/usuarios';
 
   constructor(
     private fb: FormBuilder,
@@ -37,9 +53,8 @@ export class RegistrarUsuarioComponent implements OnInit {
     private usuariosService: UsuariosService,
     private modalRef: NzModalRef<RegistrarUsuarioComponent>, // Inyecta NzModalRef
     private auth: AuthService,
-    private message: NzMessageService // Inyecta NzMessageService
-  ) {
-  }
+    private utilsService: UtilsService
+  ) {}
 
   ngOnInit(): void {
     this._loadPaises();
@@ -58,27 +73,27 @@ export class RegistrarUsuarioComponent implements OnInit {
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       correo: ['', [Validators.required, Validators.email]],
-      password_hash: ['', [Validators.required, Validators.minLength(6)]],
+      password_hash: ['', [Validators.required, passwordValidator]],
       tipo_identificacion: [null, Validators.required],
       numero_identificacion: ['', Validators.required],
-      fecha_nacimiento: [null, Validators.required],
+      fecha_nacimiento: [null, [Validators.required, mayorDeEdadValidator]],
       pais: [null, Validators.required],
-      roles: [[], Validators.required],
-      tarjetas: this.fb.array([this._createTarjetaFormGroup()])
+      // roles: [[], Validators.required],
+      tarjetas: this.fb.array([this._createTarjetaFormGroup()]),
     });
   }
 
   private _createTarjetaFormGroup(): FormGroup {
     return this.fb.group({
-      marca: [null, Validators.required],
-      tipo: [1, Validators.required],
+      // marca: [null, Validators.required],
+      // tipo: [1, Validators.required],
       numero: [null, Validators.required],
       nombre_titular: [null, Validators.required],
-      fecha_inicio: [null],
-      fecha_vencimiento: [null, Validators.required],
+      // fecha_inicio: [null],
+      fecha_vencimiento: [null, [Validators.required, fechaNoVencidaValidator]],
       cvv: [null, Validators.required],
       usuario_id: [null],
-    })
+    });
   }
 
   get tarjetas(): FormArray {
@@ -100,7 +115,7 @@ export class RegistrarUsuarioComponent implements OnInit {
         fecha_inicio: null,
         fecha_vencimiento: null,
         cvv: null,
-        usuario_id: null
+        usuario_id: null,
       });
     } else {
       this.tarjetas.removeAt(index);
@@ -108,11 +123,13 @@ export class RegistrarUsuarioComponent implements OnInit {
   }
 
   private _loadPaises(): void {
-    this.parametricasService.get_paises().subscribe(data => this.paises = data);
+    this.parametricasService
+      .get_paises()
+      .subscribe((data) => (this.paises = data));
   }
 
   private _loadRoles(): void {
-    this.parametricasService.get_roles().subscribe(data => {
+    this.parametricasService.get_roles().subscribe((data) => {
       const usuario = this.auth.usuarioActual();
       if (usuario) {
         const idsRoles = usuario.roles?.map((r: any) => r.id) || [];
@@ -140,15 +157,21 @@ export class RegistrarUsuarioComponent implements OnInit {
   }
 
   private _loadTiposIdentificacion(): void {
-    this.parametricasService.get_tipos_identificacion().subscribe(data => this.tiposIdentificacion = data);
+    this.parametricasService
+      .get_tipos_identificacion()
+      .subscribe((data) => (this.tiposIdentificacion = data));
   }
 
   private _loadMarcasTarjeta(): void {
-    this.parametricasService.get_marcas_tarjeta().subscribe(data => this.marcasTarjeta = data);
+    this.parametricasService
+      .get_marcas_tarjeta()
+      .subscribe((data) => (this.marcasTarjeta = data));
   }
 
   private _loadTiposTarjeta(): void {
-    this.parametricasService.get_tipos_tarjeta().subscribe(data => this.tiposTarjeta = data);
+    this.parametricasService
+      .get_tipos_tarjeta()
+      .subscribe((data) => (this.tiposTarjeta = data));
   }
 
   onFileChange(event: any, i: number, campo: 'anverso_url' | 'reverso_url') {
@@ -162,47 +185,42 @@ export class RegistrarUsuarioComponent implements OnInit {
     }
   }
 
-
-
-onFechaInicioBlur(event: any, index: number) {
-  this.validateFecha(event.target.value, index, 'fecha_inicio');
-}
-
-onFechaVencimientoBlur(event: any, index: number) {
-  this.validateFecha(event.target.value, index, 'fecha_vencimiento');
-}
-
-private validateFecha(value: string, index: number, controlName: string) {
-  if (!value) return; // Si está vacío, no validar (a menos que sea requerido)
-
-  const match = value.match(/^(\d{2})\/(\d{4})$/);
-  let isValid = false;
-
-  if (match) {
-    const mes = parseInt(match[1], 10);
-    const anio = parseInt(match[2], 10);
-
-    // Validar mes entre 01-12 y año razonable
-    isValid = mes >= 1 && mes <= 12 && anio >= 2020 && anio <= 2040;
+  onFechaInicioBlur(event: any, index: number) {
+    this.validateFecha(event.target.value, index, 'fecha_inicio');
   }
 
-  const control = this.tarjetas.at(index).get(controlName);
+  onFechaVencimientoBlur(event: any, index: number) {
+    this.validateFecha(event.target.value, index, 'fecha_vencimiento');
+  }
 
-  if (!isValid) {
-    control?.setErrors({ ...control.errors, invalidDate: true });
-  } else {
-    // Remover solo el error de fecha inválida
-    const currentErrors = control?.errors;
-    if (currentErrors) {
-      delete currentErrors['invalidDate'];
-      const hasOtherErrors = Object.keys(currentErrors).length > 0;
-      control?.setErrors(hasOtherErrors ? currentErrors : null);
+  private validateFecha(value: string, index: number, controlName: string) {
+    if (!value) return; // Si está vacío, no validar (a menos que sea requerido)
+
+    const match = value.match(/^(\d{2})\/(\d{4})$/);
+    let isValid = false;
+
+    if (match) {
+      const mes = parseInt(match[1], 10);
+      const anio = parseInt(match[2], 10);
+
+      // Validar mes entre 01-12 y año razonable
+      isValid = mes >= 1 && mes <= 12 && anio >= 2020 && anio <= 2040;
+    }
+
+    const control = this.tarjetas.at(index).get(controlName);
+
+    if (!isValid) {
+      control?.setErrors({ ...control.errors, invalidDate: true });
+    } else {
+      // Remover solo el error de fecha inválida
+      const currentErrors = control?.errors;
+      if (currentErrors) {
+        delete currentErrors['invalidDate'];
+        const hasOtherErrors = Object.keys(currentErrors).length > 0;
+        control?.setErrors(hasOtherErrors ? currentErrors : null);
+      }
     }
   }
-}
-
-
-
 
   getFormControlValue(control: AbstractControl, campo: string): any {
     return control?.get(campo)?.value;
@@ -211,85 +229,108 @@ private validateFecha(value: string, index: number, controlName: string) {
   onSubmit() {
     if (this.form.valid) {
       this.creandoUsuario = true;
-      // Usar getRawValue para incluir campos deshabilitados
-      const formValue = this.form.getRawValue();
+      const formValue = this.form.value;
 
-      console.log(formValue);
-
-    // Permite roles como [{id: 3}] o [3]
-    const roles_ids = Array.isArray(formValue.roles)
-      ? formValue.roles.map((r: any) => typeof r === 'object' && r !== null ? r.id : r).filter((id: any) => id !== undefined && id !== null)
-      : [];
-
-    const id_tipo_identificacion = formValue.tipo_identificacion;
-    const id_pais = formValue.pais;
-
-    // Validaciones extra
-    if (!roles_ids.length) {
-      alert('Debe seleccionar al menos un rol.');
-      return;
-    }
-    if (!id_tipo_identificacion) {
-      alert('Debe seleccionar un tipo de identificación.');
-      return;
-    }
-    if (!id_pais) {
-      alert('Debe seleccionar un país.');
-      return;
-    }
-
-    // Mapear tarjetas al formato requerido
-    const tarjetas = (formValue.tarjetas || []).map((t: any) => ({
-      numero: t.numero,
-      nombre_titular: t.nombre_titular,
-      fecha_inicio: t.fecha_inicio,
-      fecha_vencimiento: t.fecha_vencimiento,
-      cvv: t.cvv,
-      id_marca: t.marca?.id ?? t.marca, // Soporta objeto o id
-      id_tipo: t.tipo?.id ?? t.tipo      // Soporta objeto o id
-    }));
-
-    const usuario = {
-      nombre: formValue.nombre,
-      apellido: formValue.apellido,
-      correo: formValue.correo,
-      password: formValue.password_hash,
-      roles_ids,
-      id_tipo_identificacion,
-      numero_identificacion: formValue.numero_identificacion,
-      fecha_nacimiento: formValue.fecha_nacimiento,
-      id_pais,
-      tarjetas
-    };
-
-    console.log(usuario);
-    this.usuariosService.crearUsuario(usuario)
-      .pipe(
-        finalize(() => {
-          this.creandoUsuario = false; // Asegura que se desactive al finalizar
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          console.log('Usuario creado exitosamente:', response);
-          this.modalRef.close(response); // Retorna el usuario creado al llamador
-        },
-        error: (error) => {
-          // SweetAlert2: mostrar mensaje de error 400 del backend
-          if (error.status === 400 && error.error) {
-            const msg = error.error.message || error.error.error || error.statusText || 'Error desconocido';
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: msg
+      const payload = {
+        ...formValue,
+        roles: [3], 
+        id_imagenes: this.imagenes.map((img) => img.id),
+      };
+      this.usuariosService
+        .registrarUsuario(payload)
+        .pipe(
+          finalize(() => {
+            this.creandoUsuario = false; 
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            this.utilsService.showMessage({
+              title: 'Usuario creado',
+              message: 'El usuario se ha creado correctamente.',
+              icon: 'success',
             });
-          } else {
-            console.error('Error al crear el usuario:', error);
-          }
-        }
-      });
+            this.modalRef.close(response); 
+          },
+          error: (error) => {
+            
+            if (error.status === 400 && error.error) {
+              const msg =
+                error.error.message ||
+                error.error.error ||
+                error.statusText ||
+                'Error desconocido';
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: msg,
+              });
+            } else {
+              console.error('Error al crear el usuario:', error);
+            }
+          },
+        });
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  onImagenSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      this.usuariosService.cargarImagenDoc(formData).subscribe({
+        next: (data) => {
+          this.utilsService.showMessage({
+            title: 'Imagen subida con éxito',
+            message: 'La imagen se ha subido correctamente.',
+            icon: 'success',
+          });
+          const imagenId = data.id;
+          const imagenUrl = this.apiUrl + '/imagenDoc/' + imagenId;
+          this.imagenes?.push({ id: data.id, url: imagenUrl });
+        },
+        error: (error) => {
+          this.utilsService.showMessage({
+            title: 'Error al subir la imagen',
+            message:
+              error.error.error ||
+              'No se pudo subir la imagen. Por favor, intente nuevamente.',
+            icon: 'error',
+          });
+        },
+      });
+      formData.forEach((value, key) => {
+      });
+    }
+
+    input.value = '';
+  }
+  abrirSelectorImagen(): void {
+    this.inputImagen.nativeElement.click();
+  }
+
+  eliminarImagen(id: number) {
+    this.usuariosService.eliminarImagenDoc(id).subscribe({
+      next: () => {
+        this.utilsService.showMessage({
+          title: 'Imagen eliminada',
+          message: 'La imagen fue eliminada correctamente.',
+          icon: 'success',
+        });
+        this.imagenes = this.imagenes.filter((img) => img.id !== id);
+      },
+      error: (err) => {
+        console.error('Error al eliminar imagen:', err);
+        this.utilsService.showMessage({
+          title: 'Error',
+          message: err.err.err || 'No se pudo eliminar la imagen.',
+          icon: 'error',
+        });
+      },
+    });
   }
 }

@@ -87,7 +87,8 @@
             Entre Calles: <strong>{{ propiedad.entre_calles }}</strong>
           </p>
           <p>
-            Precio por Noche: <strong>U$D{{ propiedad.precioNoche | number:'1.2-2'}}</strong>
+            Precio por Noche:
+            <strong>U$D{{ propiedad.precioNoche | number : "1.2-2" }}</strong>
           </p>
           <p>
             Política de Reserva: <strong>{{ propiedad.pol_reserva }}</strong>
@@ -134,17 +135,19 @@
                 <th
                   nzShowSort
                   nzColumnKey="fecha_inicio"
-                  [nzSortFn]="fechaCompare"
+                  [nzSortFn]="fechaInicioCompare"
                 >
                   Fecha de Inicio
                 </th>
+
                 <th
                   nzShowSort
                   nzColumnKey="fecha_fin"
-                  [nzSortFn]="fechaCompare"
+                  [nzSortFn]="fechaFinCompare"
                 >
                   Fecha de Fin
                 </th>
+
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -243,7 +246,9 @@
       <form nz-form [formGroup]="formEmpleado" nzLayout="vertical">
         <div class="col-md-6">
           <nz-form-item>
-            <nz-form-label nzRequired nzFor="id_encargado">Encargado</nz-form-label>
+            <nz-form-label nzRequired nzFor="id_encargado"
+              >Encargado</nz-form-label
+            >
 
             <nz-select
               nzPlaceHolder="Seleccionar Encargado"
@@ -254,11 +259,9 @@
                 *ngFor="let empleado of empleados"
                 [nzValue]="empleado.id"
                 [nzLabel]="empleado.nombre + ': ' + empleado.correo"
-
               ></nz-option>
             </nz-select>
           </nz-form-item>
-
         </div>
       </form>
     </div>
@@ -267,7 +270,9 @@
       <form nz-form [formGroup]="formCodigo" nzLayout="vertical">
         <div class="col-md-3">
           <nz-form-item>
-            <nz-form-label nzRequired nzFor="codigoAcceso">Código de Acceso</nz-form-label>
+            <nz-form-label nzRequired nzFor="codigoAcceso"
+              >Código de Acceso</nz-form-label
+            >
             <nz-form-control [nzErrorTip]="codigoAccesoErrorTpl">
               <input
                 nz-input

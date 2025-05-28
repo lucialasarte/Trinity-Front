@@ -40,22 +40,38 @@ export class UsuariosService {
     return this.http.get<Usuario[]>(`${this.apiUrl}/por-rol/${rolId}`);
   }
 
-
-
   subirImagenDocumento(formData: FormData, idUsuario: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/imagenDocumento?id_usuario=${idUsuario}`, formData);
+    return this.http.post(
+      `${this.apiUrl}/imagenDocumento?id_usuario=${idUsuario}`,
+      formData
+    );
   }
 
-  subirImagenDocAdicional(formData: FormData, idUsuario: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/imagenDoc?id_usuario=${idUsuario}`, formData);
+  subirImagenDocAdicional(
+    formData: FormData,
+    idUsuario: number
+  ): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/imagenDoc?id_usuario=${idUsuario}`,
+      formData
+    );
   }
 
   getImagenesDocUsuario(idUsuario: number): Observable<number[]> {
-    return this.http.get<number[]>(`${this.apiUrl}/imagenesDoc?id_usuario=${idUsuario}`);
+    return this.http.get<number[]>(
+      `${this.apiUrl}/imagenesDoc?id_usuario=${idUsuario}`
+    );
   }
 
   eliminarImagenDoc(idImagen: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/imagenDoc?id_imagen=${idImagen}`);
+    return this.http.delete(`${this.apiUrl}/imagen?id_imagen=${idImagen}`);
   }
 
+  cargarImagenDoc(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/imagen`, formData);
+  }
+
+  registrarUsuario(usuario: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registrar`, usuario);
+  }
 }
