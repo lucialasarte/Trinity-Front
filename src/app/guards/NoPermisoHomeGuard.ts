@@ -16,7 +16,7 @@ export class NoPermisoHomeGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return runInInjectionContext(this.injector, () => {
       return toObservable(this.auth.usuarioActual).pipe(
-        filter(usuario => usuario !== null),
+        filter(usuario => usuario !== undefined),
         take(1),
         tap(usuario => {
           const esEmpleado = usuario?.permisos?.gestionar_propiedades;

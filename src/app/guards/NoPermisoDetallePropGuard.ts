@@ -17,7 +17,7 @@ export class NoPermisoDetallePropGuard implements CanActivate {
     return runInInjectionContext(this.injector, () => {
       return toObservable(this.auth.usuarioActual).pipe(
         // Esperamos a que el usuario esté definido (no nulo)
-        filter(usuario => usuario !== null),
+        filter(usuario => usuario !== undefined),
         take(1), // Solo nos interesa la primer emisión que no sea nula
         tap(usuario => {
           const esEmpleado = usuario?.permisos?.gestionar_propiedades;

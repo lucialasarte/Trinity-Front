@@ -17,7 +17,7 @@ export class RedireccionInicialGuard implements CanActivate {
     // ✅ corremos dentro del contexto de inyección correcto
     return runInInjectionContext(this.injector, () => {
       return toObservable(this.auth.usuarioActual).pipe(
-        filter(usuario => usuario !== null), // Espera que esté cargado
+        filter(usuario => usuario !== undefined), // Espera que esté cargado
         take(1),
         tap(usuario => {
           const esEmpleado = usuario?.permisos?.gestionar_propiedades;
