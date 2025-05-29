@@ -9,7 +9,6 @@ import { ReservasService } from '../reservas/services/reservas.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -114,31 +113,54 @@ export class HomeComponent {
       monto_total: this.precioTotal,
       id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1,
     };
+    const usuario = this.auth.usuarioActual();
+    const tarjeta =
+      usuario?.tarjetas && usuario.tarjetas.length > 0
+        ? usuario.tarjetas[0]
+        : undefined;
 
-    this.reservasService.createReserva(reserva).subscribe({
-      next: (data) => {
-        this.cargando = false;
-        this.utilsService.showMessage({
-          title: 'Reserva creada con éxito',
-          message: 'Tu reserva ha sido creada exitosamente.',
-          icon: 'success',
-        });
-        this.handleCancelReserva();
-        this.form.reset();
-        this.router.navigate(['/detalle-reserva', data.id]);
-      },
-      error: (error) => {
-        this.cargando = false;
-        console.error('Error al crear la reserva:', error);
-        this.utilsService.showMessage({
-          title: 'Error al crear la reserva',
-          message:
-            error.error.error ||
-            'No se pudo crear la reserva. Por favor, intenta nuevamente.',
-          icon: 'error',
-        });
-      },
-    });
+    let fechaVencimiento: Date | null = null;
+    if (tarjeta?.fecha_vencimiento) {
+      const [mesStr, anioStr] = tarjeta.fecha_vencimiento.split('/');
+      const mes = parseInt(mesStr);
+      const anio = parseInt(anioStr);
+      fechaVencimiento = new Date(anio, mes, 0, 23, 59, 59);
+    }
+
+    if (fechaVencimiento && fechaVencimiento < new Date()) {
+      this.cargando = false;
+      this.utilsService.showMessage({
+        title: 'Tarjeta vencida',
+        message: 'Tu tarjeta de crédito está vencida. Por favor, actualízala.',
+        icon: 'error',
+      });
+      return;
+    } else {
+      this.reservasService.createReserva(reserva).subscribe({
+        next: (data) => {
+          this.cargando = false;
+          this.utilsService.showMessage({
+            title: 'Reserva creada con éxito',
+            message: 'Tu reserva ha sido creada exitosamente.',
+            icon: 'success',
+          });
+          this.handleCancelReserva();
+          this.form.reset();
+          this.router.navigate(['/detalle-reserva', data.id]);
+        },
+        error: (error) => {
+          this.cargando = false;
+          console.error('Error al crear la reserva:', error);
+          this.utilsService.showMessage({
+            title: 'Error al crear la reserva',
+            message:
+              error.error.error ||
+              'No se pudo crear la reserva. Por favor, intenta nuevamente.',
+            icon: 'error',
+          });
+        },
+      });
+    }
   }
 
   handleCancelReserva() {
