@@ -56,10 +56,8 @@ export class HomeComponent {
     this.propiedadesPaginadas = [];
     const formValue = this.form.getRawValue();
 
-    // Extraemos las fechas del control 'fechas'
     const [checkin, checkout] = formValue.fechas || [null, null];
 
-    // Creamos el objeto de búsqueda manualmente
     this.search = {
       id: formValue.id,
       checkin: checkin,

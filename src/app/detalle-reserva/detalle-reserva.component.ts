@@ -21,6 +21,7 @@ export class DetalleReservaComponent {
   estado: string = '';
   puedeCalificar = false;
   usuario = computed(() => this.auth.usuarioActual());
+  cargando = false;
 
   constructor(
     private propiedadesService: PropiedadesService,
@@ -46,6 +47,7 @@ export class DetalleReservaComponent {
 
   calificar() {}
   cancelar(id: number) {
+   
     if (id) {
       this.utilsService.showMessage({
         title: '¿Estás seguro?',
@@ -56,8 +58,10 @@ export class DetalleReservaComponent {
         showConfirmButton: true,
         showCancelButton: true,
         actionOnConfirm: () => {
+         this.cargando = true;
           this.reservasService.cancelarReserva(id).subscribe({
             next: () => {
+              this.cargando = false;
               this.utilsService.showMessage({
                 title: 'Reserva cancelada',
                 message: 'La reserva fue cancelada correctamente.',
@@ -67,6 +71,7 @@ export class DetalleReservaComponent {
               this._getReserva(this.reserva.id);
             },
             error: (err) => {
+              this.cargando = false;
               console.error('Error al cancelar la reserva:', err);
               this.utilsService.showMessage({
                 title: 'Error',
