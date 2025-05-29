@@ -364,7 +364,7 @@ export class DetallePropiedadComponent implements OnInit {
   }
 
   private _getEmpleados() {
-    this.empleadoService.getEmpleados().subscribe({
+    this.empleadoService.getEncargados().subscribe({
       next: (data) => {
         this.empleados = data;
       },

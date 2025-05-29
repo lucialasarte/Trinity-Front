@@ -131,7 +131,7 @@ export class HomeComponent {
       this.cargando = false;
       this.utilsService.showMessage({
         title: 'Tarjeta vencida',
-        message: 'Tu tarjeta de crédito está vencida. Por favor, actualízala.',
+        message: 'Tu tarjeta de crédito está vencida.',
         icon: 'error',
       });
       return;
