@@ -139,10 +139,8 @@ export class PropiedadesComponent implements OnInit {
         });
       },
       actionOnCancel: () => {
-        this.eliminando = true;
         this.propiedadesService.eliminar_propiedad(id).subscribe({
           next: (data) => {
-            this.eliminando = false;
             if (data.delete_at && esHoy(data.delete_at)) {
               this.utilsService.showMessage({
                 title: 'Propiedad eliminada',
@@ -160,19 +158,16 @@ export class PropiedadesComponent implements OnInit {
             this._getPropiedadesEliminadas();
           },
           error: (error) => {
-            this.eliminando = false;
             this.utilsService.showMessage({
               icon: 'error',
               title: 'Error al deshabilitar propiedad',
               message:
                 'No se pudo deshabilitar la propiedad. Por favor, intente nuevamente más tarde.',
             });
-            console.error(error);
           },
         });
       },
       actionOnDeny: () => {
-        // No se especifica acción, podés agregar lógica si lo necesitás
       },
     });
   }
