@@ -35,11 +35,12 @@ export class PropiedadesService {
     return this.http.patch<any[]>(`${this.apiUrl}/cambiarEstado/${id}`, {});
   }
 
-  eliminar_propiedad(prop_id: number) {
-    return this.http.patch<any[]>(`${this.apiUrl}/eliminar/${prop_id}`, {});
+  eliminar_propiedad(prop_id: number) : Observable<Propiedad> {
+    return this.http.patch<Propiedad>(`${this.apiUrl}/eliminar/${prop_id}`, {});
   }
-  eliminar_con_reservas(prop_id: number) {
-    return this.http.patch<any[]>(
+
+  eliminar_con_reservas(prop_id: number): Observable<Propiedad> {
+    return this.http.patch<Propiedad>(
       `${this.apiUrl}/eliminarConReservas/${prop_id}`,
       {}
     );

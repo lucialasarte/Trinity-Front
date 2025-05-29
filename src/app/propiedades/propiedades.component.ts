@@ -52,7 +52,7 @@ export class PropiedadesComponent implements OnInit {
     propiedad.requiere_documentacion = false;
 
     this.propiedadesService.createPropiedad(propiedad).subscribe({
-      next: () => {
+      next: (data) => {
         this._getPropiedades();
         this.utilsService.showMessage({
           title: 'Propiedad creada',
@@ -61,6 +61,7 @@ export class PropiedadesComponent implements OnInit {
         });
         this.formPropiedad.form.reset();
         this.isVisible = false;
+        this.verPropiedad(data.id);
       },
       error: (err) => {
         this.utilsService.showMessage({
@@ -86,6 +87,9 @@ export class PropiedadesComponent implements OnInit {
   buscarPropiedad() {}
 
   eliminar(id: number) {
+    const esHoy = (fecha: string | Date) =>
+      new Date(fecha).toLocaleDateString() === new Date().toLocaleDateString();
+
     this.utilsService.showMessage2({
       title: '¿Desea cancelar las reservas futuras?',
       message:
@@ -101,14 +105,24 @@ export class PropiedadesComponent implements OnInit {
       actionOnConfirm: () => {
         this.eliminando = true;
         this.propiedadesService.eliminar_con_reservas(id).subscribe({
-          next: () => {
+          next: (data) => {
             this.eliminando = false;
-            this.utilsService.showMessage({
-              title: 'Reservas canceladas',
-              message:
-                'Las reservas futuras han sido canceladas y la propiedad ha sido eliminada.',
-              icon: 'success',
-            });
+
+            if (data.delete_at && esHoy(data.delete_at)) {
+              this.utilsService.showMessage({
+                title: 'Propiedad eliminada',
+                message: 'La propiedad ha sido eliminada correctamente.',
+                icon: 'success',
+              });
+            } else {
+              this.utilsService.showMessage({
+                title: 'Reservas canceladas',
+                message:
+                  'Las reservas futuras han sido canceladas y la propiedad ha sido eliminada.',
+                icon: 'success',
+              });
+            }
+
             this._getPropiedades();
             this._getPropiedadesEliminadas();
           },
@@ -125,17 +139,28 @@ export class PropiedadesComponent implements OnInit {
         });
       },
       actionOnCancel: () => {
+        this.eliminando = true;
         this.propiedadesService.eliminar_propiedad(id).subscribe({
           next: (data) => {
-            this.utilsService.showMessage({
-              title: 'Propiedad deshabilitada',
-              message: 'La propiedad ha sido deshabilitada correctamente.',
-              icon: 'success',
-            });
+            this.eliminando = false;
+            if (data.delete_at && esHoy(data.delete_at)) {
+              this.utilsService.showMessage({
+                title: 'Propiedad eliminada',
+                message: 'La propiedad ha sido eliminada correctamente.',
+                icon: 'success',
+              });
+            } else {
+              this.utilsService.showMessage({
+                title: 'Propiedad deshabilitada',
+                message: 'La propiedad ha sido deshabilitada correctamente.',
+                icon: 'success',
+              });
+            }
             this._getPropiedades();
             this._getPropiedadesEliminadas();
           },
           error: (error) => {
+            this.eliminando = false;
             this.utilsService.showMessage({
               icon: 'error',
               title: 'Error al deshabilitar propiedad',
@@ -147,11 +172,7 @@ export class PropiedadesComponent implements OnInit {
         });
       },
       actionOnDeny: () => {
-        // this.utilsService.showMessage({
-        //   title: 'Operación cancelada',
-        //   message: 'La operación ha sido cancelada.',
-        //   icon: 'info',
-        // });
+        // No se especifica acción, podés agregar lógica si lo necesitás
       },
     });
   }

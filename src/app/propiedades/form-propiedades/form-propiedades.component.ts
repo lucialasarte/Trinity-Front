@@ -25,7 +25,6 @@ export class FormPropiedadesComponent {
     private fb: FormBuilder,
     private parametricasService: ParametricasService,
     private empleadoService: EmpleadosService
-    
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +43,7 @@ export class FormPropiedadesComponent {
       tipo: [null],
       calle: [null, Validators.required],
       numero: [null, Validators.required],
-      entre_calles: [null,Validators.required],
+      entre_calles: [null, Validators.required],
       descripcion: [null, Validators.required],
       piso: [null],
       depto: [null],
@@ -53,10 +52,22 @@ export class FormPropiedadesComponent {
       id_provincia: [null, Validators.required],
       precioNoche: [null, [Validators.required, Validators.min(0)]],
       codigoAcceso: ['0000', [Validators.pattern(/^\d{4}$/)]],
-      banios: [null, [Validators.required, Validators.min(0)]],
-      ambientes: [null, [Validators.required, Validators.min(0)]],
-      huespedes: [null, [Validators.required, Validators.min(0)]],
-      cocheras: [null, [Validators.required, Validators.min(0)]],
+      banios: [
+        null,
+        [Validators.required, Validators.min(0), Validators.max(10)],
+      ],
+      ambientes: [
+        null,
+        [Validators.required, Validators.min(1), Validators.max(10)],
+      ],
+      huespedes: [
+        null,
+        [Validators.required, Validators.min(1), Validators.max(10)],
+      ],
+      cocheras: [
+        null,
+        [Validators.required, Validators.min(0), Validators.max(10)],
+      ],
       // requiere_documentacion: [false],
       id_encargado: [null],
     });
