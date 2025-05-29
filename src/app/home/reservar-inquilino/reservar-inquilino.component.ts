@@ -9,13 +9,12 @@ import { Propiedad } from 'src/app/propiedades/models/propiedad';
 })
 export class ReservarInquilinoComponent implements OnInit {
   @Input() propiedad: Propiedad = new Propiedad();
-  @Input() checkin!: Date;
-  @Input() checkout!: Date;
+  @Input() checkin: Date | null = null;
+  @Input() checkout: Date | null = null;
   @Input() huespedes!: number;
   @Input() precioTotal!: number;
+
   constructor() {}
 
   ngOnInit(): void {}
-
-  
 }

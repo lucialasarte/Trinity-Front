@@ -25,6 +25,7 @@ export class PropiedadesComponent implements OnInit {
   propiedadesEliminadas: any[] = [];
   isFormValid = false;
   cargando = true;
+  eliminando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -98,8 +99,10 @@ export class PropiedadesComponent implements OnInit {
       confirmButtonText: 'Cancelar Reservas',
       cancelButtonColor: '#d33',
       actionOnConfirm: () => {
+        this.eliminando = true;
         this.propiedadesService.eliminar_con_reservas(id).subscribe({
           next: () => {
+            this.eliminando = false;
             this.utilsService.showMessage({
               title: 'Reservas canceladas',
               message:
@@ -110,6 +113,7 @@ export class PropiedadesComponent implements OnInit {
             this._getPropiedadesEliminadas();
           },
           error: (error) => {
+            this.eliminando = false;
             this.utilsService.showMessage({
               icon: 'error',
               title: 'Error al eliminar propiedad',

@@ -7,14 +7,10 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
-import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Propiedad } from '../propiedades/models/propiedad';
 import { EmpleadosService } from '../empleados/services/empleados.service';
-import { HttpClient } from '@angular/common/http';
-import { ParametricasService } from '../shared/services/parametricas.service';
-import { forkJoin } from 'rxjs';
-import { ImagenesService } from '../shared/services/imagenes.service';
 import { ReservasService } from '../reservas/services/reservas.service';
 import { UtilsService } from '../shared/services/utils.service';
 import { AuthService } from '../auth/auth.service';
@@ -203,18 +199,7 @@ export class DetallePropiedadComponent implements OnInit {
     input.value = '';
   }
 
-  // private _getPropiedad(id: number) {
-  //   this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-  //     this.propiedad = data;
-  //     this._getReservas(this.propiedad.id);
-  //     this._cargarImagenes(this.propiedad.id_imagenes);
-  //     if (this.propiedad.id_encargado) {
-  //       this._getEmpleado(this.propiedad.id_encargado);
-  //     }
-  //   });
-  // }
-  
-   private _getPropiedad(id: number) {
+  private _getPropiedad(id: number) {
     this.propiedadesService.get_propiedad_id(id).subscribe({
       next: (data) => {
         this.propiedad = data;
@@ -225,8 +210,9 @@ export class DetallePropiedadComponent implements OnInit {
         }
       },
       error: (error) => {
-
-        const errorMessage = error.error?.error || 'No se pudo cargar la propiedad. Por favor, intenta nuevamente.';
+        const errorMessage =
+          error.error?.error ||
+          'No se pudo cargar la propiedad. Por favor, intenta nuevamente.';
 
         this.utilsService.showMessage({
           title: 'Error al cargar propiedad',
@@ -235,9 +221,9 @@ export class DetallePropiedadComponent implements OnInit {
         });
         if (error.status === 422) {
           if (this.auth.usuarioActual()?.permisos?.gestionar_propiedades) {
-            this.router.navigate(['/propiedades']); 
+            this.router.navigate(['/propiedades']);
           } else {
-            this.router.navigate(['/home']); 
+            this.router.navigate(['/home']);
           }
         }
       },
@@ -349,7 +335,8 @@ export class DetallePropiedadComponent implements OnInit {
       error: (error) => {
         this.utilsService.showMessage({
           title: 'Error al obtener reservas',
-          message:error.error.error ||
+          message:
+            error.error.error ||
             'No se pudieron cargar las reservas. Por favor, intente nuevamente.',
           icon: 'error',
         });
