@@ -397,21 +397,32 @@
       </div>
     </div>
     <hr />
-    <div class="card-imagenes">
-      <span *ngIf="(imagenes?.length ?? 0) < 2">
-        <button (click)="abrirSelectorImagen()" class="btn">
-          <i class="fa fa-plus"></i> Cargar Imagen
-        </button>
-        <input
-          type="file"
-          #inputImagen
-          accept="image/*"
-          style="display: none"
-          (change)="onImagenSeleccionada($event)"
-        />
-      </span>
-
-      <div *ngIf="imagenes?.length" class="imagenes-grid">
+    <br />
+    <h6>Subir Documentacion</h6>
+    <div class="row">
+      <p>
+        Debe cargar foto del frente y dorso de la documentación identificatoria
+        ingresada.
+      </p>
+    </div>
+    <span *ngIf="(imagenes?.length ?? 0) < 2">
+      <button
+        nz-button
+        class="bton-cargar-imagen"
+        (click)="abrirSelectorImagen()"
+      >
+        <span> <i class="fa fa-plus"></i> Cargar Imagen</span>
+      </button>
+      <input
+        type="file"
+        #inputImagen
+        accept="image/*"
+        style="display: none"
+        (change)="onImagenSeleccionada($event)"
+      />
+    </span>
+    <div class="card-imagenes" *ngIf="imagenes?.length">
+      <div class="imagenes-grid">
         <div class="imagen-wrapper" *ngFor="let imagen of imagenes">
           <button
             type="button"

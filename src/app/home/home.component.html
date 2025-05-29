@@ -11,7 +11,6 @@
           nzShowSearch
           [nzAllowClear]="true"
         >
-        
           <nz-option
             *ngFor="let ciudad of ciudades"
             [nzLabel]="ciudad.nombre"
@@ -79,7 +78,7 @@
       <nz-card [nzTitle]="propiedad.nombre" [nzCover]="coverTemplate">
         <ng-template #coverTemplate>
           <img
-           *ngIf="propiedad.fotoPerfil"
+            *ngIf="propiedad.fotoPerfil"
             alt="imagen propiedad"
             [src]="propiedad.fotoPerfil || 'assets/propiedades/1.jpeg'"
             width="120"
@@ -92,9 +91,10 @@
 
         <div class="grid-detalles">
           <div>
-            <strong>Precio por noche: </strong
-            >U$D{{ propiedad.precioNoche  | number:'1.2-2'}}
-            </div>
+            <strong>Precio por noche: </strong>U$D{{
+              propiedad.precioNoche | number : "1.2-2"
+            }}
+          </div>
           <div><strong>Ambientes:</strong> {{ propiedad.ambientes }}</div>
           <div><strong>Huéspedes:</strong> {{ propiedad.huespedes }}</div>
           <div><strong>Baños:</strong> {{ propiedad.banios }}</div>
@@ -133,12 +133,23 @@
     </div>
 
     <div *nzModalFooter>
-      <button class="btn-cancel" nz-button (click)="handleCancelReserva()">
-        Cancelar
-      </button>
-      <button class="btn-guardar" nz-button (click)="onSubmitReserva()">
-        Reservar
-      </button>
+      <div *ngIf="auth.usuarioActual()?.permisos?.ver_panel_inquilino">
+        <button class="btn-cancel" nz-button (click)="handleCancelReserva()">
+          Cancelar
+        </button>
+        <button class="btn-guardar" nz-button (click)="onSubmitReserva()">
+          Reservar
+        </button>
+      </div>
+
+      <div
+        class="sin-permisos"
+        *ngIf="
+          auth.usuarioActual() === null || auth.usuarioActual() === undefined
+        "
+      >
+        <p>Debe registrarse para realizar reservas.</p>
+      </div>
     </div>
   </nz-modal>
 </div>

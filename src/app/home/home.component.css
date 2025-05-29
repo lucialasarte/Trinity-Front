@@ -130,3 +130,17 @@
   margin: 0 auto;
   /* border-radius: 10px; */
 }
+
+.sin-permisos {
+  background-color: #f56161; /* fondo amarillo claro */
+  color: #fff; /* texto marrón oscuro */
+  border-left: 6px solid #ffecb5; /* barra decorativa */
+  padding: 16px;
+  margin-top: 24px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}

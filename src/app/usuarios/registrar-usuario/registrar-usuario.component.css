@@ -109,11 +109,14 @@ button[nztype="dashed"] {
 }
 .imagenes-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* de 6 a 4 */
-  gap: 20px; /* un poco más de separación */
-  margin-top: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  justify-content: center;
+  margin-top: 2rem;
+  justify-content: center;
 }
-.card-imagenes{
+
+.card-imagenes {
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -121,3 +124,22 @@ button[nztype="dashed"] {
   padding: 16px 24px;
   width: 100%;
 }
+
+.imagen-wrapper {
+  position: relative;
+  padding: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.imagen-propiedad {
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+
+
