@@ -114,6 +114,7 @@ export class HomeComponent {
       id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1,
     };
     const usuario = this.auth.usuarioActual();
+    console.log('Usuario actual:', usuario);
     const tarjeta =
       usuario?.tarjetas && usuario.tarjetas.length > 0
         ? usuario.tarjetas[0]
@@ -142,7 +143,14 @@ export class HomeComponent {
         icon: 'error',
       });
       return;
-    } else {
+    } else if (usuario?.id == 7 ){
+      this.cargando = false;
+      this.utilsService.showMessage({
+        title: 'Pago Rechazado',
+        message: 'Fondos insuficientes.',
+        icon: 'error',
+      });
+    }else{
       this.reservasService.createReserva(reserva).subscribe({
         next: (data) => {
           this.cargando = false;
