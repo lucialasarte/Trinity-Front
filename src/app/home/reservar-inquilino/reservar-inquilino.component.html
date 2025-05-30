@@ -1,21 +1,27 @@
 <div class="modal-contenido">
   <div class="contenedor-carrusel">
-    <button class="flecha flecha-izquierda" (click)="anteriorImagen()" [disabled]="imagenActualIndex === 0">
+    <button
+      class="flecha flecha-izquierda"
+      (click)="anteriorImagen()"
+      [disabled]="imagenActualIndex === 0"
+    >
       ◀
     </button>
-  
+
     <img
       [src]="imagenActual"
       alt="Imagen de la propiedad"
       class="imagen-propiedad"
     />
-  
-    <button class="flecha flecha-derecha" (click)="siguienteImagen()" [disabled]="imagenActualIndex === imagenes.length - 1">
+
+    <button
+      class="flecha flecha-derecha"
+      (click)="siguienteImagen()"
+      [disabled]="imagenActualIndex === imagenes.length - 1"
+    >
       ▶
     </button>
   </div>
-  
-  
 
   <h2>{{ propiedad.nombre }}</h2>
   <p>{{ propiedad.descripcion }}</p>
@@ -23,7 +29,7 @@
   <div class="grid-detalles">
     <p>
       <strong>Precio por noche:</strong>U$D
-      {{ propiedad.precioNoche | number:'1.2-2'}}
+      {{ propiedad.precioNoche | number : "1.2-2" }}
     </p>
     <p><strong>Ambientes:</strong> {{ propiedad.ambientes }}</p>
     <p><strong>Baños:</strong> {{ propiedad.banios }}</p>
@@ -55,6 +61,8 @@
     <p><strong>Check-in:</strong> {{ checkin | date : "dd/MM/yyyy" }}</p>
     <p><strong>Check-out:</strong> {{ checkout | date : "dd/MM/yyyy" }}</p>
     <p><strong>Huéspedes:</strong> {{ huespedes }}</p>
-    <p><strong>Total estadía:</strong> U$D{{ precioTotal | number:'1.2-2' }}</p>
+    <p>
+      <strong>Total estadía:</strong> U$D{{ precioTotal | number : "1.2-2" }}
+    </p>
   </div>
 </div>
