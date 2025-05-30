@@ -12,7 +12,7 @@
     <h1 class="logo-text">Alquiloando</h1>
   </div>
   <ul class="nav-list">
-    <li *ngIf="!auth.usuarioActual()?.permisos?.gestionar_propiedades">
+    <li >
       <button [routerLink]="'/home'" routerLinkActive="active">
         <span class="icon">🏠</span>
         <span *ngIf="isEnglish" class="label">Home</span>
