@@ -86,7 +86,7 @@ export class DetallePropiedadComponent implements OnInit {
   }
   editarEncargado() {
     this._getEmpleados();
-    this.modalTitle = 'Editar código de acceso';
+    this.modalTitle = 'Editar Encargado';
     this._initFormEncargado();
     this.isModalVisible = true;
   }
