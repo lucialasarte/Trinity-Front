@@ -99,9 +99,10 @@ export class DetalleReservaComponent {
   private _getReserva(id: number) {
     this.reservasService.get_reserva_id(id).subscribe({
       next: (data) => {
-        this.reserva = data;
-        this._getPropiedad(this.reserva.id_propiedad);
-        this.validarCalificacion();
+        this.reserva = data.reserva;
+        this.propiedad = data.propiedad;
+        // this._getPropiedad(this.reserva.id_propiedad);
+        // this.validarCalificacion();
       },
       error: (error) => {
         this.utilsService.showMessage({

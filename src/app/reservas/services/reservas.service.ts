@@ -17,7 +17,7 @@ export class ReservasService {
   }
 
   get_reserva_id(id: number) {
-    return this.http.get<Reserva>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   get_reservas() {

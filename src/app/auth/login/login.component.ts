@@ -32,14 +32,8 @@ export class LoginComponent {
     this.auth.login(correo, password).subscribe({
       next: () => {
         this.loading = false;
-        const esEmpleado =
-          this.auth.usuarioActual()?.permisos?.gestionar_propiedades;
 
-        if (esEmpleado) {
-          this.router.navigate(['/propiedades']);
-        } else {
-          this.router.navigate(['/home']);
-        }
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         this.loading = false;
