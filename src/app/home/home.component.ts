@@ -122,8 +122,15 @@ export class HomeComponent {
     let fechaVencimiento: Date | null = null;
     if (tarjeta?.fecha_vencimiento) {
       const [mesStr, anioStr] = tarjeta.fecha_vencimiento.split('/');
-      const mes = parseInt(mesStr);
-      const anio = parseInt(anioStr);
+      const mes = parseInt(mesStr, 10); // de 1 a 12
+      let anio = parseInt(anioStr, 10);
+
+      // Corregir años abreviados tipo "26" → 2026
+      if (anio < 100) {
+        anio += 2000;
+      }
+
+      // Último día del mes
       fechaVencimiento = new Date(anio, mes, 0, 23, 59, 59);
     }
 
