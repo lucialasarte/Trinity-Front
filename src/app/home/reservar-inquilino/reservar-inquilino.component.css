@@ -65,20 +65,23 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color:transparent;
+
   border: none;
   font-size: 2rem;
   cursor: pointer;
   padding: 0 8px;
-  border-radius: 4px;
+  border-radius: 50px;
   z-index: 2;
 }
 
 .flecha-izquierda {
+  background-color:transparent;
   left: 8px;
 }
 
 .flecha-derecha {
+  background-color:transparent;
   right: 8px;
 }
 
@@ -86,3 +89,4 @@
   opacity: 0.4;
   cursor: default;
 }
+
