@@ -1,9 +1,21 @@
 <div class="modal-contenido">
-  <img
-    [src]="propiedad.fotoPerfil"
-    alt="imagen propiedad"
-    class="imagen-propiedad"
-  />
+  <div class="contenedor-carrusel">
+    <button class="flecha flecha-izquierda" (click)="anteriorImagen()" [disabled]="imagenActualIndex === 0">
+      ◀
+    </button>
+  
+    <img
+      [src]="imagenActual"
+      alt="Imagen de la propiedad"
+      class="imagen-propiedad"
+    />
+  
+    <button class="flecha flecha-derecha" (click)="siguienteImagen()" [disabled]="imagenActualIndex === imagenes.length - 1">
+      ▶
+    </button>
+  </div>
+  
+  
 
   <h2>{{ propiedad.nombre }}</h2>
   <p>{{ propiedad.descripcion }}</p>
