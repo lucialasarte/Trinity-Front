@@ -236,7 +236,6 @@ export class DetallePropiedadComponent implements OnInit {
         (empleado) => empleado.id === this.propiedad.id_encargado
       );
     });
-    console.log(this.encargado);
   }
 
   private _cargarImagenes(imagenObjs: [number]): void {

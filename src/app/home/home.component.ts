@@ -190,7 +190,6 @@ export class HomeComponent {
       .get_ciudades_con_propiedades()
       .subscribe((data) => {
         this.ciudades = data;
-        console.log(this.ciudades);
       });
   }
 

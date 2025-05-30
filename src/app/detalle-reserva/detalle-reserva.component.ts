@@ -89,12 +89,12 @@ export class DetalleReservaComponent {
     this.router.navigate(['/detalle-propiedad', id]);
   }
 
-  private _getPropiedad(id: number) {
-    this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-      console.log(data);
-      this.propiedad = data;
-    });
-  }
+  // private _getPropiedad(id: number) {
+  //   this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
+  //     console.log(data);
+  //     this.propiedad = data;
+  //   });
+  // }
 
   private _getReserva(id: number) {
     this.reservasService.get_reserva_id(id).subscribe({
@@ -132,12 +132,12 @@ export class DetalleReservaComponent {
   }
 
   estadoClase(estado: string): string {
-    switch (estado.toLowerCase()) {
-      case 'confirmada':
+    switch (estado) {
+      case 'Confirmada':
         return 'badge-confirmada';
-      case 'pendiente':
+      case 'Pendiente':
         return 'badge-pendiente';
-      case 'cancelada':
+      case 'Cancelada':
         return 'badge-cancelada';
       default:
         return 'badge-otros';

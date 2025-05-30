@@ -104,7 +104,6 @@ export class FormPropiedadesComponent {
   private _get_provincias() {
     this.parametricasService.get_provincias().subscribe((data) => {
       this.provincias = data;
-      console.log(this.provincias);
     });
   }
 
@@ -116,7 +115,6 @@ export class FormPropiedadesComponent {
   private _getEmpleados() {
     this.empleadoService.getEmpleados().subscribe((data) => {
       this.empleados = data;
-      console.log(this.empleados);
     });
   }
 }

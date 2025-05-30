@@ -108,7 +108,6 @@ export class ReservasComponent {
   private _getReservas() {
     this.reservasService.get_reservas().subscribe({
       next: (data) => {
-        console.log(data);
         this.reservas = data;
         this.cargando = false;
       },

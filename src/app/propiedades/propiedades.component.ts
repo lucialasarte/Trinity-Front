@@ -245,7 +245,6 @@ export class PropiedadesComponent implements OnInit {
   private _getPropiedadesEliminadas() {
     this.propiedadesService.getPropiedadesEliminadas().subscribe((data) => {
       this.propiedadesEliminadas = data;
-      console.log(this.propiedadesEliminadas);
     });
   }
 
@@ -253,7 +252,6 @@ export class PropiedadesComponent implements OnInit {
     if (propiedad.is_habilitada) {
       this.propiedadesService.cambiar_estado_propiedad(propiedad.id).subscribe({
         next: (data) => {
-          console.log('Respuesta del servidor:', data);
           this.utilsService.showMessage({
             title: 'Propiedad deshabilitada',
             message: 'La propiedad ha sido deshabilitada correctamente.',
@@ -273,8 +271,7 @@ export class PropiedadesComponent implements OnInit {
       });
     } else {
       this.propiedadesService.cambiar_estado_propiedad(propiedad.id).subscribe({
-        next: (data) => {
-          console.log('Respuesta del servidor:', data);
+        next: () => {
           this.utilsService.showMessage({
             title: 'Propiedad habilitada',
             message: 'La propiedad ha sido habilitada correctamente.',
