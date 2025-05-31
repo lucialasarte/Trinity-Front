@@ -39,7 +39,7 @@
       <h3 class="card-title">
         Detalles de la Propiedad
         <button
-          *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
+          *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades && !isEliminada"
           class="btn btn-secondary"
           (click)="verPropiedad(propiedad.id)"
           style="float: right"

@@ -86,10 +86,28 @@ export class PropiedadesComponent implements OnInit {
 
   buscarPropiedad() {}
 
-  eliminar(id: number) {
-    const esHoy = (fecha: string | Date) =>
-      new Date(fecha).toLocaleDateString() === new Date().toLocaleDateString();
+  eliminarPropiedad(id: number) {
+    this.propiedadesService.tieneActivas(id).subscribe({
+      next: (data) => {
+        let ok: boolean = Boolean(data.tieneActivas);
+        if (ok) {
+          this.comoEliminar(id);
+        } else {
+          this._deseaEliminar(id);
+        }
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al verificar reservas',
+          message:
+            'No se pudo verificar las reservas activas. Por favor, intente nuevamente más tarde.',
+          icon: 'error',
+        });
+      },
+    });
+  }
 
+  comoEliminar(id: number) {
     this.utilsService.showMessage2({
       title: '¿Desea cancelar las reservas futuras?',
       message:
@@ -98,76 +116,19 @@ export class PropiedadesComponent implements OnInit {
       showCancelButton: true,
       showConfirmButton: true,
       showDenyButton: true,
-      cancelButtonText: 'Deshabilitar',
+      cancelButtonText: 'Cancelar',
       confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Cancelar Reservas',
+      confirmButtonText: 'Cancelar reservas',
       cancelButtonColor: '#d33',
+      denyButtonText: 'No cancelar reservas',
       actionOnConfirm: () => {
         this.eliminando = true;
-        this.propiedadesService.eliminar_con_reservas(id).subscribe({
-          next: (data) => {
-            this.eliminando = false;
-
-            if (data.delete_at && esHoy(data.delete_at)) {
-              this.utilsService.showMessage({
-                title: 'Propiedad eliminada',
-                message: 'La propiedad ha sido eliminada correctamente.',
-                icon: 'success',
-              });
-            } else {
-              this.utilsService.showMessage({
-                title: 'Reservas canceladas',
-                message:
-                  'Las reservas futuras han sido canceladas y la propiedad ha sido eliminada.',
-                icon: 'success',
-              });
-            }
-
-            this._getPropiedades();
-            this._getPropiedadesEliminadas();
-          },
-          error: (error) => {
-            this.eliminando = false;
-            this.utilsService.showMessage({
-              icon: 'error',
-              title: 'Error al eliminar propiedad',
-              message:
-                'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
-            });
-            console.error(error);
-          },
-        });
+        this._eliminarCancelandoReservas(id);
       },
-      actionOnCancel: () => {
-        this.propiedadesService.eliminar_propiedad(id).subscribe({
-          next: (data) => {
-            if (data.delete_at && esHoy(data.delete_at)) {
-              this.utilsService.showMessage({
-                title: 'Propiedad eliminada',
-                message: 'La propiedad ha sido eliminada correctamente.',
-                icon: 'success',
-              });
-            } else {
-              this.utilsService.showMessage({
-                title: 'Propiedad deshabilitada',
-                message: 'La propiedad ha sido deshabilitada correctamente.',
-                icon: 'success',
-              });
-            }
-            this._getPropiedades();
-            this._getPropiedadesEliminadas();
-          },
-          error: (error) => {
-            this.utilsService.showMessage({
-              icon: 'error',
-              title: 'Error al deshabilitar propiedad',
-              message:
-                'No se pudo deshabilitar la propiedad. Por favor, intente nuevamente más tarde.',
-            });
-          },
-        });
-      },
+      actionOnCancel: () => {},
       actionOnDeny: () => {
+        this.eliminando = true;
+        this._eliminarDeshabilitando(id);
       },
     });
   }
@@ -290,5 +251,98 @@ export class PropiedadesComponent implements OnInit {
         },
       });
     }
+  }
+
+  private _eliminarCancelandoReservas(id: number) {
+    this.propiedadesService.eliminar_con_reservas(id).subscribe({
+      next: () => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          title: 'Propiedad eliminada',
+          message:
+            'Las reservas han sido canceladas y la propiedad ha sido eliminada correctamente.',
+          icon: 'success',
+        });
+        this._getPropiedades();
+        this._getPropiedadesEliminadas();
+      },
+      error: (error) => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al eliminar propiedad',
+          message:
+            'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
+        });
+        console.error(error);
+      },
+    });
+  }
+
+  private _eliminarDeshabilitando(id: number) {
+    this.propiedadesService.eliminar_propiedad(id).subscribe({
+      next: () => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          title: 'Propiedad pendiente de eliminación',
+          message:
+            ' Esta propiedad se eliminará al finalizar su ultima reserva.',
+          icon: 'success',
+        });
+
+        this._getPropiedades();
+        this._getPropiedadesEliminadas();
+      },
+      error: (error) => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al deshabilitar propiedad',
+          message:
+            'No se pudo deshabilitar la propiedad. Por favor, intente nuevamente más tarde.',
+        });
+      },
+    });
+  }
+
+  private _eliminarPropiedad(id: number) {
+    this.propiedadesService.eliminar_con_reservas(id).subscribe({
+      next: () => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          title: 'Propiedad eliminada',
+          message: 'La propiedad ha sido eliminada correctamente.',
+          icon: 'success',
+        });
+        this._getPropiedades();
+        this._getPropiedadesEliminadas();
+      },
+      error: (error) => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al eliminar propiedad',
+          message:
+            'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
+        });
+        console.error(error);
+      },
+    });
+  }
+
+  private _deseaEliminar(id: number): void {
+    this.utilsService.showMessage2({
+      title: '¿Seguro desea eliminar la propiedad?',
+      message: 'Una vez eliminada no podrá ser recuperada.',
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Si, eliminar!',
+      actionOnConfirm: () => {
+        this.eliminando = true;
+        this._eliminarPropiedad(id);
+      },
+    });
   }
 }

@@ -309,6 +309,7 @@ export class RegistrarUsuarioComponent implements OnInit {
 
     input.value = '';
   }
+  
   abrirSelectorImagen(): void {
     this.inputImagen.nativeElement.click();
   }

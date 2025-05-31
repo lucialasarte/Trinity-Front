@@ -54,19 +54,19 @@ export class FormPropiedadesComponent {
       codigoAcceso: ['0000', [Validators.pattern(/^\d{4}$/)]],
       banios: [
         null,
-        [Validators.required, Validators.min(0), Validators.max(10)],
+        [Validators.required],
       ],
       ambientes: [
         null,
-        [Validators.required, Validators.min(1), Validators.max(10)],
+        [Validators.required],
       ],
       huespedes: [
         null,
-        [Validators.required, Validators.min(1), Validators.max(10)],
+        [Validators.required],
       ],
       cocheras: [
         null,
-        [Validators.required, Validators.min(0), Validators.max(10)],
+        [Validators.required],
       ],
       // requiere_documentacion: [false],
       id_encargado: [null],

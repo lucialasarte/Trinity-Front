@@ -35,7 +35,7 @@ export class PropiedadesService {
     return this.http.patch<any[]>(`${this.apiUrl}/cambiarEstado/${id}`, {});
   }
 
-  eliminar_propiedad(prop_id: number) : Observable<Propiedad> {
+  eliminar_propiedad(prop_id: number): Observable<Propiedad> {
     return this.http.patch<Propiedad>(`${this.apiUrl}/eliminar/${prop_id}`, {});
   }
 
@@ -84,5 +84,11 @@ export class PropiedadesService {
   }
   imagenPerfil(id_propiedad: number) {
     return this.http.get<any>(`${this.apiUrl}/imagenPerfil/${id_propiedad}`);
+  }
+
+  tieneActivas(id_propiedad: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}/tieneActivas/${id_propiedad}`
+    );
   }
 }

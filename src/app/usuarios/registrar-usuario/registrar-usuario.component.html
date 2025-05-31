@@ -405,11 +405,12 @@
         ingresada.
       </p>
     </div>
-    <span *ngIf="(imagenes?.length ?? 0) < 2">
+    <span >
       <button
         nz-button
         class="bton-cargar-imagen"
         (click)="abrirSelectorImagen()"
+        [disabled]="imagenes.length == 2"
       >
         <span> <i class="fa fa-plus"></i> Cargar Imagen</span>
       </button>

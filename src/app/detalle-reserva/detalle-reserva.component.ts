@@ -47,7 +47,6 @@ export class DetalleReservaComponent {
 
   calificar() {}
   cancelar(id: number) {
-   
     if (id) {
       this.utilsService.showMessage({
         title: '¿Estás seguro?',
@@ -58,7 +57,7 @@ export class DetalleReservaComponent {
         showConfirmButton: true,
         showCancelButton: true,
         actionOnConfirm: () => {
-         this.cargando = true;
+          this.cargando = true;
           this.reservasService.cancelarReserva(id).subscribe({
             next: () => {
               this.cargando = false;
@@ -161,5 +160,17 @@ export class DetalleReservaComponent {
     const diffDias = diffMs / (1000 * 60 * 60 * 24);
 
     return diffDias > 0 ? diffDias : 0;
+  }
+
+  get isEliminada(): boolean {
+    if (this.propiedad.delete_at === null || this.propiedad.delete_at === undefined) {
+      return false; // No está eliminada
+    }
+    if (this.propiedad.delete_at) {
+      const fechaEliminacion = new Date(this.propiedad.delete_at);
+      const hoy = new Date();
+      return fechaEliminacion <= hoy;
+    }
+    return false;
   }
 }

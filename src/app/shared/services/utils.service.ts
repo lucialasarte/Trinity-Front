@@ -48,7 +48,7 @@ export class UtilsService {
       confirmButtonText: options.confirmButtonText || this.BUTTON_TEXT_ACEPTAR,
       confirmButtonColor: options.confirmButtonColor || '#0078CF',
       cancelButtonText: options.cancelButtonText || this.BUTTON_TEXT_CANCELAR,
-      denyButtonText: 'Cancelar',
+      denyButtonText: options.denyButtonText || 'Cancelar',
       denyButtonColor: '#d33',
       reverseButtons: true,
       allowOutsideClick: false,
