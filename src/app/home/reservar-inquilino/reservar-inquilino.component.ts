@@ -13,6 +13,7 @@ export class ReservarInquilinoComponent implements OnInit {
   @Input() checkout: Date | null = null;
   @Input() huespedes!: number;
   @Input() precioTotal!: number;
+  @Input() montoSena!: number;
   imagenActualIndex = 0;
 
   imagenes: string[] = [];
@@ -23,21 +24,22 @@ export class ReservarInquilinoComponent implements OnInit {
     this.imagenes = this.propiedad.id_imagenes.map(
       (imagen) => `http://localhost:5000/propiedades/imagen/${imagen}`
     );
-    
   }
   get imagenActual(): string {
     return this.imagenes[this.imagenActualIndex];
   }
-  
+
   siguienteImagen(): void {
     if (this.imagenActualIndex < this.imagenes.length - 1) {
       this.imagenActualIndex++;
     }
   }
-  
+
   anteriorImagen(): void {
     if (this.imagenActualIndex > 0) {
       this.imagenActualIndex--;
     }
   }
+
+  
 }

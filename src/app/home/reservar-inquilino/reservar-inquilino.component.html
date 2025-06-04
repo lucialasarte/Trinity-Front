@@ -19,7 +19,7 @@
       (click)="siguienteImagen()"
       [disabled]="imagenActualIndex === imagenes.length - 1"
     >
-    <i class="fa fa-arrow-circle-right"></i>
+      <i class="fa fa-arrow-circle-right"></i>
     </button>
   </div>
 
@@ -34,19 +34,28 @@
     <p><strong>Ambientes:</strong> {{ propiedad.ambientes }}</p>
     <p><strong>Baños:</strong> {{ propiedad.banios }}</p>
     <p><strong>Cocheras:</strong> {{ propiedad.cocheras }}</p>
-    <p><strong>Piso:</strong> {{ propiedad.piso }}</p>
+    <p><strong> Capacidad Huespedes:</strong> {{ propiedad.huespedes }}</p>
     <p><strong>Tipo:</strong> {{ propiedad.tipo }}</p>
     <p>
-      <strong>Dirección:</strong> Calle {{ propiedad.calle }} entre
-      {{ propiedad.entre_calles }}
+      <strong>Dirección:</strong> Calle "{{ propiedad.calle }}" entre "{{
+        propiedad.entre_calles
+      }}"
     </p>
     <p>
       <strong>Provincia:</strong> {{ propiedad.provincia }} -
+      <strong>Ciudad:</strong>
       {{ propiedad.ciudad }}
+    </p>
+  </div>
+  <div class="politica-reserva">
+    <p>
+      <strong>Política de Reserva: </strong>{{ propiedad.pol_reserva }}. El
+      monto restante le será cobrado 48hs antes del check-in.
     </p>
   </div>
   <div class="politica-cancelacion">
     <p>
+      <strong>Política de Cancelación:</strong>
       Una vez realizada la reserva, no se realizan reintegros en caso de
       cancelación por parte del usuario, sin excepción. Solo se efectuarán
       reembolsos si la cancelación es realizada por la empresa. Recomendamos
@@ -60,9 +69,11 @@
   <div class="datos-reserva">
     <p><strong>Check-in:</strong> {{ checkin | date : "dd/MM/yyyy" }}</p>
     <p><strong>Check-out:</strong> {{ checkout | date : "dd/MM/yyyy" }}</p>
-    <p><strong>Huéspedes:</strong> {{ huespedes }}</p>
     <p>
       <strong>Total estadía:</strong> U$D{{ precioTotal | number : "1.2-2" }}
     </p>
+    <p><strong>Huéspedes:</strong> {{ huespedes }}</p>
+
+    <p><strong>Seña:</strong> U$S {{ montoSena | number : "1.2-2" }}</p>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, computed, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { UtilsService } from '../shared/services/utils.service';
 import { ParametricasService } from '../shared/services/parametricas.service';
@@ -8,6 +8,7 @@ import { Propiedad } from '../propiedades/models/propiedad';
 import { ReservasService } from '../reservas/services/reservas.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { validarRangoFechas } from './models/validarRangoFechas';
 
 @Component({
   selector: 'app-home',
@@ -96,9 +97,11 @@ export class HomeComponent {
   }
 
   verPropiedad(propiedad: Propiedad) {
+    
     if (!this.auth.usuarioActual()?.permisos?.gestionar_propiedades) {
       this.isVisible = true;
       this.porpiedadParaReservar = propiedad;
+      
     }
   }
 
@@ -112,7 +115,9 @@ export class HomeComponent {
       cantidad_personas: this.search.huespedes,
       monto_total: this.precioTotal,
       id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1,
+      monto_pagado: this.montoSena,
     };
+
     const usuario = this.auth.usuarioActual();
     console.log('Usuario actual:', usuario);
     const tarjeta =
@@ -186,7 +191,7 @@ export class HomeComponent {
   private _initForm() {
     this.form = this.fb.group({
       id: [''],
-      fechas: [null, Validators.required],
+      fechas: [null, [Validators.required, validarRangoFechas()]],
       huespedes: [
         1,
         [Validators.required, Validators.min(1), Validators.max(10)],
@@ -212,6 +217,7 @@ export class HomeComponent {
   get fechasSeleccionadas(): [Date | null, Date | null] {
     return this.form.get('fechas')?.value || [null, null];
   }
+  
 
   get noches(): number {
     const [checkin, checkout] = this.fechasSeleccionadas;
@@ -234,4 +240,19 @@ export class HomeComponent {
     if (!this.porpiedadParaReservar?.precioNoche) return 0;
     return this.noches * this.porpiedadParaReservar.precioNoche;
   }
+  
+  get montoSena(): number {
+    switch (this.porpiedadParaReservar.id_pol_reserva as number) {
+      case 1: //
+        return 0;
+      case 2: // Pago del 20% al reservar
+        return this.precioTotal * 0.2;
+      case 3: //  Pago total al reservar
+        return this.precioTotal;
+
+      default:
+        return 0;
+    }
+  }
+
 }
