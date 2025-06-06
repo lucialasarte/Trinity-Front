@@ -24,7 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.router.navigate(['/']);
         } else if (error.status === 401) {
           // Mensaje más detallado para 401
-          this.message.error('Sesión expirada o no autenticado. Por favor, inicie sesión nuevamente.', { nzDuration: 5000 });
+          // this.message.error('Sesión expirada o no autenticado. Por favor, inicie sesión nuevamente.', { nzDuration: 5000 });
           // this.router.navigate(['/iniciar-sesion']);
         } else if (error.status === 500) {
           // Mensaje para error interno del servidor
