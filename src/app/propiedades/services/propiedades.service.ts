@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PropiedadesService {
-  private apiUrl = environment.apiUrl + '/propiedades';
+  private apiUrl = `${environment.apiUrl}/propiedades`;
 
   constructor(private http: HttpClient) {}
 

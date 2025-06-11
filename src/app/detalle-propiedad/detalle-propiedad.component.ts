@@ -14,6 +14,7 @@ import { EmpleadosService } from '../empleados/services/empleados.service';
 import { ReservasService } from '../reservas/services/reservas.service';
 import { UtilsService } from '../shared/services/utils.service';
 import { AuthService } from '../auth/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-detalle-propiedad',
@@ -38,7 +39,7 @@ export class DetallePropiedadComponent implements OnInit {
   encargado: any;
   empleados: any[] = [];
   cargando: boolean = true;
-  apiUrl = 'http://localhost:5000/propiedades';
+  apiUrl = `${environment.apiUrl}/propiedades`;
   isModalVisible: boolean = false;
   modalTitle: string = '';
   formEmpleado!: FormGroup;

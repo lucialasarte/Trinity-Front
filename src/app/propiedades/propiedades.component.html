@@ -1,6 +1,6 @@
 <ng-container>
-  <!-- <div class="row" style="padding-top: 10px"> -->
-    <!-- <div class="content-form">
+  <div class="row" style="padding-top: 10px">
+    <div class="content-form">
       <h2 class="titulo-form">Buscar Propiedad</h2>
       <div class="d-flex align-items-center">
         <form
@@ -20,8 +20,17 @@
           <i class="fa fa-search"></i> Buscar
         </button>
       </div>
-    </div> -->
-  <!-- </div> -->
+    </div>
+    <div
+      class="col-md-2"
+      style="padding-left: 20px"
+      *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
+    >
+      <button (click)="showModal()" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Agregar Propiedad
+      </button>
+    </div>
+  </div>
 
   <div class="row" style="padding-top: 10px">
     <div class="row">
@@ -43,7 +52,7 @@
               <th>Tipo Propiedad</th>
               <th>Localidad</th>
               <th>Ciudad</th>
-              <th>Precio por Noche </th>
+              <th>Precio por Noche</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -54,7 +63,7 @@
               <td>{{ propiedad.tipo }}</td>
               <td>{{ propiedad.ciudad }}</td>
               <td>{{ propiedad.ciudad }}</td>
-              <td>U$D {{ propiedad.precioNoche | number:'1.2-2' }}</td>
+              <td>U$D {{ propiedad.precioNoche | number : "1.2-2" }}</td>
               <td>
                 <span
                   [ngClass]="{
@@ -81,7 +90,9 @@
                   <i class="fa fa-trash"></i> Eliminar
                 </button>
                 <button
-                [disabled]="!propiedad.id_imagenes || propiedad.id_imagenes.length === 0"
+                  [disabled]="
+                    !propiedad.id_imagenes || propiedad.id_imagenes.length === 0
+                  "
                   (click)="cambiarEstado(propiedad)"
                   class="btn btn-warning btn-sm"
                 >
@@ -104,15 +115,6 @@
         No hay propiedades.
       </div>
     </div>
-    <div
-      class="col-md-2"
-      style="padding-left: 20px"
-      *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
-    >
-      <button (click)="showModal()" class="btn btn-primary">
-        <i class="fa fa-plus"></i> Agregar Propiedad
-      </button>
-    </div>
   </div>
 
   <div
@@ -121,7 +123,9 @@
     *ngIf="propiedadesEliminadas.length > 0"
   >
     <div class="row">
-      <h2 class="titulo-propiedades">Propiedades Pendientes de Eliminación con reservas</h2>
+      <h2 class="titulo-propiedades">
+        Propiedades Pendientes de Eliminación con reservas
+      </h2>
     </div>
     <div class="table-container">
       <nz-table
@@ -137,7 +141,7 @@
             <th>Tipo Propiedad</th>
             <th>Localidad</th>
             <th>Ciudad</th>
-            <th>Precio por Noche </th>
+            <th>Precio por Noche</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -147,7 +151,7 @@
             <td>{{ propiedad.tipo }}</td>
             <td>{{ propiedad.ciudad }}</td>
             <td>{{ propiedad.ciudad }}</td>
-            <td>U$D {{ propiedad.precioNoche  | number:'1.2-2'}}</td>
+            <td>U$D {{ propiedad.precioNoche | number : "1.2-2" }}</td>
 
             <td>
               <button
@@ -191,7 +195,6 @@
     </button>
   </div>
 </nz-modal>
-
 
 <div class="fullscreen-spinner" *ngIf="eliminando">
   <div class="spinner-contenido">

@@ -25,6 +25,7 @@ import { mayorDeEdadValidator } from 'src/app/shared/models/validatorMayor';
 import { fechaNoVencidaValidator } from 'src/app/shared/models/validadorVenida';
 import { passwordValidator } from 'src/app/shared/models/passwordValidator';
 import { UtilsService } from 'src/app/shared/services/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-registrar-usuario',
@@ -45,7 +46,7 @@ export class RegistrarUsuarioComponent implements OnInit {
   imagenes: { id: number; url: string }[] = [];
   rol: number[] = [3];
 
-  apiUrl = 'http://localhost:5000/usuarios';
+  apiUrl = `${environment.apiUrl}/usuarios`;
 
   constructor(
     private fb: FormBuilder,

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { Propiedad } from 'src/app/propiedades/models/propiedad';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-reservar-inquilino',
@@ -17,12 +18,13 @@ export class ReservarInquilinoComponent implements OnInit {
   imagenActualIndex = 0;
 
   imagenes: string[] = [];
+  apiUrl = `${environment.apiUrl}/propiedades`;
 
   constructor() {}
 
   ngOnInit(): void {
     this.imagenes = this.propiedad.id_imagenes.map(
-      (imagen) => `http://localhost:5000/propiedades/imagen/${imagen}`
+      (imagen) => `${this.apiUrl}/imagen/${imagen}`
     );
   }
   get imagenActual(): string {

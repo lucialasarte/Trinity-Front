@@ -9,6 +9,7 @@ import { ReservasService } from '../reservas/services/reservas.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { validarRangoFechas } from './models/validarRangoFechas';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ export class HomeComponent {
   propiedadesPaginadas: any[] = [];
   isVisible = false;
   porpiedadParaReservar: Propiedad = new Propiedad();
-  apiUrl = 'http://localhost:5000/propiedades';
+  apiUrl = `${environment.apiUrl}/propiedades`;
   usuario = computed(() => this.auth.usuarioActual);
   cargando = false;
   search!: Search;
