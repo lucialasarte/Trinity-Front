@@ -248,14 +248,22 @@
           <nz-form-item>
             <nz-form-label nzFor="banios" nzRequired>Baños</nz-form-label>
             <nz-form-control [nzErrorTip]="baniosErrorTpl">
-              <input nz-input type="number" formControlName="banios" min="0" max="10" />
+              <input
+                nz-input
+                type="number"
+                formControlName="banios"
+              
+              />
               <ng-template #baniosErrorTpl let-control>
-                <span *ngIf="control.hasError('required')"
-                  >Este campo es obligatorio.</span
-                >
-                <span *ngIf="control.hasError('min')"
-                  >Debe ser mayor o igual a 0.</span
-                >
+                <span *ngIf="control.hasError('required')">
+                  Este campo es obligatorio.
+                </span>
+                <span *ngIf="control.hasError('min')">
+                  Debe ser mayor o igual a 0.
+                </span>
+                <span *ngIf="control.hasError('max')">
+                  Debe ser menor o igual a 10.
+                </span>
               </ng-template>
             </nz-form-control>
           </nz-form-item>
@@ -267,14 +275,22 @@
               >Ambientes</nz-form-label
             >
             <nz-form-control [nzErrorTip]="ambientesErrorTpl">
-              <input nz-input type="number" formControlName="ambientes" min="0" max="10" />
+              <input
+                nz-input
+                type="number"
+                formControlName="ambientes"
+             
+              />
               <ng-template #ambientesErrorTpl let-control>
-                <span *ngIf="control.hasError('required')"
-                  >Este campo es obligatorio.</span
-                >
-                <span *ngIf="control.hasError('min')"
-                  >Debe ser mayor o igual a 0.</span
-                >
+                <span *ngIf="control.hasError('required')">
+                  Este campo es obligatorio.
+                </span>
+                <span *ngIf="control.hasError('min')">
+                  Debe ser mayor o igual a 1.
+                </span>
+                <span *ngIf="control.hasError('max')">
+                  Debe ser menor o igual a 10.
+                </span>
               </ng-template>
             </nz-form-control>
           </nz-form-item>
@@ -289,17 +305,19 @@
               <input
                 nz-input
                 type="number"
-                min="1"
-                max="10"
+       
                 formControlName="huespedes"
               />
               <ng-template #huespedesErrorTpl let-control>
-                <span *ngIf="control.hasError('required')"
-                  >Este campo es obligatorio.</span
-                >
-                <span *ngIf="control.hasError('min')"
-                  >Debe ser mayor o igual a 0.</span
-                >
+                <span *ngIf="control.hasError('required')">
+                  Este campo es obligatorio.
+                </span>
+                <span *ngIf="control.hasError('min')">
+                  Debe ser mayor o igual a 1.
+                </span>
+                <span *ngIf="control.hasError('max')">
+                  Debe ser menor o igual a 10.
+                </span>
               </ng-template>
             </nz-form-control>
           </nz-form-item>
@@ -309,14 +327,22 @@
           <nz-form-item>
             <nz-form-label nzFor="cocheras" nzRequired>Cocheras</nz-form-label>
             <nz-form-control [nzErrorTip]="cocherasErrorTpl">
-              <input nz-input type="number" formControlName="cocheras" min="0" max="10" />
+              <input
+                nz-input
+                type="number"
+                formControlName="cocheras"
+      
+              />
               <ng-template #cocherasErrorTpl let-control>
-                <span *ngIf="control.hasError('required')"
-                  >Este campo es obligatorio.</span
-                >
-                <span *ngIf="control.hasError('min')"
-                  >Debe ser mayor o igual a 0.</span
-                >
+                <span *ngIf="control.hasError('required')">
+                  Este campo es obligatorio.
+                </span>
+                <span *ngIf="control.hasError('min')">
+                  Debe ser mayor o igual a 0.
+                </span>
+                <span *ngIf="control.hasError('max')">
+                  Debe ser menor o igual a 10.
+                </span>
               </ng-template>
             </nz-form-control>
           </nz-form-item>
@@ -351,7 +377,6 @@
                 *ngFor="let empleado of empleados"
                 [nzValue]="empleado.id"
                 [nzLabel]="empleado.nombre + ': ' + empleado.correo"
-                
               ></nz-option>
             </nz-select>
           </nz-form-item>

@@ -25,6 +25,7 @@ export class PropiedadesComponent implements OnInit {
   propiedadesEliminadas: any[] = [];
   isFormValid = false;
   cargando = true;
+  eliminando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -51,7 +52,7 @@ export class PropiedadesComponent implements OnInit {
     propiedad.requiere_documentacion = false;
 
     this.propiedadesService.createPropiedad(propiedad).subscribe({
-      next: () => {
+      next: (data) => {
         this._getPropiedades();
         this.utilsService.showMessage({
           title: 'Propiedad creada',
@@ -60,6 +61,7 @@ export class PropiedadesComponent implements OnInit {
         });
         this.formPropiedad.form.reset();
         this.isVisible = false;
+        this.verPropiedad(data.id);
       },
       error: (err) => {
         this.utilsService.showMessage({
@@ -84,7 +86,28 @@ export class PropiedadesComponent implements OnInit {
 
   buscarPropiedad() {}
 
-  eliminar(id: number) {
+  eliminarPropiedad(id: number) {
+    this.propiedadesService.tieneActivas(id).subscribe({
+      next: (data) => {
+        let ok: boolean = Boolean(data.tieneActivas);
+        if (ok) {
+          this.comoEliminar(id);
+        } else {
+          this._deseaEliminar(id);
+        }
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al verificar reservas',
+          message:
+            'No se pudo verificar las reservas activas. Por favor, intente nuevamente más tarde.',
+          icon: 'error',
+        });
+      },
+    });
+  }
+
+  comoEliminar(id: number) {
     this.utilsService.showMessage2({
       title: '¿Desea cancelar las reservas futuras?',
       message:
@@ -93,61 +116,19 @@ export class PropiedadesComponent implements OnInit {
       showCancelButton: true,
       showConfirmButton: true,
       showDenyButton: true,
-      cancelButtonText: 'Deshabilitar',
+      cancelButtonText: 'Cancelar',
       confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Cancelar Reservas',
+      confirmButtonText: 'Cancelar reservas',
       cancelButtonColor: '#d33',
+      denyButtonText: 'No cancelar reservas',
       actionOnConfirm: () => {
-        this.propiedadesService.eliminar_con_reservas(id).subscribe({
-          next: () => {
-            this.utilsService.showMessage({
-              title: 'Reservas canceladas',
-              message:
-                'Las reservas futuras han sido canceladas y la propiedad ha sido eliminada.',
-              icon: 'success',
-            });
-            this._getPropiedades();
-            this._getPropiedadesEliminadas();
-          },
-          error: (error) => {
-            this.utilsService.showMessage({
-              icon: 'error',
-              title: 'Error al eliminar propiedad',
-              message:
-                'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
-            });
-            console.error(error);
-          },
-        });
+        this.eliminando = true;
+        this._eliminarCancelandoReservas(id);
       },
-      actionOnCancel: () => {
-        this.propiedadesService.eliminar_propiedad(id).subscribe({
-          next: (data) => {
-            this.utilsService.showMessage({
-              title: 'Propiedad deshabilitada',
-              message: 'La propiedad ha sido deshabilitada correctamente.',
-              icon: 'success',
-            });
-            this._getPropiedades();
-            this._getPropiedadesEliminadas();
-          },
-          error: (error) => {
-            this.utilsService.showMessage({
-              icon: 'error',
-              title: 'Error al deshabilitar propiedad',
-              message:
-                'No se pudo deshabilitar la propiedad. Por favor, intente nuevamente más tarde.',
-            });
-            console.error(error);
-          },
-        });
-      },
+      actionOnCancel: () => {},
       actionOnDeny: () => {
-        // this.utilsService.showMessage({
-        //   title: 'Operación cancelada',
-        //   message: 'La operación ha sido cancelada.',
-        //   icon: 'info',
-        // });
+        this.eliminando = true;
+        this._eliminarDeshabilitando(id);
       },
     });
   }
@@ -225,7 +206,6 @@ export class PropiedadesComponent implements OnInit {
   private _getPropiedadesEliminadas() {
     this.propiedadesService.getPropiedadesEliminadas().subscribe((data) => {
       this.propiedadesEliminadas = data;
-      console.log(this.propiedadesEliminadas);
     });
   }
 
@@ -233,7 +213,6 @@ export class PropiedadesComponent implements OnInit {
     if (propiedad.is_habilitada) {
       this.propiedadesService.cambiar_estado_propiedad(propiedad.id).subscribe({
         next: (data) => {
-          console.log('Respuesta del servidor:', data);
           this.utilsService.showMessage({
             title: 'Propiedad deshabilitada',
             message: 'La propiedad ha sido deshabilitada correctamente.',
@@ -253,8 +232,7 @@ export class PropiedadesComponent implements OnInit {
       });
     } else {
       this.propiedadesService.cambiar_estado_propiedad(propiedad.id).subscribe({
-        next: (data) => {
-          console.log('Respuesta del servidor:', data);
+        next: () => {
           this.utilsService.showMessage({
             title: 'Propiedad habilitada',
             message: 'La propiedad ha sido habilitada correctamente.',
@@ -273,5 +251,98 @@ export class PropiedadesComponent implements OnInit {
         },
       });
     }
+  }
+
+  private _eliminarCancelandoReservas(id: number) {
+    this.propiedadesService.eliminar_con_reservas(id).subscribe({
+      next: () => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          title: 'Propiedad eliminada',
+          message:
+            'Las reservas han sido canceladas y la propiedad ha sido eliminada correctamente.',
+          icon: 'success',
+        });
+        this._getPropiedades();
+        this._getPropiedadesEliminadas();
+      },
+      error: (error) => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al eliminar propiedad',
+          message:
+            'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
+        });
+        console.error(error);
+      },
+    });
+  }
+
+  private _eliminarDeshabilitando(id: number) {
+    this.propiedadesService.eliminar_propiedad(id).subscribe({
+      next: () => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          title: 'Propiedad pendiente de eliminación',
+          message:
+            ' Esta propiedad se eliminará al finalizar su ultima reserva.',
+          icon: 'success',
+        });
+
+        this._getPropiedades();
+        this._getPropiedadesEliminadas();
+      },
+      error: (error) => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al deshabilitar propiedad',
+          message:
+            'No se pudo deshabilitar la propiedad. Por favor, intente nuevamente más tarde.',
+        });
+      },
+    });
+  }
+
+  private _eliminarPropiedad(id: number) {
+    this.propiedadesService.eliminar_con_reservas(id).subscribe({
+      next: () => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          title: 'Propiedad eliminada',
+          message: 'La propiedad ha sido eliminada correctamente.',
+          icon: 'success',
+        });
+        this._getPropiedades();
+        this._getPropiedadesEliminadas();
+      },
+      error: (error) => {
+        this.eliminando = false;
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al eliminar propiedad',
+          message:
+            'No se pudo eliminar la propiedad. Por favor, intente nuevamente más tarde.',
+        });
+        console.error(error);
+      },
+    });
+  }
+
+  private _deseaEliminar(id: number): void {
+    this.utilsService.showMessage2({
+      title: '¿Seguro desea eliminar la propiedad?',
+      message: 'Una vez eliminada no podrá ser recuperada.',
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Si, eliminar!',
+      actionOnConfirm: () => {
+        this.eliminando = true;
+        this._eliminarPropiedad(id);
+      },
+    });
   }
 }

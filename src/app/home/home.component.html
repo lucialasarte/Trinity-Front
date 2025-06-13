@@ -3,11 +3,12 @@
 <div class="detalle-container">
   <nz-card class="buscador-card" nz-form [formGroup]="form">
     <div nz-row [nzGutter]="16" class="buscador-contenedor">
-      <div nz-col [nzSpan]="8" class="buscador-item">
+      <div nz-col [nzSpan]="6" class="buscador-item">
         <label>Lugar</label>
         <nz-select
           placeholder="Explorar destinos"
           formControlName="id"
+          [nzSize]="'large'"
           nzShowSearch
           [nzAllowClear]="true"
         >
@@ -19,33 +20,26 @@
         </nz-select>
       </div>
 
-      <div nz-col [nzSpan]="5" class="buscador-item">
-        <label>Check‑in</label>
-        <nz-date-picker
-          #date
-          formControlName="checkin"
-          name="checkin"
-          nzFormat="dd/MM/yyyy"
-          nzPlaceHolder="¿Desde?"
-          [nzDisabledDate]="disabledCheckInDate"
-          (nzOnChange)="onCheckInChange(date.inputValue)"
-        ></nz-date-picker>
-      </div>
-
-      <div nz-col [nzSpan]="5" class="buscador-item">
-        <label>Check‑out</label>
-        <nz-date-picker
-          formControlName="checkout"
-          name="checkout"
-          nzFormat="dd/MM/yyyy"
-          nzPlaceHolder="¿Hasta?"
-          [nzDisabledDate]="disabledCheckOutDate"
-        ></nz-date-picker>
+      <div nz-col [nzSpan]="12" class="buscador-item">
+        <label>Check-in y Check-out</label>
+        <nz-form-control [nzErrorTip]="fechasErrorTpl">
+          <nz-range-picker
+            [nzSize]="'large'"
+            formControlName="fechas"
+            [nzFormat]="'dd/MM/yyyy'"
+            [nzPlaceHolder]="['Fecha de Check-in', 'Fecha de Check-out']"
+            [nzDisabledDate]="disabledDate"
+          ></nz-range-picker>
+          <ng-template #fechasErrorTpl let-control>
+            
+          </ng-template>
+        </nz-form-control>
       </div>
 
       <div nz-col [nzSpan]="4" class="buscador-item">
         <label>Huéspedes</label>
         <nz-input-number
+          [nzSize]="'large'"
           formControlName="huespedes"
           name="huespedes"
           [nzMin]="1"
@@ -125,10 +119,11 @@
     <div *nzModalContent>
       <app-reservar-inquilino
         [propiedad]="porpiedadParaReservar"
-        [checkin]="form.get('checkin')?.value"
-        [checkout]="form.get('checkout')?.value"
-        [huespedes]="form.get('huespedes')?.value"
+        [checkin]="search.checkin"
+        [checkout]="search.checkout"
+        [huespedes]="search.huespedes"
         [precioTotal]="precioTotal"
+        [montoSena]="montoSena"
       ></app-reservar-inquilino>
     </div>
 
@@ -152,4 +147,9 @@
       </div>
     </div>
   </nz-modal>
+</div>
+
+<!-- SPINNER RESERVANDO -->
+<div class="fullscreen-spinner" *ngIf="cargando">
+  <nz-spin nzSimple></nz-spin>
 </div>

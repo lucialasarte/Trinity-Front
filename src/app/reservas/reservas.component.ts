@@ -27,6 +27,7 @@ export class ReservasComponent {
   estado: string = '';
   cargando: boolean = true;
   calificacion: any = [];
+  cancelando: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -59,8 +60,10 @@ export class ReservasComponent {
         showConfirmButton: true,
         showCancelButton: true,
         actionOnConfirm: () => {
+          this.cancelando = true;
           this.reservasService.cancelarReserva(id).subscribe({
             next: () => {
+              this.cancelando = false;
               this.utilsService.showMessage({
                 title: 'Reserva cancelada',
                 message: 'La reserva fue cancelada correctamente.',
@@ -70,6 +73,7 @@ export class ReservasComponent {
               this._getReservas();
             },
             error: (err) => {
+              this.cancelando = false;
               console.error('Error al cancelar la reserva:', err);
               this.utilsService.showMessage({
                 title: 'Error',
@@ -104,7 +108,6 @@ export class ReservasComponent {
   private _getReservas() {
     this.reservasService.get_reservas().subscribe({
       next: (data) => {
-        console.log(data);
         this.reservas = data;
         this.cargando = false;
       },

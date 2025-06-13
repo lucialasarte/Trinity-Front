@@ -30,6 +30,10 @@
             <label>Precio Estadia: </label>
             <span>U$D{{ reserva.monto_total | number:'1.2-2' }}</span>
           </div>
+          <div class="reserva-item">
+            <label>Seña: </label>
+            <span>U$D{{ reserva.monto_pagado | number:'1.2-2' }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -39,7 +43,7 @@
       <h3 class="card-title">
         Detalles de la Propiedad
         <button
-          *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
+          *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades && !isEliminada"
           class="btn btn-secondary"
           (click)="verPropiedad(propiedad.id)"
           style="float: right"
@@ -160,3 +164,8 @@
     </div> -->
   </div>
 </ng-container>
+
+
+<div class="fullscreen-spinner" *ngIf="cargando">
+  <nz-spin nzSimple></nz-spin>
+</div>

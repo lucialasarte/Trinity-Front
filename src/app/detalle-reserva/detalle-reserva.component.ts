@@ -21,6 +21,7 @@ export class DetalleReservaComponent {
   estado: string = '';
   puedeCalificar = false;
   usuario = computed(() => this.auth.usuarioActual());
+  cargando = false;
 
   constructor(
     private propiedadesService: PropiedadesService,
@@ -56,8 +57,10 @@ export class DetalleReservaComponent {
         showConfirmButton: true,
         showCancelButton: true,
         actionOnConfirm: () => {
+          this.cargando = true;
           this.reservasService.cancelarReserva(id).subscribe({
             next: () => {
+              this.cargando = false;
               this.utilsService.showMessage({
                 title: 'Reserva cancelada',
                 message: 'La reserva fue cancelada correctamente.',
@@ -67,6 +70,7 @@ export class DetalleReservaComponent {
               this._getReserva(this.reserva.id);
             },
             error: (err) => {
+              this.cargando = false;
               console.error('Error al cancelar la reserva:', err);
               this.utilsService.showMessage({
                 title: 'Error',
@@ -84,19 +88,20 @@ export class DetalleReservaComponent {
     this.router.navigate(['/detalle-propiedad', id]);
   }
 
-  private _getPropiedad(id: number) {
-    this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-      console.log(data);
-      this.propiedad = data;
-    });
-  }
+  // private _getPropiedad(id: number) {
+  //   this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
+  //     console.log(data);
+  //     this.propiedad = data;
+  //   });
+  // }
 
   private _getReserva(id: number) {
     this.reservasService.get_reserva_id(id).subscribe({
       next: (data) => {
-        this.reserva = data;
-        this._getPropiedad(this.reserva.id_propiedad);
-        this.validarCalificacion();
+        this.reserva = data.reserva;
+        this.propiedad = data.propiedad;
+        // this._getPropiedad(this.reserva.id_propiedad);
+        // this.validarCalificacion();
       },
       error: (error) => {
         this.utilsService.showMessage({
@@ -126,12 +131,12 @@ export class DetalleReservaComponent {
   }
 
   estadoClase(estado: string): string {
-    switch (estado.toLowerCase()) {
-      case 'confirmada':
+    switch (estado) {
+      case 'Confirmada':
         return 'badge-confirmada';
-      case 'pendiente':
+      case 'Pendiente':
         return 'badge-pendiente';
-      case 'cancelada':
+      case 'Cancelada':
         return 'badge-cancelada';
       default:
         return 'badge-otros';
@@ -155,5 +160,17 @@ export class DetalleReservaComponent {
     const diffDias = diffMs / (1000 * 60 * 60 * 24);
 
     return diffDias > 0 ? diffDias : 0;
+  }
+
+  get isEliminada(): boolean {
+    if (this.propiedad.delete_at === null || this.propiedad.delete_at === undefined) {
+      return false; // No está eliminada
+    }
+    if (this.propiedad.delete_at) {
+      const fechaEliminacion = new Date(this.propiedad.delete_at);
+      const hoy = new Date();
+      return fechaEliminacion <= hoy;
+    }
+    return false;
   }
 }

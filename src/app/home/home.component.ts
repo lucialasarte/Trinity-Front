@@ -1,15 +1,15 @@
-import { Component, computed } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, computed, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { UtilsService } from '../shared/services/utils.service';
 import { ParametricasService } from '../shared/services/parametricas.service';
 import { Search } from '../propiedades/models/search';
 import { Propiedad } from '../propiedades/models/propiedad';
-
 import { ReservasService } from '../reservas/services/reservas.service';
 import { Router } from '@angular/router';
-import { forkJoin, map } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { validarRangoFechas } from './models/validarRangoFechas';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -26,8 +26,10 @@ export class HomeComponent {
   propiedadesPaginadas: any[] = [];
   isVisible = false;
   porpiedadParaReservar: Propiedad = new Propiedad();
-  apiUrl = 'http://localhost:5000/propiedades';
+  apiUrl = `${environment.apiUrl}/propiedades`;
   usuario = computed(() => this.auth.usuarioActual);
+  cargando = false;
+  search!: Search;
 
   constructor(
     private fb: FormBuilder,
@@ -44,9 +46,6 @@ export class HomeComponent {
     this._get_ciudades();
   }
 
-  onCheckInChange(value: Date): void {
-    this.form.get('checkOut')?.updateValueAndValidity();
-  }
   actualizarPagina(): void {
     const start = (this.paginaActual - 1) * this.pageSize;
     const end = start + this.pageSize;
@@ -54,11 +53,20 @@ export class HomeComponent {
   }
 
   buscarPropiedad() {
+    this.search = new Search();
     this.propiedadesPaginadas = [];
-    const form = this.form.getRawValue();
-    let search = new Search(form);
+    const formValue = this.form.getRawValue();
 
-    this.propiedadesService.search(search).subscribe({
+    const [checkin, checkout] = formValue.fechas || [null, null];
+
+    this.search = {
+      id: formValue.id,
+      checkin: checkin,
+      checkout: checkout,
+      huespedes: formValue.huespedes,
+    };
+
+    this.propiedadesService.search(this.search).subscribe({
       next: (data) => {
         if (!data || (Array.isArray(data) && data.length === 0)) {
           this.utilsService.showMessage({
@@ -68,6 +76,7 @@ export class HomeComponent {
             icon: 'info',
           });
           this.propiedades = [];
+
           return;
         }
         this.propiedades = data;
@@ -89,44 +98,90 @@ export class HomeComponent {
   }
 
   verPropiedad(propiedad: Propiedad) {
+    
     if (!this.auth.usuarioActual()?.permisos?.gestionar_propiedades) {
       this.isVisible = true;
       this.porpiedadParaReservar = propiedad;
+      
     }
   }
+
   onSubmitReserva() {
-    this.porpiedadParaReservar.requiere_documentacion;
+    this.cargando = true;
+
     const reserva = {
       id_propiedad: this.porpiedadParaReservar.id,
-      fecha_inicio: this.form.get('checkin')?.value,
-      fecha_fin: this.form.get('checkout')?.value,
-      cantidad_personas: this.form.get('huespedes')?.value,
+      fecha_inicio: this.search.checkin,
+      fecha_fin: this.search.checkout,
+      cantidad_personas: this.search.huespedes,
       monto_total: this.precioTotal,
       id_estado: this.porpiedadParaReservar.requiere_documentacion ? 2 : 1,
+      monto_pagado: this.montoSena,
     };
 
-    this.reservasService.createReserva(reserva).subscribe({
-      next: (data) => {
-        console.log('Reserva creada:', data);
-        this.utilsService.showMessage({
-          title: 'Reserva creada con éxito',
-          message: 'Tu reserva ha sido creada exitosamente.',
-          icon: 'success',
-        });
-        this.handleCancelReserva();
-        this.form.reset();
-        this.router.navigate(['/detalle-reserva', data.id]);
-      },
-      error: (error) => {
-        console.error('Error al crear la reserva:', error);
-        this.utilsService.showMessage({
-          title: 'Error al crear la reserva',
-          message:error.error.error ||
-            'No se pudo crear la reserva. Por favor, intenta nuevamente.',
-          icon: 'error',
-        });
-      },
-    });
+    const usuario = this.auth.usuarioActual();
+    console.log('Usuario actual:', usuario);
+    const tarjeta =
+      usuario?.tarjetas && usuario.tarjetas.length > 0
+        ? usuario.tarjetas[0]
+        : undefined;
+
+    let fechaVencimiento: Date | null = null;
+    if (tarjeta?.fecha_vencimiento) {
+      const [mesStr, anioStr] = tarjeta.fecha_vencimiento.split('/');
+      const mes = parseInt(mesStr, 10); // de 1 a 12
+      let anio = parseInt(anioStr, 10);
+
+      // Corregir años abreviados tipo "26" → 2026
+      if (anio < 100) {
+        anio += 2000;
+      }
+
+      // Último día del mes
+      fechaVencimiento = new Date(anio, mes, 0, 23, 59, 59);
+    }
+
+    if (fechaVencimiento && fechaVencimiento < new Date()) {
+      this.cargando = false;
+      this.utilsService.showMessage({
+        title: 'Tarjeta vencida',
+        message: 'Tu tarjeta de crédito está vencida.',
+        icon: 'error',
+      });
+      return;
+    } else if (usuario?.id == 7 ){
+      this.cargando = false;
+      this.utilsService.showMessage({
+        title: 'Pago Rechazado',
+        message: 'Fondos insuficientes.',
+        icon: 'error',
+      });
+    }else{
+      this.reservasService.createReserva(reserva).subscribe({
+        next: (data) => {
+          this.cargando = false;
+          this.utilsService.showMessage({
+            title: 'Reserva creada con éxito',
+            message: 'Tu reserva ha sido creada exitosamente.',
+            icon: 'success',
+          });
+          this.handleCancelReserva();
+          this.form.reset();
+          this.router.navigate(['/detalle-reserva', data.id]);
+        },
+        error: (error) => {
+          this.cargando = false;
+          console.error('Error al crear la reserva:', error);
+          this.utilsService.showMessage({
+            title: 'Error al crear la reserva',
+            message:
+              error.error.error ||
+              'No se pudo crear la reserva. Por favor, intenta nuevamente.',
+            icon: 'error',
+          });
+        },
+      });
+    }
   }
 
   handleCancelReserva() {
@@ -137,8 +192,7 @@ export class HomeComponent {
   private _initForm() {
     this.form = this.fb.group({
       id: [''],
-      checkin: [null, Validators.required],
-      checkout: [null, Validators.required],
+      fechas: [null, [Validators.required, validarRangoFechas()]],
       huespedes: [
         1,
         [Validators.required, Validators.min(1), Validators.max(10)],
@@ -150,36 +204,30 @@ export class HomeComponent {
       .get_ciudades_con_propiedades()
       .subscribe((data) => {
         this.ciudades = data;
-        console.log(this.ciudades);
       });
   }
 
-  disabledCheckInDate = (current: Date): boolean => {
+  disabledDate = (current: Date): boolean => {
     return current < this.clearTime(this.today);
-  };
-
-  disabledCheckOutDate = (current: Date): boolean => {
-    const checkIn = this.form.get('checkin')?.value;
-    if (!checkIn) {
-      return true;
-    }
-    return current && current <= checkIn;
   };
 
   private clearTime(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
+  get fechasSeleccionadas(): [Date | null, Date | null] {
+    return this.form.get('fechas')?.value || [null, null];
+  }
+  
+
   get noches(): number {
-    const checkin = this.form.get('checkin')?.value;
-    const checkout = this.form.get('checkout')?.value;
+    const [checkin, checkout] = this.fechasSeleccionadas;
 
     if (!checkin || !checkout) return 0;
 
     const checkinDate = new Date(checkin);
     const checkoutDate = new Date(checkout);
 
-    // Normalizar a medianoche (00:00:00)
     checkinDate.setHours(0, 0, 0, 0);
     checkoutDate.setHours(0, 0, 0, 0);
 
@@ -193,4 +241,19 @@ export class HomeComponent {
     if (!this.porpiedadParaReservar?.precioNoche) return 0;
     return this.noches * this.porpiedadParaReservar.precioNoche;
   }
+  
+  get montoSena(): number {
+    switch (this.porpiedadParaReservar.id_pol_reserva as number) {
+      case 1: //
+        return 0;
+      case 2: // Pago del 20% al reservar
+        return this.precioTotal * 0.2;
+      case 3: //  Pago total al reservar
+        return this.precioTotal;
+
+      default:
+        return 0;
+    }
+  }
+
 }

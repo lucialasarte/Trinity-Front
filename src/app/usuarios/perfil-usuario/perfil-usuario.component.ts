@@ -20,7 +20,7 @@ export class PerfilUsuarioComponent {
   fotoPerfilUrl: SafeUrl | string | null = null;
   subiendoDoc = false;
   user !: Usuario;
-  apiUrl = 'http://localhost:5000/usuarios';
+  apiUrl = `${environment.apiUrl}/usuarios`;
   imagenUrls: string[] = [];
   // Inyección del AuthService como público para acceso en plantilla
   constructor(

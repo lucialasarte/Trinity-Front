@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ParametricasService {
-  private apiUrl = environment.apiUrl + '/parametricas';
+  private apiUrl = `${environment.apiUrl}/parametricas`;
 
   constructor(private http: HttpClient) {}
 

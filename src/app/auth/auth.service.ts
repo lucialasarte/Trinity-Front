@@ -98,8 +98,6 @@ export class AuthService {
   private cargarUsuarioPorId(userId: number) {
     this.http.get<Usuario>(`${environment.apiUrl}/usuarios/${userId}`).subscribe((usuario: Usuario) => {
       this.usuarioActual.set(usuario);
-      console.log(usuario);
-
     });
   }
 
