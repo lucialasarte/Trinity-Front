@@ -1,34 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../usuarios/models/usuario';
 import { UsuariosService } from '../usuarios/services/usuarios.service';
+import { EmpleadosService } from './services/empleados.service';
+import { UtilsService } from '../shared/services/utils.service';
 
 @Component({
   selector: 'app-empleados',
   templateUrl: './empleados.component.html',
-  styleUrls: ['./empleados.component.css']
+  styleUrls: ['./empleados.component.css'],
 })
 export class EmpleadosComponent implements OnInit {
-  empleados: Usuario[] = [];
+  empleados: any[] = [];
 
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(
+    private empleadosService: EmpleadosService,
+    private utilsService: UtilsService
+  ) {}
 
   ngOnInit(): void {
-    // 2 = id de rol EMPLEADO (ajusta si tu enum cambia)
-    this.usuariosService.getUsuariosPorRol(2).subscribe((empleados: Usuario[]) => {
-      this.empleados = empleados;
+    this._getEmpleados();
+  }
+
+  private _getEmpleados() {
+    this.empleadosService.getEmpleados().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.empleados = data;
+      },
+      error: (error) => {
+        this.utilsService.showMessage ({
+          title: 'Error al obtener empleados',
+          icon: 'error',
+          message: error.error.error || 'No se pudo obtener los empleados.'
+        })
+      },
     });
-  }
-
-  // Función auxiliar para mostrar los roles como string
-  mostrarRoles(user: any): string {
-    if (!user || !user.roles) return '';
-    return user.roles.map((r: any) => r.nombre).join(', ');
-  }
-
-  // Función auxiliar para mostrar el nombre del tipo de identificación
-  getTipoIdentificacionNombre(user: any): string {
-    if (!user || !user.tipo_identificacion) return '-';
-    if (typeof user.tipo_identificacion === 'string') return user.tipo_identificacion;
-    return user.tipo_identificacion.nombre || '-';
   }
 }

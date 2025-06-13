@@ -49,7 +49,6 @@ export class PropiedadesComponent implements OnInit {
     let propiedad = new Propiedad(form);
     propiedad.precioNoche = Number(form.precioNoche);
     propiedad.is_habilitada = false;
-    propiedad.requiere_documentacion = false;
 
     this.propiedadesService.createPropiedad(propiedad).subscribe({
       next: (data) => {

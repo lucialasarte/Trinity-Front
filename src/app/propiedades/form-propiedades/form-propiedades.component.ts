@@ -68,7 +68,7 @@ export class FormPropiedadesComponent {
         null,
         [Validators.required],
       ],
-      // requiere_documentacion: [false],
+      requiere_documentacion: [false],
       id_encargado: [null],
     });
 
