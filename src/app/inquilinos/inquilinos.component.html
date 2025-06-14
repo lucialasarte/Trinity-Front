@@ -16,7 +16,10 @@
             </nz-form-control>
           </nz-form-item>
         </form>
-        <button class="btn btn-primary ml-2" (click)="buscarInquilinos(form.value)">
+        <button
+          class="btn btn-primary ml-2"
+          (click)="buscarInquilinos(form.value)"
+        >
           <i class="fa fa-search"></i> Buscar
         </button>
       </div>
@@ -40,7 +43,7 @@
       <nz-spin [nzSpinning]="cargando">
         <nz-table
           #propertyTable
-          [nzData]="inquilinos"
+          [nzData]="inquilinosFiltrados"
           [nzPageSize]="4"
           [nzFrontPagination]="true"
           [nzSize]="'small'"
@@ -69,26 +72,24 @@
               <td>
                 <span
                   [ngClass]="{
-                    'badge-confirmada': inquilino.is_bloqueado,
-                    'badge-cancelada': !inquilino.is_bloqueado
+                    'badge-confirmada': !inquilino.is_bloqueado,
+                    'badge-cancelada': inquilino.is_bloqueado
                   }"
                 >
-                  {{ inquilino.is_bloqueado ? "Activo" : "Bloqueado" }}
+                  {{ inquilino.is_bloqueado ? "Bloqueado" : "Activo" }}
                 </span>
               </td>
 
               <td>
-                
                 <button
-                  
-                  (click)="cambiarEstadoInquilino(inquilino)"
+                  (click)="cambiarEstado(inquilino.id)"
                   class="btn btn-warning btn-sm"
                 >
                   <i
                     class="fa"
-                    [ngClass]="inquilino.is_bloqueado? 'fa-lock' : 'fa-unlock'"
+                    [ngClass]="inquilino.is_bloqueado ? 'fa-lock' : 'fa-unlock'"
                   ></i>
-                  {{ inquilino.is_bloqueado? "Bloquear" : "Desbloquear" }}
+                  {{ inquilino.is_bloqueado ? "Bloquear" : "Desbloquear" }}
                 </button>
               </td>
             </tr>
@@ -105,30 +106,27 @@
     </div>
   </div>
 
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    (nzOnOk)="onSubmitInquilino()"
+    (nzOnCancel)="handleCancel()"
+    [nzWidth]="'50%'"
+    [nzTitle]="'Agregar Inquilino'"
+  >
+    <div *nzModalContent></div>
 
-<nz-modal
-  [(nzVisible)]="isVisible"
-  (nzOnOk)="onSubmitInquilino()"
-  (nzOnCancel)="handleCancel()"
-  [nzWidth]="'50%'"
-  [nzTitle]="'Agregar Propiedad'"
->
-  <div *nzModalContent>
-    
-  </div>
-
-  <div *nzModalFooter>
-    <button class="btn-cancel" nz-button (click)="handleCancel()">
-      Cancelar
-    </button>
-    <button
-      [disabled]=""
-      class="btn-aceptar"
-      nz-button
-      (click)="onSubmitInquilino()"
-    >
-      Agregar
-    </button>
-  </div>
-</nz-modal>
-
+    <div *nzModalFooter>
+      <button class="btn-cancel" nz-button (click)="handleCancel()">
+        Cancelar
+      </button>
+      <button
+        [disabled]=""
+        class="btn-aceptar"
+        nz-button
+        (click)="onSubmitInquilino()"
+      >
+        Agregar
+      </button>
+    </div>
+  </nz-modal>
+</ng-container>
