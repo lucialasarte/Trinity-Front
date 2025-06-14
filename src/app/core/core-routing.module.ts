@@ -32,6 +32,12 @@ const coreRoutes: Routes = [
     // canActivate: [NoPermisoDetallePropGuard],
   },
   {
+    path: 'inquilinos',
+    loadChildren: () =>
+      import('../inquilinos/inquilinos.module').then((m) => m.InquilinosModule),
+    // canActivate: [NoPermisoDetallePropGuard],
+  },
+  {
     path: 'reservas',
     loadChildren: () =>
       import('../reservas/reservas.module').then((m) => m.ReservasModule),

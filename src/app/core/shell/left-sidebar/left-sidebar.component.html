@@ -12,36 +12,42 @@
     <h1 class="logo-text">Alquiloando</h1>
   </div>
   <ul class="nav-list">
-    <li >
+    <li>
       <button [routerLink]="'/home'" routerLinkActive="active">
-        <span class="icon">🏠</span>
+        <span class="icon"><i class="fa fa-house"></i></span>
         <span *ngIf="isEnglish" class="label">Home</span>
         <span *ngIf="!isEnglish" class="label">Inicio</span>
       </button>
     </li>
     <li *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades">
       <button [routerLink]="'/propiedades'" routerLinkActive="active">
-        <span class="icon">🏘️</span>
-        <span *ngIf="isEnglish" class="label">Properties</span>
+        <span class="icon"><i class="fa fa-city"></i></span>
+        <!-- <span *ngIf="isEnglish" class="label">Properties</span> -->
         <span *ngIf="!isEnglish" class="label">Propiedades</span>
       </button>
     </li>
     <li *ngIf="auth.usuarioActual()">
       <button [routerLink]="'/reservas'" routerLinkActive="active">
-        <span class="icon">📅</span>
-        <span *ngIf="isEnglish" class="label">Reservations</span>
+        <span class="icon"><i class="fa fa-calendar"></i></span>
+        <!-- <span *ngIf="isEnglish" class="label">Reservations</span> -->
         <span *ngIf="!isEnglish" class="label">Reservas</span>
       </button>
     </li>
 
-    
+    <li *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades">
+      <button [routerLink]="'/inquilinos'" routerLinkActive="active">
+        <span class="icon"> <i class="fa fa-users"></i></span>
+        <span *ngIf="isEnglish" class="label">Users</span>
+        <span *ngIf="!isEnglish" class="label">Inquilinos</span>
+      </button>
+    </li>
+
     <li *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados">
       <button [routerLink]="'/empleados'" routerLinkActive="active">
-        <span class="icon">👥 </span>
-        <span *ngIf="isEnglish" class="label">Employees</span>
+        <span class="icon"><i class="fa fa-user-tie"></i> </span>
+        <!-- <span class="icon"><i class="fa fa-briefcase"></i> </span> -->
         <span *ngIf="!isEnglish" class="label">Empleados</span>
       </button>
     </li>
-    
   </ul>
 </nav>

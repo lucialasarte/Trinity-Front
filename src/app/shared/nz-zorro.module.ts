@@ -46,6 +46,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzFormModule,
     NzButtonModule,
     NzInputModule,
+    NzTableModule,
+    NzFormModule,
+    NzButtonModule,
+    NzInputModule,
+    NzModalModule,
   ],
   exports: [
     NzIconModule,
@@ -71,6 +76,11 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzFormModule,
     NzButtonModule,
     NzInputModule,
+    NzTableModule,
+    NzFormModule,
+    NzButtonModule,
+    NzInputModule,
+    NzModalModule,
   ],
 })
 export class NzZorroModule {}
