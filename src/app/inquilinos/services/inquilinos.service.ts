@@ -12,7 +12,7 @@ export class InquilinosService {
 
     constructor(private http: HttpClient) {}
 
-    cambiarEstadoInquilino(id:number): Observable<any> {
+    cambiar_estado_inquilino(id:number): Observable<any> {
         return this.http.patch<any>(`${this.apiURL}/cambiarEstado/${id}`, {});
     }
 }

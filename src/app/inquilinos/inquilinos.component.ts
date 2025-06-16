@@ -1,32 +1,41 @@
 import { Component, computed } from '@angular/core';
-import { FormBuilder, FormGroup, MinLengthValidator, RequiredValidator, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  MinLengthValidator,
+  RequiredValidator,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { UsuariosService } from '../usuarios/services/usuarios.service';
 import { min } from 'moment';
 import { InquilinosService } from './services/inquilinos.service';
 import { UtilsService } from '../shared/services/utils.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { RegistrarUsuarioComponent } from '../usuarios/registrar-usuario/registrar-usuario.component';
 
 @Component({
   selector: 'app-inquilinos',
   templateUrl: './inquilinos.component.html',
-  styleUrls: ['./inquilinos.component.css']
+  styleUrls: ['./inquilinos.component.css'],
 })
 export class InquilinosComponent {
-
-  form!:FormGroup;
+  form!: FormGroup;
   cargando: boolean = true;
   inquilinos: Array<any> = [];
   inquilinosFiltrados: Array<any> = [];
   isVisible: boolean = false;
-  
+  loading: boolean = true;
+  error: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     public auth: AuthService,
     private userService: UsuariosService,
     private inquilinosService: InquilinosService,
-    private utilsService: UtilsService
-  ) { }
+    private utilsService: UtilsService,
+    private modal: NzModalService
+  ) {}
 
   ngOnInit(): void {
     this._initForm();
@@ -44,64 +53,70 @@ export class InquilinosComponent {
       showCancelButton: true,
       actionOnConfirm: () => {
         this.cambiarEstadoInquilino(id);
-      }
+      },
     });
   }
-  
-  cambiarEstadoInquilino(id:number) {
-    this.inquilinosService.cambiarEstadoInquilino(id).subscribe({
+
+  cambiarEstadoInquilino(id: number) {
+    this.inquilinosService.cambiar_estado_inquilino(id).subscribe({
       next: (data) => {
-        if(data.is_bloqueado) {
-        this.utilsService.showMessage({
-          icon: 'success',
-          title: 'Inquilino bloqueado',
-          message: `El inquilino ha sido bloqueado correctamente.`
-        })}else {
+        if (data.is_bloqueado) {
           this.utilsService.showMessage({
-          icon: 'success',
-          title: 'Inquilino desbloqueado',
-          message: `El inquilino ha sido desbloqueado correctamente.`
-        });
+            icon: 'success',
+            title: 'Inquilino bloqueado',
+            message: `El inquilino ha sido bloqueado correctamente.`,
+          });
+        } else {
+          this.utilsService.showMessage({
+            icon: 'success',
+            title: 'Inquilino desbloqueado',
+            message: `El inquilino ha sido desbloqueado correctamente.`,
+          });
         }
-        this._getInquilinos(); 
+        this._getInquilinos();
       },
       error: (error) => {
         this.utilsService.showMessage({
           icon: 'error',
           title: 'Error al cambiar estado',
-          message: `No se pudo cambiar el estado del inquilino.`
+          message: `No se pudo cambiar el estado del inquilino.`,
         });
+      },
+    });
+  }
+
+  abrirModalRegistroUsuario() {
+    const modalRef = this.modal.create({
+      nzTitle: 'Registrar usuario',
+      nzContent: RegistrarUsuarioComponent,
+      nzWidth: 990,
+      nzFooter: null,
+    });
+    modalRef.afterClose.subscribe((usuarioCreado) => {
+      if (usuarioCreado) {
+        this._getInquilinos();
       }
     });
   }
   buscarInquilinos(value: any) {
-  const dato = value.dato?.trim()?.toLowerCase();
-  if (!dato || dato.length < 4) {
-    this.inquilinosFiltrados = [...this.inquilinos]; 
-    return;
-  }
+    const dato = value.dato?.trim()?.toLowerCase();
+    if (!dato || dato.length < 4) {
+      this.inquilinosFiltrados = [...this.inquilinos];
+      return;
+    }
 
-  this.inquilinosFiltrados = this.inquilinos.filter(inquilino => {
-    return (
-      inquilino.nombre?.toLowerCase().includes(dato) ||
-      inquilino.apellido?.toLowerCase().includes(dato) ||
-      inquilino.numero_identificacion?.toLowerCase().includes(dato) ||
-      inquilino.correo?.toLowerCase().includes(dato)
-    );
-  });
-}
-
-  showModal() {
-    this.isVisible = true;
+    this.inquilinosFiltrados = this.inquilinos.filter((inquilino) => {
+      return (
+        inquilino.nombre?.toLowerCase().includes(dato) ||
+        inquilino.apellido?.toLowerCase().includes(dato) ||
+        inquilino.numero_identificacion?.toLowerCase().includes(dato) ||
+        inquilino.correo?.toLowerCase().includes(dato)
+      );
+    });
   }
-  handleCancel() {
-    this.isVisible = false;
-  }
-
-  onSubmitInquilino(){}
 
   private _getInquilinos() {
-    this.userService.getUsuariosPorRol(2).subscribe({
+    this.userService.getUsuariosPorRol(3).subscribe({
       next: (data) => {
         this.inquilinos = data;
         this.inquilinosFiltrados = data;
@@ -110,15 +125,13 @@ export class InquilinosComponent {
       error: (error) => {
         console.error('Error fetching inquilinos:', error);
         this.cargando = false;
-      }
+      },
     });
   }
 
- private _initForm() {
-  this.form = this.fb.group({
-    dato: [null, [Validators.required, Validators.minLength(4)]]
-  });
-}
-
-
+  private _initForm() {
+    this.form = this.fb.group({
+      dato: [null, [Validators.required, Validators.minLength(4)]],
+    });
+  }
 }

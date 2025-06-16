@@ -22,7 +22,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     PerfilUsuarioComponent,
     RegistrarUsuarioComponent
   ],
-  exports: [],
+  exports: [RegistrarUsuarioComponent],
   providers: [provideNgxMask()],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

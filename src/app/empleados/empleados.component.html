@@ -1,32 +1,33 @@
 <div class="empleados-list">
   <h2 class="titulo">Empleados</h2>
   <div class="table-container">
-    <nz-table
-      #empleadosTable
-      [nzData]="empleados"
-      [nzPageSize]="4"
-      [nzFrontPagination]="true"
-      [nzSize]="'small'"
-      *ngIf="empleados.length > 0"
-    >
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <!-- <th>Apellido</th> -->
-          <th>Email</th>
-          <!-- <th>Rol</th>
+    <nz-spin [nzSpinning]="cargando">
+      <nz-table
+        #empleadosTable
+        [nzData]="empleados"
+        [nzPageSize]="4"
+        [nzFrontPagination]="true"
+        [nzSize]="'small'"
+        *ngIf="empleados.length > 0"
+      >
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <!-- <th>Apellido</th> -->
+            <th>Email</th>
+            <!-- <th>Rol</th>
           <th>Tipo Identificación</th>
           <th>Número Identificación</th>
           <th>Fecha de Nacimiento</th>
           <th>País</th> -->
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let empleado of empleados">
-          <td>{{ empleado.nombre }}</td>
-          <!-- <td>{{ empleado.apellido }}</td> -->
-          <td>{{ empleado.correo }}</td>
-          <!-- <td>{{ empleado.roles[0].nombre }}</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let empleado of empleados">
+            <td>{{ empleado.nombre }}</td>
+            <!-- <td>{{ empleado.apellido }}</td> -->
+            <td>{{ empleado.correo }}</td>
+            <!-- <td>{{ empleado.roles[0].nombre }}</td>
           <td>{{ empleado.tipo_identificacion.nombre || "-" }}</td>
           <td>{{ empleado.numero_identificacion || "-" }}</td>
           <td>
@@ -37,14 +38,15 @@
             }}
           </td>
           <td>{{ empleado?.pais?.nombre || "-" }}</td> -->
-        </tr>
-      </tbody>
-    </nz-table>
-  </div>
-  <div *ngIf="empleados.length === 0">
-    <nz-alert
-      nzType="info"
-      nzMessage="No hay empleados para mostrar."
-    ></nz-alert>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+    <div
+      *ngIf="!empleados || empleados.length === 0"
+      class="mensaje-sin-propiedades"
+    >
+      No hay empleados.
+    </div>
   </div>
 </div>

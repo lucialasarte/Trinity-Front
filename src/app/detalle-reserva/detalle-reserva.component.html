@@ -85,13 +85,72 @@
         </div>
       </div>
     </div>
+    <!-- Card Inquilino -->
+    <div class="card acciones-card">
+      <ng-container *ngIf="inquilino">
+        <h3 class="titulo-seccion">Inquilino</h3>
+        <h5
+          *ngIf="
+            calificacionInquilino &&
+            auth.usuarioActual()?.permisos?.gestionar_propiedades
+          "
+        >
+          Calificación: {{ calificacionInquilino }}
+        </h5>
+        <p><strong>Nombre:</strong> {{ inquilino.nombre }}</p>
+        <p>
+          <strong>Tipo de Identificación:</strong>
+          {{ inquilino.tipo_identificacion.nombre }}
+        </p>
+        <p>
+          <strong>Número de Identificación:</strong>
+          {{ inquilino.numero_identificacion }}
+        </p>
+        <p><strong>Email:</strong> {{ inquilino.correo }}</p>
+      </ng-container>
+    </div>
 
-    <div
-      class="card acciones-card"
-      *ngIf="reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada'"
-    >
+    <div class="calificacion-container" *ngIf="calificacionPropiedad">
+      <h5>Calificación</h5>
+      <div>
+        <label>Personal:</label>
+        <nz-rate [ngModel]="calificacionPropiedad.personal" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Instalaciones:</label>
+        <nz-rate
+          [ngModel]="calificacionPropiedad.instalaciones_servicios"
+          disabled
+        ></nz-rate>
+      </div>
+
+      <div>
+        <label>Limpieza:</label>
+        <nz-rate [ngModel]="calificacionPropiedad.limpieza" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Confort:</label>
+        <nz-rate [ngModel]="calificacionPropiedad.confort" disabled></nz-rate>
+      </div>
+      <div>
+        <label>Relación Precio-Calidad:</label>
+        <nz-rate
+          [ngModel]="calificacionPropiedad.precio_calidad"
+          disabled
+        ></nz-rate>
+      </div>
+      <div>
+        <label>Ubicación:</label>
+        <nz-rate [ngModel]="calificacionPropiedad.ubicacion" disabled></nz-rate>
+      </div>
+    </div>
+    <!-- Card Acciones -->
+    <div class="card acciones-card">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
+        <!-- Chat -->
+        <button class="btn-sm" (click)="chat()">Chat</button>
+        <!-- Cancelar Reserva -->
         <button
           class="btn-sm"
           (click)="cancelar(this.reserva.id)"
@@ -101,6 +160,7 @@
         >
           Cancelar
         </button>
+        <!-- Subir Documentacion -->
         <button
           *ngIf="propiedad.requiere_documentacion"
           class="btn-sm"
@@ -108,20 +168,40 @@
         >
           Subir Documentación
         </button>
+        <!-- Confirmar Reserva Administrador -->
         <button
-          *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados && reserva.id_estado === 2"
+          *ngIf="
+            auth.usuarioActual()?.permisos?.gestionar_empleados &&
+            reserva.id_estado === 2
+          "
           class="btn-sm"
           (click)="confirmarReserva()"
-          
         >
           Confirmar Reserva
         </button>
+        <!-- Calificar Propiedad (Inquilino)-->
         <button
+          *ngIf="
+            !auth.usuarioActual()?.permisos?.gestionar_propiedades &&
+            calificacionPropiedad?.confort == null
+          "
           [disabled]="!puedeCalificar"
           class="btn-sm"
           (click)="calificar()"
         >
           Calificar
+        </button>
+        <!-- Calificar Inquilino (Encargado/Admin) -->
+        <button
+          *ngIf="
+            auth.usuarioActual()?.permisos?.gestionar_empleados &&
+            !calificacionInquilino
+          "
+          class="btn-sm"
+          [disabled]="!puedeCalificar"
+          (click)="calificar()"
+        >
+          Calificar Inquilino
         </button>
       </div>
     </div>
@@ -138,41 +218,161 @@
       </ul>
       <p *ngIf="documentos.length === 0">No se ha subido documentación.</p>
     </div>
-
-    <div class="calificacion-container" *ngIf="calificacion">
-      <h5>Calificación</h5>
-      <div>
-        <label>Personal:</label>
-        <nz-rate [ngModel]="calificacion.personal" disabled></nz-rate>
-      </div>
-      <div>
-        <label>Instalaciones:</label>
-        <nz-rate [ngModel]="calificacion.instalaciones" disabled></nz-rate>
-      </div>
-      <div>
-        <label>Servicios:</label>
-        <nz-rate [ngModel]="calificacion.servicios" disabled></nz-rate>
-      </div>
-      <div>
-        <label>Limpieza:</label>
-        <nz-rate [ngModel]="calificacion.limpieza" disabled></nz-rate>
-      </div>
-      <div>
-        <label>Confort:</label>
-        <nz-rate [ngModel]="calificacion.confort" disabled></nz-rate>
-      </div>
-      <div>
-        <label>Relación Precio-Calidad:</label>
-        <nz-rate [ngModel]="calificacion.precioCalidad" disabled></nz-rate>
-      </div>
-      <div>
-        <label>Ubicación:</label>
-        <nz-rate [ngModel]="calificacion.ubicacion" disabled></nz-rate>
-      </div>
-    </div>
   </div>
 </ng-container>
 
 <div class="fullscreen-spinner" *ngIf="cargando">
   <nz-spin nzSimple></nz-spin>
 </div>
+
+<!-- MODAL CHAT -->
+<nz-modal
+  [(nzVisible)]="isVisibleChat"
+  [nzTitle]="'Chat'"
+  [nzWidth]="'50%'"
+  [nzFooter]="null"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="onSubmitMensaje()"
+>
+  <div *nzModalContent>
+    <app-detalle-chat
+      [esAdmin]="esAdmin"
+      [esEncargado]="esEncargado"
+      [esInquilino]="esInquilino"
+    >
+    </app-detalle-chat>
+    <form
+      [formGroup]="formMensaje"
+      (ngSubmit)="onSubmitMensaje()"
+      class="form-chat"
+    >
+      <input
+        type="text"
+        nz-input
+        placeholder="Escribí tu mensaje..."
+        formControlName="mensaje"
+        class="chat-input"
+      />
+
+      <button
+        nz-button
+        nzType="primary"
+        [disabled]="formMensaje.invalid"
+        class="btn-enviar"
+      >
+        <i nz-icon nzType="send" nzTheme="outline"></i> Enviar
+      </button>
+    </form>
+  </div>
+</nz-modal>
+
+<!-- MODAL CALIFICACION PROPIEDAD (INQUILINO)-->
+<nz-modal
+  [(nzVisible)]="isVisibleCalificarInquilino"
+  [nzTitle]="'Calificación'"
+  [nzWidth]="'50%'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="onSubmitCalificacion()"
+>
+  <div *nzModalContent>
+    <form [formGroup]="formCalificacion">
+      <h5>Calificación</h5>
+
+      <div>
+        <label>Personal:</label>
+        <nz-rate formControlName="personal" nzRequired></nz-rate>
+      </div>
+
+      <div>
+        <label>Instalaciones:</label>
+        <nz-rate formControlName="instalaciones_servicios" nzRequired></nz-rate>
+      </div>
+
+      <div>
+        <label>Limpieza:</label>
+        <nz-rate formControlName="limpieza" nzRequired></nz-rate>
+      </div>
+
+      <div>
+        <label>Confort:</label>
+        <nz-rate formControlName="confort" nzRequired></nz-rate>
+      </div>
+
+      <div>
+        <label>Relación Precio-Calidad:</label>
+        <nz-rate formControlName="precio_calidad" nzRequired></nz-rate>
+      </div>
+
+      <div>
+        <label>Ubicación:</label>
+        <nz-rate formControlName="ubicacion" nzRequired></nz-rate>
+      </div>
+    </form>
+  </div>
+  <div *nzModalFooter>
+    <button class="btn-cancel" nz-button (click)="handleCancel()">
+      Cancelar
+    </button>
+    <button class="btn-aceptar" [disabled]="formCalificacion.invalid" nz-button (click)="onSubmitCalificacion()">
+      Enviar
+    </button>
+  </div>
+</nz-modal>
+
+<!-- MODAL CALIFICACION (ADMIN)-->
+<nz-modal
+  [(nzVisible)]="isVisibleCalificar"
+  [nzTitle]="'Calificación'"
+  [nzWidth]="'50%'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="onSubmitCalificacion()"
+>
+  <div *nzModalContent>
+    <form [formGroup]="formCalificacionInquilino" class="form-calificacion">
+      <label style="padding: 20px">Calificación:</label>
+      <nz-rate
+        formControlName="calificacion"
+        [nzCharacter]="emojiTemplate"
+        nzRequired
+      ></nz-rate>
+
+      <p>
+        Valor de calificación:
+        {{ formCalificacionInquilino.get("calificacion")?.value }}
+      </p>
+    </form>
+
+    <ng-template #emojiTemplate let-index let-value="nzRateValue">
+      <span
+        class="emoji-rate"
+        [class.selected-emoji]="
+          (formCalificacionInquilino.get('calificacion')?.value || 0) > index
+        "
+      >
+        <i
+          class="far"
+          [ngClass]="{
+            'fa-frown': index === 0,
+            'fa-meh': index === 1,
+            'fa-smile': index === 2,
+            'fa-laugh-beam': index === 3,
+            'fa-grin-stars': index === 4
+          }"
+        ></i>
+      </span>
+    </ng-template>
+  </div>
+  <div *nzModalFooter>
+    <button class="btn-cancel" nz-button (click)="handleCancel()">
+      Cancelar
+    </button>
+    <button
+      class="btn-aceptar"
+      nz-button
+      (click)="onSubmitCalificacionInquilino()"
+      [disabled]="formCalificacionInquilino.invalid"
+    >
+      Enviar
+    </button>
+  </div>
+</nz-modal>

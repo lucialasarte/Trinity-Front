@@ -33,7 +33,7 @@ export class DetallePropiedadComponent implements OnInit {
   imagenesConId: { id: number; url: string }[] = [];
 
   paginaActual = 1;
-  imagenesPorPagina = 4;
+  imagenesPorPagina = 3;
   totalPaginas = 1;
 
   encargado: any;

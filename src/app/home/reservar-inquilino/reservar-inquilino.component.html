@@ -47,6 +47,57 @@
       {{ propiedad.ciudad }}
     </p>
   </div>
+  <nz-divider></nz-divider>
+  <div *ngIf="propiedad.promedio_calificacion_detallado">
+    <h3>Calificaciones detalladas</h3>
+    <div class="grid-detalles">
+      <p>
+        <strong>Confort:</strong>
+        <nz-rate
+          [ngModel]="propiedad.promedio_calificacion_detallado.confort"
+          [nzDisabled]="true"
+        ></nz-rate>
+      </p>
+      <p>
+        <strong>Instalaciones y Servicios:</strong>
+        <nz-rate
+          [ngModel]="
+            propiedad.promedio_calificacion_detallado.instalaciones_servicios
+          "
+          [nzDisabled]="true"
+        ></nz-rate>
+      </p>
+      <p>
+        <strong>Limpieza:</strong>
+        <nz-rate
+          [ngModel]="propiedad.promedio_calificacion_detallado.limpieza"
+          [nzDisabled]="true"
+        ></nz-rate>
+      </p>
+      <p>
+        <strong>Personal:</strong>
+        <nz-rate
+          [ngModel]="propiedad.promedio_calificacion_detallado.personal"
+          [nzDisabled]="true"
+        ></nz-rate>
+      </p>
+      <p>
+        <strong>Relación Precio/Calidad:</strong>
+        <nz-rate
+          [ngModel]="propiedad.promedio_calificacion_detallado.precio_calidad"
+          [nzDisabled]="true"
+        ></nz-rate>
+      </p>
+      <p>
+        <strong>Ubicación:</strong>
+        <nz-rate
+          [ngModel]="propiedad.promedio_calificacion_detallado.ubicacion"
+          [nzDisabled]="true"
+        ></nz-rate>
+      </p>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
   <div class="politica-reserva">
     <p>
       <strong>Política de Reserva: </strong>{{ propiedad.pol_reserva }}. El

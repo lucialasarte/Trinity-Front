@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DetallePropiedadRoutingModule } from './detalle-propiedad-routing.module';
 import { DetallePropiedadComponent } from './detalle-propiedad.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzZorroModule } from '../shared/nz-zorro.module';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 
@@ -10,6 +10,7 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
   declarations: [DetallePropiedadComponent],
   imports: [
     CommonModule,
+    FormsModule,
     DetallePropiedadRoutingModule,
     NzZorroModule,
     ReactiveFormsModule,

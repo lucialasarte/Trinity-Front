@@ -11,6 +11,7 @@ import { UtilsService } from '../shared/services/utils.service';
 })
 export class EmpleadosComponent implements OnInit {
   empleados: any[] = [];
+  cargando: boolean = true;
 
   constructor(
     private empleadosService: EmpleadosService,
@@ -26,6 +27,7 @@ export class EmpleadosComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.empleados = data;
+        this.cargando = false;
       },
       error: (error) => {
         this.utilsService.showMessage ({
@@ -33,6 +35,7 @@ export class EmpleadosComponent implements OnInit {
           icon: 'error',
           message: error.error.error || 'No se pudo obtener los empleados.'
         })
+        this.cargando = false;
       },
     });
   }

@@ -29,7 +29,7 @@
       style="padding-left: 20px"
       *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
     >
-      <button (click)="showModal()" class="btn btn-primary">
+      <button (click)="abrirModalRegistroUsuario()" class="btn btn-primary">
         <i class="fa fa-plus"></i> Agregar Inquilino
       </button>
     </div>
@@ -87,9 +87,9 @@
                 >
                   <i
                     class="fa"
-                    [ngClass]="inquilino.is_bloqueado ? 'fa-lock' : 'fa-unlock'"
+                    [ngClass]="inquilino.is_bloqueado ? 'fa-unlock' : 'fa-lock'"
                   ></i>
-                  {{ inquilino.is_bloqueado ? "Bloquear" : "Desbloquear" }}
+                  {{ inquilino.is_bloqueado ? "Desbloquear" : "Bloquear" }}
                 </button>
               </td>
             </tr>
@@ -105,28 +105,6 @@
       </div>
     </div>
   </div>
-
-  <nz-modal
-    [(nzVisible)]="isVisible"
-    (nzOnOk)="onSubmitInquilino()"
-    (nzOnCancel)="handleCancel()"
-    [nzWidth]="'50%'"
-    [nzTitle]="'Agregar Inquilino'"
-  >
-    <div *nzModalContent></div>
-
-    <div *nzModalFooter>
-      <button class="btn-cancel" nz-button (click)="handleCancel()">
-        Cancelar
-      </button>
-      <button
-        [disabled]=""
-        class="btn-aceptar"
-        nz-button
-        (click)="onSubmitInquilino()"
-      >
-        Agregar
-      </button>
-    </div>
-  </nz-modal>
+  
+  
 </ng-container>

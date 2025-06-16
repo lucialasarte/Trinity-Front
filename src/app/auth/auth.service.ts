@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -22,10 +22,12 @@ export class AuthService {
     return !!this.usuarioActual();
   }
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  esAdministrador = computed(() => {
+    const usuario = this.usuarioActual();
+    return usuario?.permisos?.gestionar_empleados === true;
+  });
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   /**
    * Realiza login contra el backend, guarda el token y obtiene el usuario completo.
@@ -34,21 +36,23 @@ export class AuthService {
    * @returns Observable con la respuesta del backend
    */
   login(correo: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { correo, password }).pipe(
-      tap(response => {
-        if (response.token) {
-          this.setToken(response.token); // Guarda el token JWT
-          // Decodifica el token para extraer el id de usuario
-          const payload = JSON.parse(atob(response.token.split('.')[1]));
-          const userId = payload.sub || payload.identity || payload.id;
-          // Si hay id, obtiene el usuario completo desde la API y lo setea en el signal
-          if (userId) {
-            this.cargarUsuarioPorId(Number(userId));
+    return this.http
+      .post<any>(`${this.apiUrl}/login`, { correo, password })
+      .pipe(
+        tap((response) => {
+          if (response.token) {
+            this.setToken(response.token); // Guarda el token JWT
+            // Decodifica el token para extraer el id de usuario
+            const payload = JSON.parse(atob(response.token.split('.')[1]));
+            const userId = payload.sub || payload.identity || payload.id;
+            // Si hay id, obtiene el usuario completo desde la API y lo setea en el signal
+            if (userId) {
+              this.cargarUsuarioPorId(Number(userId));
+            }
+            this.router.navigate(['/home']); // Redirige al home tras login
           }
-          this.router.navigate(['/home']); // Redirige al home tras login
-        }
-      })
-    );
+        })
+      );
   }
 
   /**
@@ -96,9 +100,11 @@ export class AuthService {
    * @param userId id del usuario
    */
   private cargarUsuarioPorId(userId: number) {
-    this.http.get<Usuario>(`${environment.apiUrl}/usuarios/${userId}`).subscribe((usuario: Usuario) => {
-      this.usuarioActual.set(usuario);
-    });
+    this.http
+      .get<Usuario>(`${environment.apiUrl}/usuarios/${userId}`)
+      .subscribe((usuario: Usuario) => {
+        this.usuarioActual.set(usuario);
+      });
   }
 
   /**
@@ -108,7 +114,10 @@ export class AuthService {
    * @param usuarioCompleto (opcional) usuario ya resuelto desde el backend
    * @returns true si el usuario fue cargado correctamente, false si el token es inválido
    */
-  private decodificarTokenYSetearUsuario(token: string, usuarioCompleto?: Usuario): boolean {
+  private decodificarTokenYSetearUsuario(
+    token: string,
+    usuarioCompleto?: Usuario
+  ): boolean {
     try {
       if (usuarioCompleto) {
         this.usuarioActual.set(usuarioCompleto);

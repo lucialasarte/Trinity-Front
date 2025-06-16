@@ -16,9 +16,6 @@ export class Usuario {
   pais?: Pais;
   roles: Rol[];
   tarjetas: Tarjeta[];
-  // id_imagen?: number;
-  // imagen: string;
-  // imagenes_doc: Array<{id: number}>;
   permisos?: PermisosUsuario;
   id_imagenes?: number[];
 
@@ -34,9 +31,6 @@ export class Usuario {
     this.pais = obj && obj.pais || null;
     this.roles = obj && obj.roles || [];
     this.tarjetas = obj && obj.tarjetas || [];
-    // this.id_imagen = obj && obj.id_imagen || null;
-    // this.imagen = obj && obj.imagen || '';
-    // this.imagenes_doc = obj && obj.imagenes_doc || [];
     this.permisos = obj && obj.permisos || null;
     this.id_imagenes = obj && obj.id_imagenes || [];
   }

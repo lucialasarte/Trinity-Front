@@ -7,6 +7,8 @@ import { Calificacion } from '../shared/models/calificacion';
 import { UtilsService } from '../shared/services/utils.service';
 import { ReservasService } from '../reservas/services/reservas.service';
 import { AuthService } from '../auth/auth.service';
+import { UsuariosService } from '../usuarios/services/usuarios.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-detalle-reserva',
@@ -15,21 +17,33 @@ import { AuthService } from '../auth/auth.service';
 })
 export class DetalleReservaComponent {
   reserva: Reserva = new Reserva();
+  formMensaje!: FormGroup;
+  formCalificacion!: FormGroup;
+  formCalificacionInquilino!: FormGroup;
+  inquilino: any;
   propiedad: any;
   documentos: any[] = [];
-  calificacion: Calificacion | null = null;
+  calificacionPropiedad: Calificacion | null = null;
+  calificacionInquilino: number | null = null;
   estado: string = '';
   puedeCalificar = false;
   usuario = computed(() => this.auth.usuarioActual());
   cargando = false;
+  isVisibleChat = false;
+  isVisibleCalificar = false;
+  isVisibleCalificarInquilino = false;
+  esAdmin: boolean = false;
+  esEncargado: boolean = false;
+  esInquilino: boolean = false;
 
   constructor(
-    private propiedadesService: PropiedadesService,
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private utilsService: UtilsService,
     private reservasService: ReservasService,
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private userService: UsuariosService
   ) {}
 
   ngOnInit() {
@@ -41,11 +55,102 @@ export class DetalleReservaComponent {
         this._getReserva(this.reserva.id);
       }
     });
+    this._initFormMensaje();
+    this._initFormCalificacion();
+    this._initFormCalificacionInquilino();
+  }
+  onSubmitCalificacion() {
+    const calificacion = this.formCalificacion.value;
+    console.log('Calificación enviada:', calificacion);
+    this.reservasService
+      .calificarPropiedad(this.reserva.id, { calificacion })
+      .subscribe({
+        next: (res) => {
+          this.calificacionPropiedad = calificacion;
+          this.utilsService.showMessage({
+            title: 'Calificación exitosa',
+            message: 'La calificación fue registrada correctamente.',
+            icon: 'success',
+          });
+          this.handleCancel();
+        },
+        error: (error) => {
+          this.utilsService.showMessage({
+            title: 'Error al calificar.',
+            message:
+              error.error.error || 'No se pudo registrar la calificación.',
+            icon: 'error',
+          });
+        },
+      });
+  }
+  onSubmitCalificacionInquilino() {
+    const calificacion =
+      this.formCalificacionInquilino.get('calificacion')?.value;
+    this.reservasService
+      .calificarInquilino(this.reserva.id, { calificacion })
+      .subscribe({
+        next: (res) => {
+          this.calificacionInquilino = calificacion;
+
+          this.utilsService.showMessage({
+            title: 'Calificación exitosa',
+            message: 'La calificación fue registrada correctamente.',
+            icon: 'success',
+          });
+          this.handleCancel();
+        },
+        error: (error) => {
+          this.utilsService.showMessage({
+            title: 'Error al calificar.',
+            message:
+              error.error.error || 'No se pudo registrar la calificación.',
+            icon: 'error',
+          });
+        },
+      });
+  }
+  onSubmitMensaje() {
+    const mensaje = this.formMensaje.value;
+    console.log('Mensaje enviado:', mensaje);
+    // this.reservasService
+    //   .enviarMensaje(this.reserva.id, { mensaje })
+    //   .subscribe({
+    //     next: (res) => {
+    //       this.utilsService.showMessage({
+    //         title: 'Mensaje enviado',
+    //         message: 'El mensaje fue enviado correctamente.',
+    //         icon: 'success',
+    //       });
+    //       this.handleCancel();
+    //     },
+    //     error: (error) => {
+    //       this.utilsService.showMessage({
+    //         title: 'Error al enviar el mensaje.',
+    //         message:
+    //           error.error.error || 'No se pudo enviar el mensaje.',
+    //         icon: 'error',
+    //       });
+    //     },
+    //   });
   }
 
   confirmarReserva() {}
 
-  calificar() {}
+  calificar() {
+    const usuario = this.auth.usuarioActual();
+    this.esAdmin = !!usuario?.permisos?.gestionar_empleados;
+    this.esEncargado =
+      !this.esAdmin && !!usuario?.permisos?.gestionar_propiedades;
+    this.esInquilino = !this.esAdmin && !this.esEncargado;
+
+    if (this.esInquilino) {
+      this.isVisibleCalificarInquilino = true;
+    } else {
+      this.isVisibleCalificar = true;
+    }
+  }
+
   cancelar(id: number) {
     if (id) {
       this.utilsService.showMessage({
@@ -84,24 +189,44 @@ export class DetalleReservaComponent {
     }
   }
   subirDocumentacion() {}
+
   verPropiedad(id: number) {
     this.router.navigate(['/detalle-propiedad', id]);
   }
 
-  // private _getPropiedad(id: number) {
-  //   this.propiedadesService.get_propiedad_id(id).subscribe((data) => {
-  //     console.log(data);
-  //     this.propiedad = data;
-  //   });
-  // }
+  chat() {
+    const usuario = this.auth.usuarioActual();
+
+    this.esAdmin = !!usuario?.permisos?.gestionar_empleados;
+    this.esEncargado =
+      !this.esAdmin && !!usuario?.permisos?.gestionar_propiedades;
+    this.esInquilino = !this.esAdmin && !this.esEncargado;
+
+    this.isVisibleChat = true;
+  }
+
+  handleCancel() {
+    this.isVisibleChat = false;
+    this.isVisibleCalificar = false;
+    this.isVisibleCalificarInquilino = false;
+    // Resetear formularios al cerrar el modal
+    this.formCalificacion.reset();
+    this.formMensaje.reset();
+    this.formCalificacionInquilino.reset();
+  }
 
   private _getReserva(id: number) {
     this.reservasService.get_reserva_id(id).subscribe({
       next: (data) => {
         this.reserva = data.reserva;
+        this._getInquilino(this.reserva.id_inquilino);
         this.propiedad = data.propiedad;
-        // this._getPropiedad(this.reserva.id_propiedad);
-        // this.validarCalificacion();
+        this.calificacionPropiedad = new Calificacion(
+          data.calificacion_propiedad
+        );
+        this.calificacionInquilino = data.calificacion_inquilino.calificacion;
+        this.validarCalificacion();
+        console.log(this.calificacionPropiedad);
       },
       error: (error) => {
         this.utilsService.showMessage({
@@ -113,22 +238,64 @@ export class DetalleReservaComponent {
     });
   }
 
-  validarCalificacion(): void {
-    if (!this.reserva?.fecha_fin) return;
-
-    const fechaFin = new Date(this.reserva.fecha_fin); // convierte string a Date
-    const hoy = new Date();
-
-    // Normalizar fechas a medianoche para evitar diferencias horarias
-    fechaFin.setHours(0, 0, 0, 0);
-    hoy.setHours(0, 0, 0, 0);
-
-    const estadiaFinalizada = fechaFin <= hoy;
-    const diasDesdeFin =
-      (hoy.getTime() - fechaFin.getTime()) / (1000 * 60 * 60 * 24);
-
-    this.puedeCalificar = estadiaFinalizada && diasDesdeFin <= 14;
+  private _getInquilino(id: number) {
+    this.userService.getUsuarioPorId(id).subscribe({
+      next: (data) => {
+        this.inquilino = data;
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al obtener el inquilino',
+          message: error.error.error || 'No se pudo cargar el inquilino.',
+          icon: 'error',
+        });
+      },
+    });
   }
+
+  private _initFormMensaje() {
+    this.formMensaje = this.fb.group({
+      mensaje: [null, [Validators.required, Validators.minLength(1)]],
+    });
+  }
+
+  private _initFormCalificacion() {
+    this.formCalificacion = this.fb.group({
+      confort: [null, Validators.required],
+      instalaciones_servicios: [null, Validators.required],
+      limpieza: [null, Validators.required],
+      personal: [null, Validators.required],
+      precio_calidad: [null, Validators.required],
+      ubicacion: [null, Validators.required],
+    });
+  }
+
+  private _initFormCalificacionInquilino() {
+    this.formCalificacionInquilino = this.fb.group({
+      calificacion: [3, Validators.required],
+    });
+  }
+
+  validarCalificacion(): void {
+  if (!this.reserva?.fecha_fin) {
+    this.puedeCalificar = false;
+    return;
+  }
+
+  const fechaFin = new Date(this.reserva.fecha_fin); // formato ISO => OK
+  const hoy = new Date();
+
+  // Normaliza ambas fechas a medianoche para comparar solo fechas
+  fechaFin.setHours(0, 0, 0, 0);
+  hoy.setHours(0, 0, 0, 0);
+
+  const tiempoTranscurrido = hoy.getTime() - fechaFin.getTime();
+  const diasDesdeFin = Math.floor(tiempoTranscurrido / (1000 * 60 * 60 * 24));
+
+  const estadiaFinalizada = fechaFin <= hoy;
+  this.puedeCalificar = estadiaFinalizada && diasDesdeFin <= 14;
+}
+
 
   estadoClase(estado: string): string {
     switch (estado) {
@@ -163,7 +330,10 @@ export class DetalleReservaComponent {
   }
 
   get isEliminada(): boolean {
-    if (this.propiedad.delete_at === null || this.propiedad.delete_at === undefined) {
+    if (
+      this.propiedad.delete_at === null ||
+      this.propiedad.delete_at === undefined
+    ) {
       return false; // No está eliminada
     }
     if (this.propiedad.delete_at) {

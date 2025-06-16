@@ -19,6 +19,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzRateModule } from 'ng-zorro-antd/rate';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 
 @NgModule({
   declarations: [],
@@ -51,9 +53,14 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzButtonModule,
     NzInputModule,
     NzModalModule,
+    NzRateModule,
+    NzInputModule,
+    NzDatePickerModule,
+    NzInputNumberModule,
+    NzButtonModule,
+    NzCardModule,
   ],
   exports: [
-    NzIconModule,
     NzCollapseModule,
     NzStepsModule,
     NzTableModule,
@@ -81,6 +88,14 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzButtonModule,
     NzInputModule,
     NzModalModule,
+    NzRateModule,
+    NzInputModule,
+    NzDatePickerModule,
+    NzInputNumberModule,
+    NzButtonModule,
+    NzCardModule,
+    NzIconModule,
+
   ],
 })
 export class NzZorroModule {}

@@ -32,4 +32,12 @@ export class ReservasService {
   cancelarReserva(id: number) {
     return this.http.patch<any>(`${this.apiUrl}/cancelar/${id}`, {});
   }
+
+  calificarPropiedad(reservaId: number, calificacion: any) {
+    return this.http.patch<any>(`${this.apiUrl}/calificarPropiedad/${reservaId}`, calificacion);
+  }
+
+  calificarInquilino(reservaId: number, calificacion: any) {
+    return this.http.patch<any>(`${this.apiUrl}/calificarInquilino/${reservaId}`, calificacion);
+  }
 }
