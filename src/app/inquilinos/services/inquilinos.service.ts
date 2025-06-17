@@ -8,11 +8,11 @@ import { environment } from "src/environments/environment";
 })
 export class InquilinosService {
 
-    private apiURL = `${environment.apiUrl}/inquilinos`;
+    private apiURL = `${environment.apiUrl}/usuarios`;
 
     constructor(private http: HttpClient) {}
 
-    cambiar_estado_inquilino(id:number): Observable<any> {
-        return this.http.patch<any>(`${this.apiURL}/cambiarEstado/${id}`, {});
-    }
+    // cambiar_estado_inquilino(id:number): Observable<any> {
+    //     return this.http.patch<any>(`${this.apiURL}/cambiarEstado/${id}`, {});
+    // }
 }

@@ -21,6 +21,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRateModule } from 'ng-zorro-antd/rate';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @NgModule({
   declarations: [],
@@ -59,6 +60,7 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     NzInputNumberModule,
     NzButtonModule,
     NzCardModule,
+    NzToolTipModule
   ],
   exports: [
     NzCollapseModule,
@@ -95,6 +97,7 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     NzButtonModule,
     NzCardModule,
     NzIconModule,
+    NzToolTipModule
 
   ],
 })

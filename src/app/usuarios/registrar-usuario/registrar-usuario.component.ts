@@ -206,8 +206,6 @@ export class RegistrarUsuarioComponent implements OnInit {
     }
   }
 
-
-
   onSubmit() {
     if (this.form.valid) {
       this.creandoUsuario = true;

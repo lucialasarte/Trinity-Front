@@ -74,4 +74,7 @@ export class UsuariosService {
   registrarUsuario(usuario: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registrar`, usuario);
   }
+   cambiar_estado_inquilino(id:number): Observable<any> {
+        return this.http.patch<any>(`${this.apiUrl}/cambiarEstado/${id}`, {});
+    }
 }

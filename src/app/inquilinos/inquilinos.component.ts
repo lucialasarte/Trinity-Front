@@ -32,7 +32,6 @@ export class InquilinosComponent {
     private fb: FormBuilder,
     public auth: AuthService,
     private userService: UsuariosService,
-    private inquilinosService: InquilinosService,
     private utilsService: UtilsService,
     private modal: NzModalService
   ) {}
@@ -58,7 +57,7 @@ export class InquilinosComponent {
   }
 
   cambiarEstadoInquilino(id: number) {
-    this.inquilinosService.cambiar_estado_inquilino(id).subscribe({
+    this.userService.cambiar_estado_inquilino(id).subscribe({
       next: (data) => {
         if (data.is_bloqueado) {
           this.utilsService.showMessage({

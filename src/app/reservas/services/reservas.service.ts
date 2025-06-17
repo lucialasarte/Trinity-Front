@@ -2,16 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Reserva } from '../models/reserva';
 import { environment } from 'src/environments/environment';
+import {
+  Chat,
+  ChatResponse,
+} from 'src/app/detalle-reserva/detalle-chat/models/chat';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReservasService {
   private apiUrl = `${environment.apiUrl}/reservas`;
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {}
 
   createReserva(reserva: any) {
     return this.http.post<any>(`${this.apiUrl}/`, reserva);
@@ -34,10 +36,31 @@ export class ReservasService {
   }
 
   calificarPropiedad(reservaId: number, calificacion: any) {
-    return this.http.patch<any>(`${this.apiUrl}/calificarPropiedad/${reservaId}`, calificacion);
+    return this.http.patch<any>(
+      `${this.apiUrl}/calificarPropiedad/${reservaId}`,
+      calificacion
+    );
   }
 
   calificarInquilino(reservaId: number, calificacion: any) {
-    return this.http.patch<any>(`${this.apiUrl}/calificarInquilino/${reservaId}`, calificacion);
+    return this.http.patch<any>(
+      `${this.apiUrl}/calificarInquilino/${reservaId}`,
+      calificacion
+    );
+  }
+
+  getChatReserva(id: number) {
+    return this.http.get<ChatResponse>(`${this.apiUrl}/chat/${id}`);
+  }
+
+  enviarMensajeChat(idReserva: number, mensaje: Chat) {
+    return this.http.post<ChatResponse>(
+      `${this.apiUrl}/chat/${idReserva}`,
+      mensaje
+    );
+  }
+
+  confirmar(id: number) {
+    return this.http.patch<any>(`${this.apiUrl}/confirmar/${id}`, {});
   }
 }

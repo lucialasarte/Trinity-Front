@@ -9,6 +9,7 @@ import { ReservasService } from '../reservas/services/reservas.service';
 import { AuthService } from '../auth/auth.service';
 import { UsuariosService } from '../usuarios/services/usuarios.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Chat } from './detalle-chat/models/chat';
 
 @Component({
   selector: 'app-detalle-reserva',
@@ -17,6 +18,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class DetalleReservaComponent {
   reserva: Reserva = new Reserva();
+  chatReserva: Chat[] = [];
   formMensaje!: FormGroup;
   formCalificacion!: FormGroup;
   formCalificacionInquilino!: FormGroup;
@@ -48,11 +50,17 @@ export class DetalleReservaComponent {
 
   ngOnInit() {
     this.auth.cargarUsuarioDesdeToken();
+    const usuario = this.auth.usuarioActual();
+    this.esAdmin = !!usuario?.permisos?.gestionar_empleados;
+    this.esEncargado =
+      !this.esAdmin && !!usuario?.permisos?.gestionar_propiedades;
+    this.esInquilino = !this.esAdmin && !this.esEncargado;
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.reserva.id = +id;
         this._getReserva(this.reserva.id);
+        this._getChatReserva(this.reserva.id);
       }
     });
     this._initFormMensaje();
@@ -63,7 +71,7 @@ export class DetalleReservaComponent {
     const calificacion = this.formCalificacion.value;
     console.log('Calificación enviada:', calificacion);
     this.reservasService
-      .calificarPropiedad(this.reserva.id, { calificacion })
+      .calificarPropiedad(this.reserva.id, calificacion)
       .subscribe({
         next: (res) => {
           this.calificacionPropiedad = calificacion;
@@ -84,6 +92,7 @@ export class DetalleReservaComponent {
         },
       });
   }
+
   onSubmitCalificacionInquilino() {
     const calificacion =
       this.formCalificacionInquilino.get('calificacion')?.value;
@@ -110,32 +119,49 @@ export class DetalleReservaComponent {
         },
       });
   }
+
   onSubmitMensaje() {
     const mensaje = this.formMensaje.value;
     console.log('Mensaje enviado:', mensaje);
-    // this.reservasService
-    //   .enviarMensaje(this.reserva.id, { mensaje })
-    //   .subscribe({
-    //     next: (res) => {
-    //       this.utilsService.showMessage({
-    //         title: 'Mensaje enviado',
-    //         message: 'El mensaje fue enviado correctamente.',
-    //         icon: 'success',
-    //       });
-    //       this.handleCancel();
-    //     },
-    //     error: (error) => {
-    //       this.utilsService.showMessage({
-    //         title: 'Error al enviar el mensaje.',
-    //         message:
-    //           error.error.error || 'No se pudo enviar el mensaje.',
-    //         icon: 'error',
-    //       });
-    //     },
-    //   });
+    this.reservasService.enviarMensajeChat(this.reserva.id, mensaje).subscribe({
+      next: () => {
+        this.utilsService.showMessage({
+          title: 'Mensaje enviado',
+          message: 'El mensaje fue enviado correctamente.',
+          icon: 'success',
+        });
+        this.handleCancel();
+        this._getChatReserva(this.reserva.id);
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al enviar el mensaje.',
+          message: error.error.error || 'No se pudo enviar el mensaje.',
+          icon: 'error',
+        });
+      },
+    });
   }
 
-  confirmarReserva() {}
+  confirmarReserva() {
+    this.reservasService.confirmar(this.reserva.id).subscribe({
+      next: () => {
+        this.utilsService.showMessage({
+          title: 'Reserva confirmada',
+          message: 'La reserva fue confirmada correctamente.',
+          icon: 'success',
+        });
+        this._getReserva(this.reserva.id);
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al confirmar la reserva',
+          message: error.error.error || 'No se pudo confirmar la reserva.',
+          icon: 'error',
+        });
+      },
+    });
+  }
 
   calificar() {
     const usuario = this.auth.usuarioActual();
@@ -226,12 +252,26 @@ export class DetalleReservaComponent {
         );
         this.calificacionInquilino = data.calificacion_inquilino.calificacion;
         this.validarCalificacion();
-        console.log(this.calificacionPropiedad);
       },
       error: (error) => {
         this.utilsService.showMessage({
           title: 'Error al obtener la reserva',
           message: error.error.error || 'No se pudo cargar la reserva.',
+          icon: 'error',
+        });
+      },
+    });
+  }
+
+  private _getChatReserva(id: number) {
+    this.reservasService.getChatReserva(id).subscribe({
+      next: (data) => {
+        this.chatReserva = data.mensajes;
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al obtener el chat',
+          message: error.error.error || 'No se pudo cargar el chat.',
           icon: 'error',
         });
       },
@@ -277,25 +317,23 @@ export class DetalleReservaComponent {
   }
 
   validarCalificacion(): void {
-  if (!this.reserva?.fecha_fin) {
-    this.puedeCalificar = false;
-    return;
+    if (!this.reserva?.fecha_fin) {
+      this.puedeCalificar = false;
+      return;
+    }
+
+    const fechaFin = new Date(this.reserva.fecha_fin);
+    const hoy = new Date();
+
+    fechaFin.setHours(0, 0, 0, 0);
+    hoy.setHours(0, 0, 0, 0);
+
+    const tiempoTranscurrido = hoy.getTime() - fechaFin.getTime();
+    const diasDesdeFin = Math.floor(tiempoTranscurrido / (1000 * 60 * 60 * 24));
+
+    const estadiaFinalizada = fechaFin <= hoy;
+    this.puedeCalificar = estadiaFinalizada && diasDesdeFin <= 14;
   }
-
-  const fechaFin = new Date(this.reserva.fecha_fin); // formato ISO => OK
-  const hoy = new Date();
-
-  // Normaliza ambas fechas a medianoche para comparar solo fechas
-  fechaFin.setHours(0, 0, 0, 0);
-  hoy.setHours(0, 0, 0, 0);
-
-  const tiempoTranscurrido = hoy.getTime() - fechaFin.getTime();
-  const diasDesdeFin = Math.floor(tiempoTranscurrido / (1000 * 60 * 60 * 24));
-
-  const estadiaFinalizada = fechaFin <= hoy;
-  this.puedeCalificar = estadiaFinalizada && diasDesdeFin <= 14;
-}
-
 
   estadoClase(estado: string): string {
     switch (estado) {
@@ -341,6 +379,23 @@ export class DetalleReservaComponent {
       const hoy = new Date();
       return fechaEliminacion <= hoy;
     }
+    return false;
+  }
+
+  get puedeEnviarMensajes(): boolean {
+    if (!this.reserva?.fecha_inicio || !this.reserva?.fecha_fin) return false;
+
+    const ahora = new Date();
+    const inicio = new Date(this.reserva.fecha_inicio);
+    const fin = new Date(this.reserva.fecha_fin);
+
+    const esAntes = ahora < inicio;
+    const esDurante = ahora >= inicio && ahora <= fin;
+
+    if (this.esInquilino && (esAntes || esDurante)) return true;
+    if (this.esAdmin && esAntes) return true;
+    if (this.esEncargado && esDurante) return true;
+
     return false;
   }
 }

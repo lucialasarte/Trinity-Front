@@ -86,15 +86,13 @@
       </div>
     </div>
     <!-- Card Inquilino -->
-    <div class="card acciones-card">
+    <div
+      class="card acciones-card"
+      *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
+    >
       <ng-container *ngIf="inquilino">
         <h3 class="titulo-seccion">Inquilino</h3>
-        <h5
-          *ngIf="
-            calificacionInquilino &&
-            auth.usuarioActual()?.permisos?.gestionar_propiedades
-          "
-        >
+        <h5 *ngIf="calificacionInquilino">
           Calificación: {{ calificacionInquilino }}
         </h5>
         <p><strong>Nombre:</strong> {{ inquilino.nombre }}</p>
@@ -149,10 +147,10 @@
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <!-- Chat -->
-        <button class="btn-sm" (click)="chat()">Chat</button>
+        <button class="boton-lleno btn-sm" (click)="chat()">Chat</button>
         <!-- Cancelar Reserva -->
         <button
-          class="btn-sm"
+          class="boton-lleno btn-sm"
           (click)="cancelar(this.reserva.id)"
           *ngIf="
             reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada'
@@ -163,7 +161,7 @@
         <!-- Subir Documentacion -->
         <button
           *ngIf="propiedad.requiere_documentacion"
-          class="btn-sm"
+          class="boton-lleno btn-sm"
           (click)="subirDocumentacion()"
         >
           Subir Documentación
@@ -174,30 +172,39 @@
             auth.usuarioActual()?.permisos?.gestionar_empleados &&
             reserva.id_estado === 2
           "
-          class="btn-sm"
+          class="boton-lleno btn-sm"
           (click)="confirmarReserva()"
         >
           Confirmar Reserva
         </button>
         <!-- Calificar Propiedad (Inquilino)-->
-        <button
+        <span
+          class="tooltip-wrapper"
           *ngIf="
             !auth.usuarioActual()?.permisos?.gestionar_propiedades &&
             calificacionPropiedad?.confort == null
           "
-          [disabled]="!puedeCalificar"
-          class="btn-sm"
-          (click)="calificar()"
         >
-          Calificar
-        </button>
+          <button
+            [disabled]="!puedeCalificar"
+            class="boton-lleno btn-sm"
+            (click)="calificar()"
+            nz-tooltip
+            [nzTooltipTitle]="
+              'La calificación podrá ser realizada en un plazo de 14 días luego de finalizada la reserva.'
+            "
+          >
+            Calificar
+          </button>
+        </span>
+
         <!-- Calificar Inquilino (Encargado/Admin) -->
         <button
           *ngIf="
             auth.usuarioActual()?.permisos?.gestionar_empleados &&
             !calificacionInquilino
           "
-          class="btn-sm"
+          class="boton-lleno btn-sm"
           [disabled]="!puedeCalificar"
           (click)="calificar()"
         >
@@ -239,6 +246,7 @@
       [esAdmin]="esAdmin"
       [esEncargado]="esEncargado"
       [esInquilino]="esInquilino"
+      [chat]="chatReserva || []"
     >
     </app-detalle-chat>
     <form
@@ -252,13 +260,18 @@
         placeholder="Escribí tu mensaje..."
         formControlName="mensaje"
         class="chat-input"
+        [disabled]="!puedeEnviarMensajes"
       />
 
       <button
         nz-button
         nzType="primary"
-        [disabled]="formMensaje.invalid"
         class="btn-enviar"
+        [disabled]="formMensaje.invalid || !puedeEnviarMensajes"
+        nz-tooltip
+        [nzTooltipTitle]="
+          !puedeEnviarMensajes ? 'No podés enviar mensajes ahora' : null
+        "
       >
         <i nz-icon nzType="send" nzTheme="outline"></i> Enviar
       </button>
@@ -313,7 +326,12 @@
     <button class="btn-cancel" nz-button (click)="handleCancel()">
       Cancelar
     </button>
-    <button class="btn-aceptar" [disabled]="formCalificacion.invalid" nz-button (click)="onSubmitCalificacion()">
+    <button
+      class="btn-aceptar"
+      [disabled]="formCalificacion.invalid"
+      nz-button
+      (click)="onSubmitCalificacion()"
+    >
       Enviar
     </button>
   </div>
