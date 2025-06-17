@@ -74,4 +74,20 @@ export class UsuariosService {
   registrarUsuario(usuario: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registrar`, usuario);
   }
+
+  // POST /auth/forgot-password
+  recuperarPassword(correo: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/forgot-password`, { "correo": correo });
+  }
+
+  // POST /auth/forgot-password/reset
+  resetPassword(password: string, password_confirmación: string, token: string): Observable<any> {
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    return this.http.post(`${environment.apiUrl}/auth/forgot-password/reset`, {
+      "password": password,
+      "password_confirmacion": password_confirmación
+    }, { headers });
+  }
 }
