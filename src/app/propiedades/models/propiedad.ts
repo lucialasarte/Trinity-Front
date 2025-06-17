@@ -8,7 +8,7 @@ export class Propiedad {
   calle: string;
   numero: number;
   piso: number | null;
-  dpto: string | null;
+  depto: string | null;
   id_ciudad: number;
   ciudad: string | null;
   id_provincia: number;
@@ -53,7 +53,7 @@ export class Propiedad {
     this.calle = (obj && obj.calle) || '';
     this.numero = (obj && obj.numero) || null;
     this.piso = (obj && obj.piso) || null;
-    this.dpto = (obj && obj.dpto) || null;
+    this.depto = (obj && obj.depto) || null;
     this.id_ciudad = (obj && obj.id_ciudad) || null;
     this.id_provincia = (obj && obj.id_provincia) || null;
     this.provincia = (obj && obj.provincia) || null;

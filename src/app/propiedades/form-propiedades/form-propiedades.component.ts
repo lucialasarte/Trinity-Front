@@ -46,7 +46,7 @@ export class FormPropiedadesComponent {
       entre_calles: [null, Validators.required],
       descripcion: [null, Validators.required],
       piso: [null],
-      dpto: [null],
+      depto: [null],
       id_pol_reserva: [null, Validators.required],
       id_ciudad: [null, Validators.required],
       id_provincia: [null, Validators.required],
