@@ -49,7 +49,7 @@ export class AuthService {
             if (userId) {
               this.cargarUsuarioPorId(Number(userId));
             }
-            this.router.navigate(['/home']); // Redirige al home tras login
+            // this.router.navigate(['/home']); // Redirige al home tras login
           }
         })
       );

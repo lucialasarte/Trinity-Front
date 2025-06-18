@@ -29,14 +29,48 @@ export class LoginComponent {
     this.loading = true;
     this.error = null;
     const { correo, password } = this.form.value;
+
     this.auth.login(correo, password).subscribe({
       next: () => {
-        this.loading = false;
-
-        this.router.navigate(['/home']);
+        const intento = localStorage.getItem('reservaIntento');
+        const returnTo = intento ? JSON.parse(intento).returnUrl : '/home';
+        this.router.navigateByUrl(returnTo);
       },
       error: (err) => {
         this.loading = false;
+        this.error = err?.error?.mensaje || 'Credenciales inválidas';
+      },
+    });
+  }
+
+  toggleForgotPassword() {
+    this.showForgotPassword = !this.showForgotPassword;
+    if (this.showForgotPassword) {
+      this.forgotPasswordForm.reset();
+    } else {
+      this.form.reset();
+    }
+    this.error = null; // Limpiar errores al cambiar
+  }
+
+  handleSendReset() {
+    if (this.forgotPasswordForm.invalid) return;
+    this.loading = true;
+    this.error = null;
+    const correo = this.forgotPasswordForm.value.correo;
+    this.usuarios.recuperarPassword(correo).subscribe({
+      next: () => {
+        this.loading = false;
+        this.utilsService.showMessage({
+          title: 'Solicitud enviada',
+          message: 'Se le ha enviado un enlace para recuperar la contraseña.',
+          icon: 'success',
+        });
+        this.toggleForgotPassword();
+      },
+      error: (err) => {
+        this.loading = false;
+        console.log(err);
         this.error = err?.error?.mensaje || 'Credenciales inválidas';
       },
     });

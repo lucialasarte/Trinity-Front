@@ -147,13 +147,14 @@
         </button>
       </div>
 
-      <div
-        class="sin-permisos"
-        *ngIf="
-          auth.usuarioActual() === null || auth.usuarioActual() === undefined
-        "
-      >
-        <p>Debe registrarse para realizar reservas.</p>
+      <div class="sin-permisos" *ngIf="!auth.usuarioActual()">
+        <p>Debe registrarse o iniciar sesión para realizar reservas.</p>
+        <button nz-button nzType="default" (click)="redireccionarARegistro()">
+          Registrarse
+        </button>
+        <button nz-button nzType="primary" (click)="redireccionarALogin()">
+          Iniciar Sesión
+        </button>
       </div>
     </div>
   </nz-modal>

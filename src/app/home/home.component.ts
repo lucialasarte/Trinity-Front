@@ -1,4 +1,4 @@
-import { Component, computed, ViewChild } from '@angular/core';
+import { Component, computed, effect, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -18,6 +18,8 @@ import { AuthService } from '../auth/auth.service';
 import { validarRangoFechas } from './models/validarRangoFechas';
 import { environment } from 'src/environments/environment';
 import { UsuariosService } from '../usuarios/services/usuarios.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { RegistrarUsuarioComponent } from '../usuarios/form-registrar-usuario/registrar-usuario.component';
 
 @Component({
   selector: 'app-home',
@@ -55,13 +57,35 @@ export class HomeComponent {
     private router: Router,
     private parametricasService: ParametricasService,
     public auth: AuthService,
-    private userService: UsuariosService
+    private userService: UsuariosService,
+    private modal: NzModalService
+      
   ) {}
 
   ngOnInit(): void {
+    this.auth.cargarUsuarioDesdeToken();
+
     this._initForm();
     this._get_ciudades();
     this._initFormBuscar();
+    if (localStorage.getItem('reservaIntento')) {
+      const reservaIntento = JSON.parse(
+        localStorage.getItem('reservaIntento') || '{}'
+      );
+      if (reservaIntento.propiedad) {
+        this.porpiedadParaReservar = reservaIntento.propiedad;
+      }
+      if (reservaIntento.search) {
+        this.search = reservaIntento.search;
+        this.form.patchValue({
+          id: this.search.id,
+          fechas: [this.search.checkin, this.search.checkout],
+          huespedes: this.search.huespedes,
+        });
+      }
+      localStorage.removeItem('reservaIntento');
+      this.isVisible = true;
+    }
   }
 
   actualizarPagina(): void {
@@ -285,6 +309,33 @@ export class HomeComponent {
       );
     });
   }
+
+  redireccionarARegistro() {
+    localStorage.setItem(
+      'reservaIntento',
+      JSON.stringify({
+        propiedad: this.porpiedadParaReservar,
+        search: this.search,
+      })
+    );
+    this.router.navigate(['/registrarse']);
+  }
+
+  // home.component.ts
+
+  redireccionarALogin() {
+    // guardo en storage la pantalla a la que quiero volver y los datos
+    localStorage.setItem(
+      'reservaIntento',
+      JSON.stringify({
+        propiedad: this.porpiedadParaReservar,
+        search: this.search,
+        returnUrl: this.router.url, // por si querés volver a la misma URL
+      })
+    );
+    this.router.navigate(['/iniciar-sesion']);
+  }
+
 
   private _initForm() {
     this.form = this.fb.group({

@@ -1,7 +1,7 @@
 import { Component, OnInit, computed } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { RegistrarUsuarioComponent } from 'src/app/usuarios/registrar-usuario/registrar-usuario.component';
+import { RegistrarUsuarioComponent } from 'src/app/usuarios/form-registrar-usuario/registrar-usuario.component';
 import { Router } from '@angular/router';
 
 /**
@@ -28,6 +28,10 @@ export class ShellComponent implements OnInit {
 
   toggleLanguage() {
     this.isEnglish = !this.isEnglish;
+  }
+
+  registarse(){
+    this.router.navigate(['/registrarse']);
   }
 
   abrirModalRegistroUsuario() {

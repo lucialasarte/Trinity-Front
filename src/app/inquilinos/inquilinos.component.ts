@@ -12,7 +12,7 @@ import { min } from 'moment';
 import { InquilinosService } from './services/inquilinos.service';
 import { UtilsService } from '../shared/services/utils.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { RegistrarUsuarioComponent } from '../usuarios/registrar-usuario/registrar-usuario.component';
+import { RegistrarUsuarioComponent } from '../usuarios/form-registrar-usuario/registrar-usuario.component';
 
 @Component({
   selector: 'app-inquilinos',

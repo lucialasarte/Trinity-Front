@@ -10,12 +10,10 @@ export class UsuariosService {
 
   constructor(private http: HttpClient) {}
 
-  // GET /usuarios
   getUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.apiUrl}/`);
   }
 
-  // POST /usuarios (acepta objeto plano para registro)
   crearUsuario(usuario: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/`, usuario);
   }
