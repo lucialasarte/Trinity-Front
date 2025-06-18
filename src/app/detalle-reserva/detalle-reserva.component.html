@@ -91,11 +91,12 @@
       *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
     >
       <ng-container *ngIf="inquilino">
-        <h3 class="titulo-seccion">Inquilino</h3>
+        <h3 class="card-title">Inquilino</h3>
         <h5 *ngIf="calificacionInquilino">
           Calificación: {{ calificacionInquilino }}
         </h5>
-        <p><strong>Nombre:</strong> {{ inquilino.nombre }}</p>
+        <p><strong>Nombre:</strong> {{ inquilino.nombre }} </p>
+        <p><strong>Apellido:</strong> {{ inquilino.apellido }} </p>
         <p>
           <strong>Tipo de Identificación:</strong>
           {{ inquilino.tipo_identificacion.nombre }}
@@ -107,15 +108,15 @@
         <p><strong>Email:</strong> {{ inquilino.correo }}</p>
       </ng-container>
     </div>
-
-    <div class="calificacion-container" *ngIf="calificacionPropiedad">
-      <h5>Calificación</h5>
+    <!-- Card Calificación Propiedad -->
+    <div class="card acciones-card" *ngIf="calificacionPropiedad">
+      <h3 class="card-title">Calificación</h3>
       <div>
-        <label>Personal:</label>
+        <label style="padding: 10px;">Personal:</label>
         <nz-rate [ngModel]="calificacionPropiedad.personal" disabled></nz-rate>
       </div>
       <div>
-        <label>Instalaciones:</label>
+        <label style="padding: 10px;">Instalaciones:</label>
         <nz-rate
           [ngModel]="calificacionPropiedad.instalaciones_servicios"
           disabled
@@ -123,25 +124,27 @@
       </div>
 
       <div>
-        <label>Limpieza:</label>
+        <label style="padding: 10px;">Limpieza:</label>
         <nz-rate [ngModel]="calificacionPropiedad.limpieza" disabled></nz-rate>
       </div>
       <div>
-        <label>Confort:</label>
+        <label style="padding: 10px;">Confort:</label>
         <nz-rate [ngModel]="calificacionPropiedad.confort" disabled></nz-rate>
       </div>
       <div>
-        <label>Relación Precio-Calidad:</label>
+        <label style="padding: 10px;">Relación Precio-Calidad:</label>
         <nz-rate
           [ngModel]="calificacionPropiedad.precio_calidad"
           disabled
         ></nz-rate>
       </div>
       <div>
-        <label>Ubicación:</label>
+        <label style="padding: 10px;">Ubicación:</label>
         <nz-rate [ngModel]="calificacionPropiedad.ubicacion" disabled></nz-rate>
       </div>
     </div>
+
+
     <!-- Card Acciones -->
     <div class="card acciones-card">
       <h3 class="card-title">Acciones</h3>

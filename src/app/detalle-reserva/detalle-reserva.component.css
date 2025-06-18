@@ -146,7 +146,7 @@
 }
 .acciones-card {
   flex: 1 1 30%;
-  max-width: 300px;
+  max-width: 400px;
 }
 
 .acciones-card .card-content {
