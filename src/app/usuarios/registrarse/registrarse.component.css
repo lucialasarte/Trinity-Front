@@ -73,7 +73,6 @@ button[nztype="dashed"] {
   transition: color 0.2s;
 }
 
-
 .imagen-wrapper {
   position: relative;
   padding: 5px;
@@ -141,8 +140,6 @@ button[nztype="dashed"] {
   border-radius: 12px;
 }
 
-
-
 .detalle-container {
   display: flex;
   flex-wrap: wrap;
@@ -150,7 +147,8 @@ button[nztype="dashed"] {
   padding: 4rem 2rem;
   justify-content: center;
   border-radius: 10px;
-}.card {
+}
+.card {
   flex: 1 1 45%;
   background-color: #ffffff;
   border-radius: 12px;

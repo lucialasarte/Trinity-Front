@@ -45,6 +45,7 @@ export class HomeComponent {
   idUsuario: number = 0;
 
   usuarioSeleccionado: any = null;
+  cargandoUsuarios: boolean = false;
   isAgregarUsuario: boolean = false;
   usuarios: any[] = [];
   usuariosFiltrados: any[] = [];
@@ -59,7 +60,6 @@ export class HomeComponent {
     public auth: AuthService,
     private userService: UsuariosService,
     private modal: NzModalService
-      
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +84,12 @@ export class HomeComponent {
         });
       }
       localStorage.removeItem('reservaIntento');
-      this.isVisible = true;
+      if (reservaIntento.esEmpleado) {
+        this.isVisibleEmpleado = true;
+      } else {
+        this.isVisible = true;
+      }
+      console.log(reservaIntento);
     }
   }
 
@@ -148,6 +153,7 @@ export class HomeComponent {
       this.porpiedadParaReservar = propiedad;
     }
   }
+
   onSubmitReservaEmpleado() {
     this.cargando = true;
     const reserva = {
@@ -275,6 +281,7 @@ export class HomeComponent {
 
   agregarUsuario() {
     this.isAgregarUsuario = true;
+    this.cargandoUsuarios = true;
     this._getUsuarios();
   }
 
@@ -316,26 +323,27 @@ export class HomeComponent {
       JSON.stringify({
         propiedad: this.porpiedadParaReservar,
         search: this.search,
+        returnUrl: this.router.url,
+        esEmpleado: false,
       })
     );
     this.router.navigate(['/registrarse']);
   }
 
-  // home.component.ts
+  // para implementar esto del login tengo que ver que me devulevan el rol en el login con el token
 
-  redireccionarALogin() {
-    // guardo en storage la pantalla a la que quiero volver y los datos
-    localStorage.setItem(
-      'reservaIntento',
-      JSON.stringify({
-        propiedad: this.porpiedadParaReservar,
-        search: this.search,
-        returnUrl: this.router.url, // por si querés volver a la misma URL
-      })
-    );
-    this.router.navigate(['/iniciar-sesion']);
-  }
-
+  // redireccionarALogin() {
+  //   localStorage.setItem(
+  //     'reservaIntento',
+  //     JSON.stringify({
+  //       propiedad: this.porpiedadParaReservar,
+  //       search: this.search,
+  //       returnUrl: this.router.url,
+  //       esEmpleado: false,
+  //     })
+  //   );
+  //   this.router.navigate(['/iniciar-sesion']);
+  // }
 
   private _initForm() {
     this.form = this.fb.group({
@@ -365,10 +373,20 @@ export class HomeComponent {
   private _getUsuarios() {
     this.userService.getUsuariosPorRol(3).subscribe({
       next: (data) => {
+        this.cargandoUsuarios = false;
         this.usuarios = data;
         this.usuariosFiltrados = data;
       },
-      error: (error) => {},
+      error: (error) => {
+        this.cargandoUsuarios = false;
+        console.error('Error al cargar usuarios:', error);
+        this.utilsService.showMessage({
+          title: 'Error al cargar usuarios',
+          message:
+            'No se pudieron cargar los usuarios. Por favor, intenta nuevamente.',
+          icon: 'error',
+        });
+      },
     });
   }
 

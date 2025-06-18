@@ -131,19 +131,6 @@
   /* border-radius: 10px; */
 }
 
-.sin-permisos {
-  background-color: #f56161; /* fondo amarillo claro */
-  color: #fff; /* texto marrón oscuro */
-  border-left: 6px solid #ffecb5; /* barra decorativa */
-  padding: 16px;
-  margin-top: 24px;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.5;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  text-align: center;
-}
 .fullscreen-spinner {
   position: fixed;
   top: 0;
@@ -334,5 +321,72 @@
 
 .calificacion-texto {
   font-size: 0.85rem;
-  color: #666;
+  color
+  : #666;
 }
+.sin-permisos {
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.mensaje {
+  font-weight: 500;
+  color: #b91c1c;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.acciones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+
+.btn-registrarse {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: inline-block; 
+  white-space: nowrap;
+  text-align: center; 
+  text-decoration: none; 
+}
+
+.btn-registrarse:hover {
+  background-color: #1e40af;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-registrarse:active {
+  background-color: #1c3d8e;
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+/* 
+.btn-iniciar-sesion {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-iniciar-sesion:hover {
+  background-color: #1e40af;
+} */

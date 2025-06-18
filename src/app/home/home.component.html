@@ -148,13 +148,20 @@
       </div>
 
       <div class="sin-permisos" *ngIf="!auth.usuarioActual()">
-        <p>Debe registrarse o iniciar sesión para realizar reservas.</p>
-        <button nz-button nzType="default" (click)="redireccionarARegistro()">
-          Registrarse
-        </button>
-        <button nz-button nzType="primary" (click)="redireccionarALogin()">
-          Iniciar Sesión
-        </button>
+        <p class="mensaje">Debe registrarse para realizar reservas.</p>
+        <div class="acciones">
+          <button
+            class="btn-registrarse"
+            nz-button
+            nzType="default"
+            (click)="redireccionarARegistro()"
+          >
+            Registrarse
+          </button>
+          <!-- <button class="btn-iniciar-sesion" nz-button nzType="primary" (click)="redireccionarALogin()">
+            Iniciar Sesión
+          </button> -->
+        </div>
       </div>
     </div>
   </nz-modal>
@@ -240,7 +247,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let usuario of usuariosFiltrados">
+                <tr *ngFor="let usuario of usuariosTable.data">
                   <td>{{ usuario.nombre }}</td>
                   <td>{{ usuario.apellido }}</td>
                   <td>{{ usuario.correo }}</td>
