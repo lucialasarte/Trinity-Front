@@ -1,5 +1,5 @@
 <div class="login-container">
-  <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+  <form nz-form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" *ngIf="!showForgotPassword">
     <h2 style="text-align:center;">Iniciar Sesión</h2>
     <nz-form-item>
       <nz-form-label [nzSpan]="24" nzFor="correo">Correo</nz-form-label>
@@ -20,6 +20,30 @@
       </nz-form-control>
     </nz-form-item>
     <button nz-button nzType="primary" class="login-btn" [disabled]="form.invalid" style="width:100%;margin-top:12px;align-items: center;">Entrar</button>
+    <div style="text-align: center; margin-top: 10px;">
+      <a (click)="toggleForgotPassword()">¿Olvidó su contraseña?</a>
+    </div>
     <nz-alert *ngIf="error" nzType="error" nzMessage="{{ error }}" nzShowIcon style="margin-top:12px;"></nz-alert>
+  </form>
+
+  <form nz-form [formGroup]="forgotPasswordForm" (ngSubmit)="handleSendReset()" class="login-form" *ngIf="showForgotPassword">
+    <h2 style="text-align:center;">Recuperar Contraseña</h2>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="24" nzFor="forgotCorreo">Correo</nz-form-label>
+      <nz-form-control [nzSpan]="24">
+        <input nz-input id="forgotCorreo" type="email" formControlName="correo" placeholder="Ingrese su correo" />
+        <div *ngIf="forgotPasswordForm.get('correo')?.invalid && forgotPasswordForm.get('correo')?.touched">
+          <nz-alert nzType="error" nzMessage="Ingrese un correo válido." nzShowIcon></nz-alert>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+    <div nz-row [nzGutter]="8" style="margin-top:12px;">
+      <div nz-col [nzSpan]="12">
+        <button nz-button class="btn-cancel" style="width:100%;" (click)="toggleForgotPassword()">Cancelar</button>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <button nz-button class="btn-guardar" style="width:100%;" [disabled]="forgotPasswordForm.invalid" [nzLoading]="loading">Enviar</button>
+      </div>
+    </div>
   </form>
 </div>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { UsuariosService } from '../../usuarios/services/usuarios.service';
+import { UtilsService } from 'src/app/shared/services/utils.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,17 +12,24 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   form: FormGroup;
+  forgotPasswordForm: FormGroup;
+  showForgotPassword = false;
   error: string | null = null;
   loading = false;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private usuarios: UsuariosService,
+    private router: Router,
+    private utilsService: UtilsService
   ) {
     this.form = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+    });
+    this.forgotPasswordForm = this.fb.group({
+      correo: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -70,7 +79,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.loading = false;
-        console.log(err);
+        console.log(err)
         this.error = err?.error?.mensaje || 'Credenciales inválidas';
       },
     });
