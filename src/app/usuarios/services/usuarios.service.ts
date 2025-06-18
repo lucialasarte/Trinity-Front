@@ -81,10 +81,10 @@ export class UsuariosService {
   }
 
   // POST /auth/forgot-password/reset
-  resetPassword(password: string, password_confirmación: string, token: string): Observable<any> {
-    const headers = {
+  resetPassword(password: string, password_confirmación: string, token?: string): Observable<any> {
+    const headers: any = token ? {
       Authorization: `Bearer ${token}`
-    };
+    } : {};
     return this.http.post(`${environment.apiUrl}/auth/forgot-password/reset`, {
       "password": password,
       "password_confirmacion": password_confirmación
