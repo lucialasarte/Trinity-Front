@@ -1,4 +1,4 @@
-import { Component, computed, effect, ViewChild } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -18,8 +18,6 @@ import { AuthService } from '../auth/auth.service';
 import { validarRangoFechas } from './models/validarRangoFechas';
 import { environment } from 'src/environments/environment';
 import { UsuariosService } from '../usuarios/services/usuarios.service';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { RegistrarUsuarioComponent } from '../usuarios/form-registrar-usuario/registrar-usuario.component';
 
 @Component({
   selector: 'app-home',
@@ -58,8 +56,7 @@ export class HomeComponent {
     private router: Router,
     private parametricasService: ParametricasService,
     public auth: AuthService,
-    private userService: UsuariosService,
-    private modal: NzModalService
+    private userService: UsuariosService
   ) {}
 
   ngOnInit(): void {

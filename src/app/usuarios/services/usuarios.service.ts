@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario';
 import { environment } from 'src/environments/environment';
+import { Inquilino } from 'src/app/inquilinos/models/inquilino';
 
 @Injectable({ providedIn: 'root' })
 export class UsuariosService {
@@ -90,5 +91,9 @@ export class UsuariosService {
       "password": password,
       "password_confirmacion": password_confirmación
     }, { headers });
+  }
+
+  getInquilinos(): Observable<Inquilino[]> {
+    return this.http.get<Inquilino[]>(`${this.apiUrl}/inquilinos`);
   }
 }

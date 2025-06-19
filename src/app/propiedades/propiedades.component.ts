@@ -17,9 +17,6 @@ export class PropiedadesComponent implements OnInit {
   formPropiedad!: FormPropiedadesComponent;
   form!: FormGroup;
   usuario = computed(() => this.auth.usuarioActual());
-
-  // propiedades: any[] = [];
-
   isVisible = false;
   propiedades: any[] = [];
   propiedadesFiltradas: any[] = [];
