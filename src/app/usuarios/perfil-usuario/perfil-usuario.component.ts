@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import { SafeUrl } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { Usuario } from '../models/usuario';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { EditarUsuarioComponent } from './perfil-usuario-editar/perfil-usuario-editar.component';
 
 @Component({
   selector: 'app-perfil-usuario',
@@ -26,7 +28,8 @@ export class PerfilUsuarioComponent {
   constructor(
     public auth: AuthService,
     private fb: FormBuilder,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private modal: NzModalService
   ) {
     // Si no hay usuario cargado (por ejemplo, acceso directo por URL), intenta cargarlo desde el token
     if (!this.auth.usuarioActual()) {
@@ -159,5 +162,22 @@ export class PerfilUsuarioComponent {
       }
     });
   }
+  updateUser(id: number) {
+      const modalRef = this.modal.create({
+            //nzTitle: 'Editar Perfil',
+            nzContent: EditarUsuarioComponent,
+            nzWidth: 990,
+            nzFooter: null,
+            nzData: {
+              usuarioId: id,
+              rol: this.auth.usuarioActual()?.roles[0].id,
+          },
+          });
+          modalRef.afterClose.subscribe((usuarioCreado) => {
+            if (usuarioCreado) {
+              //this._getPropiedad(id);
+            }
+          });
+    }
 
 }
