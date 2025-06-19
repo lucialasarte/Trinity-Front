@@ -1,19 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  MinLengthValidator,
-  RequiredValidator,
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-
-import { Usuario } from '../usuarios/models/usuario';
-import { UsuariosService } from '../usuarios/services/usuarios.service';
 import { EmpleadosService } from './services/empleados.service';
 import { UtilsService } from '../shared/services/utils.service';
 
+import { RegistrarEmpleadoComponent } from './form-registrar-empleado/registrar-empleado.component';
 @Component({
   selector: 'app-empleados',
   templateUrl: './empleados.component.html',
@@ -72,7 +68,17 @@ export class EmpleadosComponent {
   //   }
 
   abirModalRegistroEmpleado() {
-    console.log("abrur modal")
+    const modalRef = this.modal.create({
+        nzTitle: 'Registrar usuario',
+        nzContent: RegistrarEmpleadoComponent,
+        nzWidth: 990,
+        nzFooter: null,
+      });
+      modalRef.afterClose.subscribe((usuarioCreado) => {
+        if (usuarioCreado) {
+          this._getEmpleados();
+        }
+      });
   }
 
   buscarEmpleados(value: any) {

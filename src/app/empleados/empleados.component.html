@@ -29,7 +29,7 @@
       style="padding-left: 20px"
       *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades"
     >
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" (click)="abirModalRegistroEmpleado()">
         <i class="fa fa-plus"></i> Agregar Empleado
       </button>
     </div>
