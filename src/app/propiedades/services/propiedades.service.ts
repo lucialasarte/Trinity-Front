@@ -91,4 +91,8 @@ export class PropiedadesService {
       `${this.apiUrl}/tieneActivas/${id_propiedad}`
     );
   }
+  
+  updatePropiedad(propiedad: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${propiedad.id}`, propiedad);
+  }
 }

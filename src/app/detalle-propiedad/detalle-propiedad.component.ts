@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
-
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Propiedad } from '../propiedades/models/propiedad';
 import { EmpleadosService } from '../empleados/services/empleados.service';
@@ -15,7 +15,7 @@ import { ReservasService } from '../reservas/services/reservas.service';
 import { UtilsService } from '../shared/services/utils.service';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
-
+import { EditarPropiedadComponent } from './form-editar-propiedad/form-editar-propiedad.component';
 @Component({
   selector: 'app-detalle-propiedad',
   templateUrl: './detalle-propiedad.component.html',
@@ -54,7 +54,8 @@ export class DetallePropiedadComponent implements OnInit {
     private empleadoService: EmpleadosService,
     private reservasService: ReservasService,
     private utilsService: UtilsService,
-    public auth: AuthService
+    public auth: AuthService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -140,7 +141,22 @@ export class DetallePropiedadComponent implements OnInit {
       this.isModalVisible = false;
     }
   }
-  updatePropiedad(id: number) {}
+  updatePropiedad(id: number) {
+    const modalRef = this.modal.create({
+          nzTitle: 'Editar Propiedad',
+          nzContent: EditarPropiedadComponent,
+          nzWidth: 990,
+          nzFooter: null,
+          nzData: {
+            propiedadId: id 
+        },
+        });
+        modalRef.afterClose.subscribe((usuarioCreado) => {
+          if (usuarioCreado) {
+            this._getPropiedad(id);
+          }
+        });
+  }
 
   estadoFilterFn = (filter: string[], item: any): boolean => {
     return filter.length === 0 || filter.includes(item.estado);
