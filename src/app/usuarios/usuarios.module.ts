@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NzZorroModule } from '../shared/nz-zorro.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { EditarUsuarioComponent } from './perfil-usuario/perfil-usuario-editar/perfil-usuario-editar.component';
 
 @NgModule({
   imports: [
@@ -21,10 +22,10 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
   declarations: [
     UsuariosComponent,
     PerfilUsuarioComponent,
-    RegistrarUsuarioComponent,
+    RegistrarUsuarioComponent,EditarUsuarioComponent,
     ResetPasswordComponent
   ],
-  exports: [RegistrarUsuarioComponent],
+  exports: [RegistrarUsuarioComponent,EditarUsuarioComponent],
   providers: [provideNgxMask()],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

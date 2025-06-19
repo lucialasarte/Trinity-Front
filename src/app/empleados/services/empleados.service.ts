@@ -19,5 +19,9 @@ export class EmpleadosService {
     return this.http.get<any[]>(`${this.apiUrl}/encargados`);
   }
 
+  registrarEmpleado(empleado: any) {
+    console.log('registrarEmpleado', empleado);
+    return this.http.post<any>(`${this.apiUrl}/registrarEmpleado`, empleado);
+  }
   
 }

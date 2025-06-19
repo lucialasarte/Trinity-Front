@@ -46,7 +46,7 @@
   align-items: center;
   justify-content: center;
   max-height: fit-content;
-  max-width: fit-content;
+  max-width: 100%;
   border-radius: 10px;
 }
 
@@ -73,7 +73,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
-  margin: 5px;
+  margin: 0px;
   &:hover {
     background-color: antiquewhite;
     color: #2c3e508a;
@@ -87,6 +87,8 @@ button {
     cursor: not-allowed;
   }
 }
+
+
 
 .mi-boton {
   background-color: #fff4e6;
@@ -222,6 +224,7 @@ p {
 }
 
 .card {
+  flex: 1 1 45%;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -229,6 +232,7 @@ p {
   padding: 16px 24px;
 }
 .card-imagenes {
+  flex: 1 1 40%;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);

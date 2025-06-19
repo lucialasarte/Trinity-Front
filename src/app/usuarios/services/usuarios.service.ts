@@ -39,6 +39,10 @@ export class UsuariosService {
     return this.http.get<Usuario[]>(`${this.apiUrl}/por-rol/${rolId}`);
   }
 
+  getUsuarioReducido(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/reducido`);
+  }
+
   subirImagenDocumento(formData: FormData, idUsuario: number): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/imagenDocumento?id_usuario=${idUsuario}`,

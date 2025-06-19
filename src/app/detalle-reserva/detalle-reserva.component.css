@@ -66,6 +66,10 @@
   background-color: #fff4e6;
   /* margin-left: 20px; */
   font-size: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
 }
 
 .detalle-grid {
@@ -144,10 +148,31 @@
 .card-content {
   padding-top: 10px;
 }
+
 .acciones-card {
   flex: 1 1 30%;
-  max-width: 400px;
+  max-width: 380px;
 }
+.card-inquilino {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.card-encargado {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.card-calificacion {
+  flex: 0 0 30%;
+  max-width: 30%;
+}
+
+.card-acciones {
+  flex: 0 0 15%;
+  max-width: 15%;
+}
+
 
 .acciones-card .card-content {
   display: flex;
@@ -274,4 +299,13 @@ button:disabled {
   display: inline-block;
   color: inherit;         /* evita sobrescribir el color del botón */
   font-weight: inherit;   /* evita sobrescribir el font-weight del botón */
+}
+@media (max-width: 768px) {
+  .card-inquilino,
+  .card-encargado,
+  .card-calificacion,
+  .card-acciones {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }

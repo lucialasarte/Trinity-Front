@@ -23,6 +23,7 @@ export class DetalleReservaComponent {
   formCalificacion!: FormGroup;
   formCalificacionInquilino!: FormGroup;
   inquilino: any;
+  encargado: any;
   propiedad: any;
   documentos: any[] = [];
   calificacionPropiedad: Calificacion | null = null;
@@ -144,24 +145,21 @@ export class DetalleReservaComponent {
   }
 
   confirmarReserva() {
-    this.reservasService.confirmar(this.reserva.id).subscribe({
-      next: () => {
-        this.utilsService.showMessage({
-          title: 'Reserva confirmada',
-          message: 'La reserva fue confirmada correctamente.',
-          icon: 'success',
-        });
-        this._getReserva(this.reserva.id);
-      },
-      error: (error) => {
-        this.utilsService.showMessage({
-          title: 'Error al confirmar la reserva',
-          message: error.error.error || 'No se pudo confirmar la reserva.',
-          icon: 'error',
-        });
+    this.utilsService.showMessage({
+      title: '¿Estás seguro?',
+      message: '¿Querés confirmar esta reserva?',
+      icon: 'warning',
+      confirmButtonText: 'Si, confirmar!',
+      cancelButtonText: 'Cancelar',
+      showConfirmButton: true,
+      showCancelButton: true,
+      actionOnConfirm: () => {
+        this._confirmarReserva();
       },
     });
   }
+
+  
 
   calificar() {
     const usuario = this.auth.usuarioActual();
@@ -250,6 +248,7 @@ export class DetalleReservaComponent {
         this.calificacionPropiedad = new Calificacion(
           data.calificacion_propiedad
         );
+        this._getEncargado(this.propiedad.id_encargado);
         this.calificacionInquilino = data.calificacion_inquilino.calificacion;
         this.validarCalificacion();
       },
@@ -279,7 +278,7 @@ export class DetalleReservaComponent {
   }
 
   private _getInquilino(id: number) {
-    this.userService.getUsuarioPorId(id).subscribe({
+    this.userService.getUsuarioReducido(id).subscribe({
       next: (data) => {
         this.inquilino = data;
       },
@@ -287,6 +286,41 @@ export class DetalleReservaComponent {
         this.utilsService.showMessage({
           title: 'Error al obtener el inquilino',
           message: error.error.error || 'No se pudo cargar el inquilino.',
+          icon: 'error',
+        });
+      },
+    });
+  }
+
+  private _confirmarReserva() {
+    this.reservasService.confirmar(this.reserva.id).subscribe({
+      next: () => {
+        this.utilsService.showMessage({
+          title: 'Reserva confirmada',
+          message: 'La reserva fue confirmada correctamente.',
+          icon: 'success',
+        });
+        this._getReserva(this.reserva.id);
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al confirmar la reserva',
+          message: error.error.error || 'No se pudo confirmar la reserva.',
+          icon: 'error',
+        });
+      },
+    });
+  }
+
+  private _getEncargado(id: number) {
+    this.userService.getUsuarioReducido(id).subscribe({
+      next: (data) => {
+        this.encargado = data;
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al obtener el encargado',
+          message: error.error.error || 'No se pudo cargar el encargado.',
           icon: 'error',
         });
       },
