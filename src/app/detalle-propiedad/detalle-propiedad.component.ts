@@ -75,23 +75,20 @@ export class DetallePropiedadComponent implements OnInit {
     this.router.navigate(['/detalle-reserva', id]);
   }
 
-  handleCancel() {
-    this.isModalVisible = false;
-    this.codigo = false;
-  }
-
   editarCodigoAcceso() {
     this.codigo = true;
     this.modalTitle = 'Editar código de acceso';
     this._initFormCodigo();
     this.isModalVisible = true;
   }
+
   editarEncargado() {
     this._getEmpleados();
     this.modalTitle = 'Editar Encargado';
     this._initFormEncargado();
     this.isModalVisible = true;
   }
+
   onSubmitForm() {
     if (this.codigo) {
       const codigo = this.formCodigo.get('codigoAcceso')?.value;
@@ -141,41 +138,28 @@ export class DetallePropiedadComponent implements OnInit {
       this.isModalVisible = false;
     }
   }
+
   updatePropiedad(id: number) {
     const modalRef = this.modal.create({
-          nzTitle: 'Editar Propiedad',
-          nzContent: EditarPropiedadComponent,
-          nzWidth: 990,
-          nzFooter: null,
-          nzData: {
-            propiedadId: id 
-        },
-        });
-        modalRef.afterClose.subscribe((usuarioCreado) => {
-          if (usuarioCreado) {
-            this._getPropiedad(id);
-          }
-        });
+      nzTitle: 'Editar Propiedad',
+      nzContent: EditarPropiedadComponent,
+      nzWidth: 990,
+      nzFooter: null,
+      nzData: {
+        propiedadId: id,
+      },
+    });
+    modalRef.afterClose.subscribe((usuarioCreado) => {
+      if (usuarioCreado) {
+        this._getPropiedad(id);
+      }
+    });
   }
 
-  estadoFilterFn = (filter: string[], item: any): boolean => {
-    return filter.length === 0 || filter.includes(item.estado);
-  };
-
-  stadoCompare(a: any, b: any): number {
-    const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada'];
-    return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);
+  handleCancel() {
+    this.isModalVisible = false;
+    this.codigo = false;
   }
-
-  fechaInicioCompare = (a: any, b: any): number => {
-    return (
-      new Date(a.fecha_inicio).getTime() - new Date(b.fecha_inicio).getTime()
-    );
-  };
-
-  fechaFinCompare = (a: any, b: any): number => {
-    return new Date(a.fecha_fin).getTime() - new Date(b.fecha_fin).getTime();
-  };
 
   abrirSelectorImagen(): void {
     this.inputImagen.nativeElement.click();
@@ -215,6 +199,77 @@ export class DetallePropiedadComponent implements OnInit {
 
     input.value = '';
   }
+
+  eliminarImagen(imagenUrl: string) {
+    if (this.imagenesConId.length === 1) {
+      this.utilsService.showMessage({
+        title: 'No se puede eliminar',
+        message: 'La propiedad debe tener al menos una imagen.',
+        icon: 'warning',
+      });
+    } else {
+      const imagen = this.imagenesConId.find((img) => img.url === imagenUrl);
+      if (!imagen) return;
+
+      this.utilsService.showMessage({
+        title: '¿Estás seguro?',
+        message: '¿Querés eliminar esta imagen?',
+        icon: 'warning',
+        confirmButtonText: 'Si, eliminar!',
+        cancelButtonText: 'Cancelar',
+        showConfirmButton: true,
+        showCancelButton: true,
+        actionOnConfirm: () => {
+          this.propiedadesService.eliminarImagen(imagen.id).subscribe({
+            next: () => {
+              this.utilsService.showMessage({
+                title: 'Imagen eliminada',
+                message: 'La imagen fue eliminada correctamente.',
+                icon: 'success',
+              });
+              this.imagenesConId = this.imagenesConId.filter(
+                (img) => img.id !== imagen.id
+              );
+              this.totalPaginas = Math.ceil(
+                this.imagenesConId.length / this.imagenesPorPagina
+              );
+              if (this.paginaActual > this.totalPaginas) {
+                this.paginaActual = this.totalPaginas;
+              }
+              this.actualizarImagenesPaginadas();
+            },
+            error: (err) => {
+              console.error('Error al eliminar imagen:', err);
+              this.utilsService.showMessage({
+                title: 'Error',
+                message: 'No se pudo eliminar la imagen.',
+                icon: 'error',
+              });
+            },
+          });
+        },
+      });
+    }
+  }
+
+  estadoFilterFn = (filter: string[], item: any): boolean => {
+    return filter.length === 0 || filter.includes(item.estado);
+  };
+
+  stadoCompare(a: any, b: any): number {
+    const estadoOrden = ['Pendiente', 'Confirmada', 'Cancelada'];
+    return estadoOrden.indexOf(a.estado) - estadoOrden.indexOf(b.estado);
+  }
+
+  fechaInicioCompare = (a: any, b: any): number => {
+    return (
+      new Date(a.fecha_inicio).getTime() - new Date(b.fecha_inicio).getTime()
+    );
+  };
+
+  fechaFinCompare = (a: any, b: any): number => {
+    return new Date(a.fecha_fin).getTime() - new Date(b.fecha_fin).getTime();
+  };
 
   private _getPropiedad(id: number) {
     this.propiedadesService.get_propiedad_id(id).subscribe({
@@ -287,58 +342,6 @@ export class DetallePropiedadComponent implements OnInit {
     this.imagenesPaginadas = this.imagenesConId
       .slice(inicio, fin)
       .map((img) => img.url);
-  }
-
-  eliminarImagen(imagenUrl: string) {
-    if (this.imagenesConId.length === 1) {
-      this.utilsService.showMessage({
-        title: 'No se puede eliminar',
-        message: 'La propiedad debe tener al menos una imagen.',
-        icon: 'warning',
-      });
-    } else {
-      const imagen = this.imagenesConId.find((img) => img.url === imagenUrl);
-      if (!imagen) return;
-
-      this.utilsService.showMessage({
-        title: '¿Estás seguro?',
-        message: '¿Querés eliminar esta imagen?',
-        icon: 'warning',
-        confirmButtonText: 'Si, eliminar!',
-        cancelButtonText: 'Cancelar',
-        showConfirmButton: true,
-        showCancelButton: true,
-        actionOnConfirm: () => {
-          this.propiedadesService.eliminarImagen(imagen.id).subscribe({
-            next: () => {
-              this.utilsService.showMessage({
-                title: 'Imagen eliminada',
-                message: 'La imagen fue eliminada correctamente.',
-                icon: 'success',
-              });
-              this.imagenesConId = this.imagenesConId.filter(
-                (img) => img.id !== imagen.id
-              );
-              this.totalPaginas = Math.ceil(
-                this.imagenesConId.length / this.imagenesPorPagina
-              );
-              if (this.paginaActual > this.totalPaginas) {
-                this.paginaActual = this.totalPaginas;
-              }
-              this.actualizarImagenesPaginadas();
-            },
-            error: (err) => {
-              console.error('Error al eliminar imagen:', err);
-              this.utilsService.showMessage({
-                title: 'Error',
-                message: 'No se pudo eliminar la imagen.',
-                icon: 'error',
-              });
-            },
-          });
-        },
-      });
-    }
   }
 
   private _getReservas(id: number) {
