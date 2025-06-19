@@ -4,6 +4,7 @@ import { EmpleadosComponent } from './empleados.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NzZorroModule } from '../shared/nz-zorro.module';
 import { EmpleadosRoutingModule } from './empleados-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', component: EmpleadosComponent }
@@ -14,7 +15,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     EmpleadosRoutingModule,
-    NzZorroModule
+    NzZorroModule,
+    ReactiveFormsModule,
   ],
   exports: [EmpleadosComponent]
 })
