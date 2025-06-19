@@ -164,7 +164,6 @@ export class PerfilUsuarioComponent {
   }
   updateUser(id: number) {
       const modalRef = this.modal.create({
-            //nzTitle: 'Editar Perfil',
             nzContent: EditarUsuarioComponent,
             nzWidth: 990,
             nzFooter: null,
@@ -173,9 +172,9 @@ export class PerfilUsuarioComponent {
               rol: this.auth.usuarioActual()?.roles[0].id,
           },
           });
-          modalRef.afterClose.subscribe((usuarioCreado) => {
-            if (usuarioCreado) {
-              //this._getPropiedad(id);
+          modalRef.afterClose.subscribe((usuarioEditado) => {
+            if (usuarioEditado) {
+              this.auth.refrescarUsuarioActual();
             }
           });
     }

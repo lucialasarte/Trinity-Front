@@ -211,13 +211,12 @@
         <br />
         <div *ngIf="data.rol == 3">
           <h6>Tarjeta de crédito</h6>
-          <div formArrayName="tarjetas" >
-            <div nz-row [nzGutter]="16" *ngIf="tarjetas.controls.length > 0">
+          
+            <div nz-row [nzGutter]="16">
               <div
                 nz-col
                 nzSpan="24"
-                *ngFor="let tarjeta of tarjetas.controls; let i = index"
-                [formGroupName]="i"
+                [formGroup]="tarjetaFormGroup"
               >
                 <nz-card
                   class="card-hover-border"
@@ -395,7 +394,7 @@
             </div>
           </div>
 
-          </div>
+          
         
         <div style="text-align: right; margin-top: 24px">
           <button

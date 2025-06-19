@@ -1,6 +1,7 @@
-import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 
-export function fechaNoVencidaValidator(control: AbstractControl): ValidationErrors | null {
+export function fechaNoVencidaValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
   const valor: string = control.value;
   if (!valor) return null;
 
@@ -28,4 +29,4 @@ export function fechaNoVencidaValidator(control: AbstractControl): ValidationErr
   }
 
   return null;
-}
+}}
