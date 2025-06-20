@@ -32,6 +32,7 @@ export class InquilinosComponent {
     private fb: FormBuilder,
     public auth: AuthService,
     private userService: UsuariosService,
+    private inquilinoService: InquilinosService,
     private utilsService: UtilsService,
     private modal: NzModalService
   ) {}
@@ -115,7 +116,7 @@ export class InquilinosComponent {
   }
 
   private _getInquilinos() {
-    this.userService.getUsuariosPorRol(3).subscribe({
+    this.inquilinoService.getInquilinos().subscribe({
       next: (data) => {
         this.inquilinos = data;
         this.inquilinosFiltrados = data;
