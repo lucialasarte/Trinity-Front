@@ -48,6 +48,7 @@ export class EmpleadosComponent {
       showConfirmButton: true,
       showCancelButton: true,
       actionOnConfirm: () => {
+        this._eliminarEmpleado(id);
         // this.cambiarEstadoInquilino(id);
       },
     });
@@ -97,7 +98,25 @@ export class EmpleadosComponent {
         );
       });
     }
-  
+  private _eliminarEmpleado(id: number) {
+    this.empleadosService.eliminarEmpleado(id).subscribe({
+      next: (data) => {
+        this.utilsService.showMessage({
+          title: 'Empleado eliminado',
+          icon: 'success',
+          message: 'El empleado ha sido eliminado correctamente.',
+        });
+        this._getEmpleados();
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al eliminar empleado',
+          icon: 'error',
+          message: error.error.error || 'No se pudo eliminar el empleado.',
+        });
+      },
+    });
+  }
   private _getEmpleados() {
     this.empleadosService.getEmpleados().subscribe({
       next: (data) => {
@@ -115,6 +134,7 @@ export class EmpleadosComponent {
         this.cargando = false;
       },
     });
+    console.log(this.empleados)
   }
   private _initForm() {
     this.form = this.fb.group({

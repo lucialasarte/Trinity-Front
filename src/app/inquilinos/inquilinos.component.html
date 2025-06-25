@@ -65,10 +65,10 @@
             <tr *ngFor="let inquilino of propertyTable.data">
               <td>{{ inquilino.nombre }}</td>
               <td>{{ inquilino.apellido }}</td>
-              <td>{{ inquilino.tipo_identificacion }}</td>
+              <td>{{ inquilino.tipo_identificacion}}</td>
               <td>{{ inquilino.numero_identificacion }}</td>
               <td>{{ inquilino.correo }}</td>
-              <td>{{ inquilino.calificacion  || 'Sin calificación' }}</td>
+              <td>{{ inquilino.calificacion || "Sin calificación" }}</td>
               <td>
                 <span
                   [ngClass]="{

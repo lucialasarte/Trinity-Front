@@ -94,9 +94,11 @@ export class EditarUsuarioComponent implements OnInit {
       next: (usuario: Usuario) => {
 
         if (usuario.roles[0].id == 3) {
-
+          const fechaFormateada = usuario.tarjetas[0].fecha_vencimiento.slice(0, 3) + usuario.tarjetas[0].fecha_vencimiento.slice(5);
           this.tarjetaFormGroup.patchValue(usuario.tarjetas[0]);
+          this.tarjetaFormGroup.get('fecha_vencimiento')?.setValue(fechaFormateada)
           this.tarjetaFormGroup.updateValueAndValidity();
+
 
           this.imagenes = usuario.id_imagenes?.map((img: any) => ({
               id: img,

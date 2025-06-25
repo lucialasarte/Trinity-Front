@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { Inquilino } from '../models/inquilino';
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -15,4 +16,8 @@ export class InquilinosService {
     // cambiar_estado_inquilino(id:number): Observable<any> {
     //     return this.http.patch<any>(`${this.apiURL}/cambiarEstado/${id}`, {});
     // }
+
+    getInquilinos(): Observable<Inquilino[]> {
+      return this.http.get<Inquilino[]>(`${this.apiURL}/inquilinos`);
+    }
 }
