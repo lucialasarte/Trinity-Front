@@ -69,31 +69,7 @@
                 </ng-template>
               </nz-form-control>
             </nz-form-item>
-          </div>
-          <div nz-col nzSpan="12">
-            <nz-form-item>
-              <nz-form-label [nzSpan]="24" nzFor="password_hash" nzRequired
-                >Contraseña</nz-form-label
-              >
-              <nz-form-control [nzSpan]="24" [nzErrorTip]="passwordErrorTpl">
-                <input
-                  nz-input
-                  type="password"
-                  formControlName="password_hash"
-                  placeholder="Contraseña"
-                />
-                <ng-template #passwordErrorTpl let-control>
-                  <span *ngIf="control.hasError('required')"
-                    >La contraseña es obligatoria.</span
-                  >
-                  <span *ngIf="control.hasError('invalidPassword')">
-                    La contraseña debe tener al menos 8 caracteres, una
-                    mayúscula y un número.
-                  </span>
-                </ng-template>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
+          </div>      
         </div>
 
         <div nz-row [nzGutter]="16">
@@ -351,57 +327,56 @@
           </div>
           <hr />
           <br />
-          <h6>Subir Documentacion</h6>
-          <div class="row">
-            <p>
-              Debe cargar foto del frente y dorso de la documentación
-              identificatoria ingresada.
-            </p>
-          </div>
-          <span>
-            <button
-              nz-button
-              class="bton-cargar-imagen"
-              (click)="abrirSelectorImagen()"
-              [disabled]="imagenes.length == 2"
-            >
-              <span> <i class="fa fa-plus"></i> Cargar Imagen</span>
-            </button>
-            <input
-              type="file"
-              #inputImagen
-              accept="image/*"
-              style="display: none"
-              (change)="onImagenSeleccionada($event)"
-            />
-          </span>
-          <div class="card-imagenes" *ngIf="imagenes?.length">
-            <div class="imagenes-grid">
-              <div class="imagen-wrapper" *ngFor="let imagen of imagenes">
-                <button
-                  type="button"
-                  class="boton-cerrar"
-                  (click)="eliminarImagen(imagen.id)"
-                >
-                  <i class="fa fa-close"></i>
-                </button>
-                <img
-                  [src]="imagen.url"
-                  alt="imagen-propiedad"
-                  class="imagen-propiedad"
-                />
+          <div *ngIf="data.rol == 3">
+            <h6>Subir Documentacion</h6>
+            <div class="row">
+              <p>
+                Debe cargar foto del frente y dorso de la documentación
+                identificatoria ingresada.
+              </p>
+            </div>
+            <span>
+              <button
+                nz-button
+                class="bton-cargar-imagen"
+                (click)="abrirSelectorImagen()"
+                [disabled]="imagenes.length == 2"
+              >
+                <span> <i class="fa fa-plus"></i> Cargar Imagen</span>
+              </button>
+              <input
+                type="file"
+                #inputImagen
+                accept="image/*"
+                style="display: none"
+                (change)="onImagenSeleccionada($event)"
+              />
+            </span>
+            <div class="card-imagenes" *ngIf="imagenes?.length">
+              <div class="imagenes-grid">
+                <div class="imagen-wrapper" *ngFor="let imagen of imagenes">
+                  <button
+                    type="button"
+                    class="boton-cerrar"
+                    (click)="eliminarImagen(imagen.id)"
+                  >
+                    <i class="fa fa-close"></i>
+                  </button>
+                  <img
+                    [src]="imagen.url"
+                    alt="imagen-propiedad"
+                    class="imagen-propiedad"
+                  />
+                </div>
               </div>
             </div>
           </div>
-
-          
-        
         <div style="text-align: right; margin-top: 24px">
           <button
             nz-button
             nzType="primary"
             (click)="onSubmit()"
-            [disabled]="form.invalid || (rol == 3 && imagenes.length < 2)"
+            [disabled]="form.invalid || (data.rol == 3 && imagenes.length < 2)"
           >
             Confirmar
           </button>
