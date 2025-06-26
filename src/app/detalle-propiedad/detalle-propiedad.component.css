@@ -46,7 +46,7 @@
   align-items: center;
   justify-content: center;
   max-height: fit-content;
-  max-width: fit-content;
+  max-width: 100%;
   border-radius: 10px;
 }
 
@@ -73,13 +73,13 @@ button {
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
-  margin: 5px;
+  margin: 0px;
   &:hover {
     background-color: antiquewhite;
     color: #2c3e508a;
     border-color: #2c3e508a;
   }
-    
+
   &:disabled {
     background-color: #f5f5f5;
     color: #999;
@@ -87,6 +87,8 @@ button {
     cursor: not-allowed;
   }
 }
+
+
 
 .mi-boton {
   background-color: #fff4e6;
@@ -156,7 +158,6 @@ button {
   font-weight: bold;
 }
 
-
 .titulo-general {
   font-size: 28px;
   font-weight: bold;
@@ -178,8 +179,6 @@ button {
 p {
   margin: 8px 0;
 }
-
-
 
 .imagen-propiedad {
   width: 100%;
@@ -225,19 +224,31 @@ p {
 }
 
 .card {
+  flex: 1 1 45%;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
   padding: 16px 24px;
 }
-.card-imagenes{
-   background-color: #fff;
+.card-imagenes {
+  flex: 1 1 40%;
+  background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 24px;
   padding: 16px 24px;
-  width: 100%;
+  /* width: 50%; */
+  box-sizing: border-box; /* importante para evitar desbordes */
+}
+.card-calificaciones {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  /* width: 40%; */
+  box-sizing: border-box; /* importante para evitar desbordes */
 }
 
 .card:hover {
@@ -280,7 +291,7 @@ p {
 }
 .imagenes-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* de 6 a 4 */
+  grid-template-columns: repeat(3, 1fr); /* de 6 a 4 */
   gap: 20px; /* un poco más de separación */
   margin-top: 1rem;
 }
@@ -297,7 +308,6 @@ p {
   object-fit: cover;
   display: block;
 }
-
 
 .boton-cerrar {
   position: absolute;
@@ -320,4 +330,3 @@ p {
   gap: 10px;
   margin-top: 10px;
 }
-

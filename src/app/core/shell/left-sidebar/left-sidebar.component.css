@@ -101,3 +101,13 @@
       transform: scale(1);
     }
   }
+
+  .fa{
+    color:#1a2c48
+  }
+  .fa:hover{
+    color:#a0c4ff
+  }
+  .fa.active{
+    color:#a0c4ff
+  }

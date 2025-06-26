@@ -14,6 +14,7 @@
 .grid-detalles {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 0.5rem;
   gap: 6px 16px;
 }
 
@@ -21,7 +22,7 @@
   background-color: #f0f2f5;
   padding: 12px;
   border-radius: 8px;
-   display: grid;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px 16px;
   font-size: 22px;
@@ -59,8 +60,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-
-
 .contenedor-carrusel {
   position: relative;
   width: 100%;
@@ -79,7 +78,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color:transparent;
+  background-color: transparent;
 
   border: none;
   font-size: 2rem;
@@ -90,12 +89,12 @@
 }
 
 .flecha-izquierda {
-  background-color:transparent;
+  background-color: transparent;
   left: 8px;
 }
 
 .flecha-derecha {
-  background-color:transparent;
+  background-color: transparent;
   right: 8px;
 }
 
@@ -103,4 +102,3 @@
   opacity: 0.4;
   cursor: default;
 }
-

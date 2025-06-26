@@ -2,7 +2,7 @@ export class Propiedad {
   id: number;
   nombre: string;
   descripcion: string;
-  entre_calles : string;
+  entre_calles: string;
   id_tipo: number;
   tipo: string;
   calle: string;
@@ -27,36 +27,54 @@ export class Propiedad {
   id_imagenes: [number];
   delete_at: Date | null;
   fotoPerfil: any;
+  promedio_calificacion?: number | null;
+  calificacion?: number | null;
+  promedio_calificacion_detallado: {
+    confort: number;
+    instalaciones_servicios: number;
+    limpieza: number;
+    personal: number;
+    precio_calidad: number;
+    ubicacion: number;
+  } = {
+    confort: 0,
+    instalaciones_servicios: 0,
+    limpieza: 0,
+    personal: 0,
+    precio_calidad: 0,
+    ubicacion: 0
+  };
 
   constructor(obj?: any) {
-    this.id = obj && obj.id || null;
-    this.nombre = obj && obj.nombre || '';
-    this.id_tipo = obj &&  obj.id_tipo || null;
-    this.tipo = obj &&  obj.tipo || '';
-    this.calle = obj && obj.calle || '';
-    this.numero = obj && obj.numero || null;
-    this.piso = obj && obj.piso || null;
-    this.depto = obj && obj.depto || null;
-    this.id_ciudad = obj && obj.id_ciudad || null;
-    this.id_provincia = obj && obj.id_provincia || null;
-    this.provincia = obj && obj.provincia || null;
-    this.precioNoche = obj && obj.precio || null;
-    this.codigoAcceso = obj && obj.codigoAcceso || '0000';
-    this.banios = obj && obj.banios || '0';
-    this.ambientes = obj && obj.ambientes || '0';
-    this.huespedes = obj && obj.huespedes || '0';
-    this.cocheras = obj && obj.cocheras || '0';
-    this.id_pol_reserva = obj && obj.id_pol_reserva || null;
-    this.descripcion = obj && obj.descripcion || null;
-    this.entre_calles = obj && obj.entre_calles || null;
-    this.ciudad = obj && obj.ciudad || null;
-    this.is_habilitada = obj && obj.is_habilitada || false;
-    this.requiere_documentacion = obj && obj.requiere_documentacion || false;
-    this.id_encargado = obj && obj.id_encargado || null;
-    this.pol_reserva = obj && obj.pol_reserva || null;
-    this.id_imagenes = obj && obj.id_imagenes || [];
-    this.delete_at = obj && obj.delete_at || null;
-    this.fotoPerfil = obj && obj.fotoPerfil || null;
-  }	
-
+    this.id = (obj && obj.id) || null;
+    this.nombre = (obj && obj.nombre) || '';
+    this.id_tipo = (obj && obj.id_tipo) || null;
+    this.tipo = (obj && obj.tipo) || '';
+    this.calle = (obj && obj.calle) || '';
+    this.numero = (obj && obj.numero) || null;
+    this.piso = (obj && obj.piso) || null;
+    this.depto = (obj && obj.depto) || null;
+    this.id_ciudad = (obj && obj.id_ciudad) || null;
+    this.id_provincia = (obj && obj.id_provincia) || null;
+    this.provincia = (obj && obj.provincia) || null;
+    this.precioNoche = (obj && obj.precio) || null;
+    this.codigoAcceso = (obj && obj.codigoAcceso) || '0000';
+    this.banios = (obj && obj.banios) || '0';
+    this.ambientes = (obj && obj.ambientes) || '0';
+    this.huespedes = (obj && obj.huespedes) || '0';
+    this.cocheras = (obj && obj.cocheras) || '0';
+    this.id_pol_reserva = (obj && obj.id_pol_reserva) || null;
+    this.descripcion = (obj && obj.descripcion) || null;
+    this.entre_calles = (obj && obj.entre_calles) || null;
+    this.ciudad = (obj && obj.ciudad) || null;
+    this.is_habilitada = (obj && obj.is_habilitada) || false;
+    this.requiere_documentacion = (obj && obj.requiere_documentacion) || false;
+    this.id_encargado = (obj && obj.id_encargado) || null;
+    this.pol_reserva = (obj && obj.pol_reserva) || null;
+    this.id_imagenes = (obj && obj.id_imagenes) || [];
+    this.delete_at = (obj && obj.delete_at) || null;
+    this.fotoPerfil = (obj && obj.fotoPerfil) || null;
+    this.promedio_calificacion = (obj && obj.promedioCalificacion) || null;
+    this.calificacion = (obj && obj.calificacion) || null;
+  }
 }

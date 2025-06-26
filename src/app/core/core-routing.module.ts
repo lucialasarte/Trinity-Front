@@ -32,6 +32,12 @@ const coreRoutes: Routes = [
     // canActivate: [NoPermisoDetallePropGuard],
   },
   {
+    path: 'inquilinos',
+    loadChildren: () =>
+      import('../inquilinos/inquilinos.module').then((m) => m.InquilinosModule),
+    // canActivate: [NoPermisoDetallePropGuard],
+  },
+  {
     path: 'reservas',
     loadChildren: () =>
       import('../reservas/reservas.module').then((m) => m.ReservasModule),
@@ -55,12 +61,19 @@ const coreRoutes: Routes = [
     loadChildren: () =>
       import('../usuarios/usuarios.module').then((m) => m.UsuariosModule),
   },
+  {
+    path:'registrarse',
+    loadChildren: () =>
+      import('../usuarios/registrarse/registrarse.module').then(
+        (m) => m.RegistrarseModule
+      ),  
+  },
   // {
   //   path: '',
   //   component: NotFoundComponent,
   //   canActivate: [RedireccionInicialGuard],
   //   pathMatch: 'full',
-  // },
+  // }
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'not-found',

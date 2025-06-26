@@ -1,5 +1,5 @@
 import { Component, computed, OnInit, ViewChild } from '@angular/core';
-import { Form, FormBuilder, FormGroup } from '@angular/forms';
+import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PropiedadesService } from './services/propiedades.service';
 import { Propiedad } from './models/propiedad';
 import { FormPropiedadesComponent } from './form-propiedades/form-propiedades.component';
@@ -22,6 +22,7 @@ export class PropiedadesComponent implements OnInit {
 
   isVisible = false;
   propiedades: any[] = [];
+  propiedadesFiltradas: any[] = [];
   propiedadesEliminadas: any[] = [];
   isFormValid = false;
   cargando = true;
@@ -36,9 +37,7 @@ export class PropiedadesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      dato: [''],
-    });
+    this._initForm();
     this._getPropiedades();
     this._getPropiedadesEliminadas();
     this.auth.cargarUsuarioDesdeToken();
@@ -49,7 +48,6 @@ export class PropiedadesComponent implements OnInit {
     let propiedad = new Propiedad(form);
     propiedad.precioNoche = Number(form.precioNoche);
     propiedad.is_habilitada = false;
-    propiedad.requiere_documentacion = false;
 
     this.propiedadesService.createPropiedad(propiedad).subscribe({
       next: (data) => {
@@ -84,7 +82,23 @@ export class PropiedadesComponent implements OnInit {
     this.formPropiedad.form.reset();
   }
 
-  buscarPropiedad() {}
+  buscarPropiedad(value: any) {
+    const dato = value.dato?.trim()?.toLowerCase();
+    if (!dato || dato.length < 4) {
+      this.propiedadesFiltradas = [...this.propiedades];
+      return;
+    }
+
+    this.propiedadesFiltradas = this.propiedades.filter((propiedad) => {
+      return (
+        propiedad.nombre.toLowerCase().includes(dato) ||
+        propiedad.descripcion.toLowerCase().includes(dato) ||
+        propiedad.tipo.toLowerCase().includes(dato) ||
+        propiedad.ciudad.toLowerCase().includes(dato) ||
+        propiedad.provincia?.toLowerCase().includes(dato)
+      );
+    });
+  }
 
   eliminarPropiedad(id: number) {
     this.propiedadesService.tieneActivas(id).subscribe({
@@ -177,11 +191,9 @@ export class PropiedadesComponent implements OnInit {
     this.isFormValid = valid;
   }
 
-  search() {}
-
   private _initForm() {
     this.form = this.fb.group({
-      busqueda: [null],
+      dato: [null, [Validators.required, Validators.minLength(4)]],
     });
   }
 
@@ -189,6 +201,7 @@ export class PropiedadesComponent implements OnInit {
     this.propiedadesService.getPropiedades().subscribe(
       (data) => {
         this.propiedades = data;
+        this.propiedadesFiltradas = data;
         this.cargando = false;
       },
       (error) => {

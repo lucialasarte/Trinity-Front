@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { Propiedad } from 'src/app/propiedades/models/propiedad';
 import { environment } from 'src/environments/environment';
@@ -15,6 +15,8 @@ export class ReservarInquilinoComponent implements OnInit {
   @Input() huespedes!: number;
   @Input() precioTotal!: number;
   @Input() montoSena!: number;
+  @Input() empleado:boolean = false;
+  @Output() idUsuario!: number;
   imagenActualIndex = 0;
 
   imagenes: string[] = [];

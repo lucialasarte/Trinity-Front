@@ -1,5 +1,15 @@
 <div class="perfil-container">
-  <h2>Mi Perfil</h2>
+  <h2>Mi Perfil 
+    <div *ngIf="usuario() as user">
+      <button
+          class="btn btn-secondary"
+          (click)="updateUser(user.id)"
+          style="float: right">
+          <i class="fa fa-pencil"></i>
+  </button>
+    </div>
+    
+  </h2>
   <div *ngIf="usuario() as user">
     <div class="perfil-grid">
       <div class="perfil-col">

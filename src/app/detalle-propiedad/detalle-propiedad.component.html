@@ -17,14 +17,14 @@
     <div class="card" style="width: 50%">
       <h3 class="card-title">
         Información de la Propiedad
-        <!-- <button
+        <button
           *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
           class="btn btn-secondary"
           (click)="updatePropiedad(propiedad.id)"
           style="float: right"
         >
           <i class="fa fa-pencil"></i>
-        </button> -->
+        </button>
       </h3>
 
       <div
@@ -231,6 +231,63 @@
         </button>
       </div>
     </div>
+
+    <!-- Card Calificaciones -->
+    <div class="card-calificaciones">
+      <h3 class="card-title">Calificaciones</h3>
+      <div
+        class="detalle-grid"
+        *ngIf="propiedad.promedio_calificacion_detallado"
+      >
+        <div class="detalle-item">
+          <p>
+            Promedio General:
+            <nz-rate
+              [ngModel]="propiedad.promedio_calificacion"
+              [nzDisabled]="true"
+            ></nz-rate>
+            <span class="calificacion-texto"
+              >({{ propiedad.promedio_calificacion | number : "1.1-1" }})</span
+            >
+          </p>
+
+          <p>
+            Confort:
+            <nz-rate
+              [ngModel]="propiedad.promedio_calificacion_detallado.confort"
+              [nzDisabled]="true"
+            ></nz-rate>
+          </p>
+          <p>
+            Limpieza:
+            <nz-rate
+              [ngModel]="propiedad.promedio_calificacion_detallado.limpieza"
+              [nzDisabled]="true"
+            ></nz-rate>
+          </p>
+          <p>
+            Ubicación:
+            <nz-rate
+              [ngModel]="propiedad.promedio_calificacion_detallado.ubicacion"
+              [nzDisabled]="true"
+            ></nz-rate>
+          </p>
+          <p>
+            Servicios:
+            <nz-rate
+              [ngModel]="
+                propiedad.promedio_calificacion_detallado
+                  .instalaciones_servicios
+              "
+              [nzDisabled]="true"
+            ></nz-rate>
+          </p>
+        </div>
+      </div>
+      <div *ngIf="!propiedad.promedio_calificacion_detallado">
+        <p>No hay calificaciones para esta propiedad.</p>
+      </div>
+    </div>
   </div>
 </ng-container>
 
@@ -306,4 +363,3 @@
     </button>
   </div>
 </nz-modal>
-

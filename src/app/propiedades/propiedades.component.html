@@ -12,11 +12,11 @@
           <nz-form-item>
             <nz-form-label nzFor="dato">Dato Identificatorio</nz-form-label>
             <nz-form-control>
-              <input nz-input formControlName="dato" />
+              <input nz-input formControlName="dato" minlength="4" />
             </nz-form-control>
           </nz-form-item>
         </form>
-        <button class="btn btn-primary ml-2" (click)="buscarPropiedad()">
+        <button class="btn btn-primary ml-2" (click)="buscarPropiedad(form.value)">
           <i class="fa fa-search"></i> Buscar
         </button>
       </div>
@@ -40,7 +40,7 @@
       <nz-spin [nzSpinning]="cargando">
         <nz-table
           #propertyTable
-          [nzData]="propiedades"
+          [nzData]="propiedadesFiltradas"
           [nzPageSize]="4"
           [nzFrontPagination]="true"
           [nzSize]="'small'"

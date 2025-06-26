@@ -1,0 +1,41 @@
+.mensaje-container {
+  display: flex;
+  margin: 8px 0;
+}
+
+.mensaje-derecha {
+  justify-content: flex-end;
+}
+
+.mensaje-izquierda {
+  justify-content: flex-start;
+}
+
+.mensaje-card {
+  background-color: #f1f1f1;
+  max-width: 60%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mensaje-header {
+  display: flex;
+  flex-direction: column; /* de fila a columna */
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.mensaje-texto {
+  font-size: 14px;
+}
+.mensaje-nombre {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.mensaje-fecha {
+  font-size: 11px;
+  color: #999;
+}

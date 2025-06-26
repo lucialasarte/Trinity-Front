@@ -10,12 +10,10 @@ export class UsuariosService {
 
   constructor(private http: HttpClient) {}
 
-  // GET /usuarios
   getUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.apiUrl}/`);
   }
 
-  // POST /usuarios (acepta objeto plano para registro)
   crearUsuario(usuario: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/`, usuario);
   }
@@ -38,6 +36,10 @@ export class UsuariosService {
    */
   getUsuariosPorRol(rolId: number): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.apiUrl}/por-rol/${rolId}`);
+  }
+
+  getUsuarioReducido(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/reducido`);
   }
 
   subirImagenDocumento(formData: FormData, idUsuario: number): Observable<any> {
@@ -73,5 +75,24 @@ export class UsuariosService {
 
   registrarUsuario(usuario: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/registrar`, usuario);
+  }
+   cambiar_estado_inquilino(id:number): Observable<any> {
+        return this.http.patch<any>(`${this.apiUrl}/cambiarEstado/${id}`, {});
+    }
+
+  // POST /auth/forgot-password
+  recuperarPassword(correo: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/forgot-password`, { "correo": correo });
+  }
+
+  // POST /auth/forgot-password/reset
+  resetPassword(password: string, password_confirmación: string, token: string): Observable<any> {
+    const headers = {
+      Authorization: `Bearer ${token}`
+    };
+    return this.http.post(`${environment.apiUrl}/auth/forgot-password/reset`, {
+      "password": password,
+      "password_confirmacion": password_confirmación
+    }, { headers });
   }
 }

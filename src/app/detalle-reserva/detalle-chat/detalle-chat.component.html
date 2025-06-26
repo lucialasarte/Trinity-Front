@@ -1,0 +1,18 @@
+<div *ngFor="let mensaje of chat">
+  <div
+    [ngClass]="{
+      'mensaje-derecha': esMensajeDerecha(mensaje.rol),
+      'mensaje-izquierda': !esMensajeDerecha(mensaje.rol)
+    }"
+    class="mensaje-container"
+  >
+    <div class="mensaje-card">
+      <div class="mensaje-header">
+        <div class="mensaje-nombre">{{ mensaje.nombre }}</div>
+        <div class="mensaje-fecha">{{ mensaje.fecha | date : "short" }}</div>
+      </div>
+
+      <div class="mensaje-texto">{{ mensaje.mensaje }}</div>
+    </div>
+  </div>
+</div>

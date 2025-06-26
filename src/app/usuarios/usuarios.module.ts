@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { UsuariosComponent } from './usuarios.component';
 import { UsuariosRoutingModule } from './usuarios-routing.module';
 import { PerfilUsuarioComponent } from './perfil-usuario/perfil-usuario.component';
-import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
+import { RegistrarUsuarioComponent } from './form-registrar-usuario/registrar-usuario.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzZorroModule } from '../shared/nz-zorro.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { EditarUsuarioComponent } from './perfil-usuario/perfil-usuario-editar/perfil-usuario-editar.component';
 
 @NgModule({
   imports: [
@@ -20,9 +22,10 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
   declarations: [
     UsuariosComponent,
     PerfilUsuarioComponent,
-    RegistrarUsuarioComponent
+    RegistrarUsuarioComponent,EditarUsuarioComponent,
+    ResetPasswordComponent
   ],
-  exports: [],
+  exports: [RegistrarUsuarioComponent,EditarUsuarioComponent],
   providers: [provideNgxMask()],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

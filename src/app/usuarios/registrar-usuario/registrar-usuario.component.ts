@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -39,12 +39,12 @@ export class RegistrarUsuarioComponent implements OnInit {
   paises: Pais[] = [];
   roles: Rol[] = [];
   tiposIdentificacion: TipoIdentificacion[] = [];
-  marcasTarjeta: MarcaTarjeta[] = [];
-  tiposTarjeta: TipoTarjeta[] = [];
   creandoUsuario = false; // Nueva propiedad
   tieneSesion = false;
   imagenes: { id: number; url: string }[] = [];
   rol: number[] = [3];
+  esAdministrador = false;
+  @Input()esInquilino = true;
 
   apiUrl = `${environment.apiUrl}/usuarios`;
 
@@ -61,12 +61,11 @@ export class RegistrarUsuarioComponent implements OnInit {
     this._loadPaises();
     this._loadRoles();
     this._loadTiposIdentificacion();
-    this._loadMarcasTarjeta();
-    this._loadTiposTarjeta();
     this._initForm();
 
     this.tieneSesion = !!this.auth.usuarioActual();
-    // El seteo por defecto del rol ahora se hace en _loadRoles usando RolEnum
+    this.esAdministrador = this.auth.esAdministrador();
+    console.log('es administrador:', this.esAdministrador);
   }
 
   private _initForm() {
@@ -86,11 +85,8 @@ export class RegistrarUsuarioComponent implements OnInit {
 
   private _createTarjetaFormGroup(): FormGroup {
     return this.fb.group({
-      // marca: [null, Validators.required],
-      // tipo: [1, Validators.required],
       numero: [null, Validators.required],
       nombre_titular: [null, Validators.required],
-      // fecha_inicio: [null],
       fecha_vencimiento: [null, [Validators.required, fechaNoVencidaValidator]],
       cvv: [null, Validators.required],
       usuario_id: [null],
@@ -106,7 +102,6 @@ export class RegistrarUsuarioComponent implements OnInit {
   }
 
   eliminarTarjeta(index: number) {
-    // Si solo hay una tarjeta, resetea el form en vez de eliminar para evitar errores de controles
     if (this.tarjetas.length === 1) {
       this.tarjetas.at(0).reset({
         marca: null,
@@ -163,18 +158,6 @@ export class RegistrarUsuarioComponent implements OnInit {
       .subscribe((data) => (this.tiposIdentificacion = data));
   }
 
-  private _loadMarcasTarjeta(): void {
-    this.parametricasService
-      .get_marcas_tarjeta()
-      .subscribe((data) => (this.marcasTarjeta = data));
-  }
-
-  private _loadTiposTarjeta(): void {
-    this.parametricasService
-      .get_tipos_tarjeta()
-      .subscribe((data) => (this.tiposTarjeta = data));
-  }
-
   onFileChange(event: any, i: number, campo: 'anverso_url' | 'reverso_url') {
     const file = event.target.files[0];
     if (file) {
@@ -221,10 +204,6 @@ export class RegistrarUsuarioComponent implements OnInit {
         control?.setErrors(hasOtherErrors ? currentErrors : null);
       }
     }
-  }
-
-  getFormControlValue(control: AbstractControl, campo: string): any {
-    return control?.get(campo)?.value;
   }
 
   onSubmit() {

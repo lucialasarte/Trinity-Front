@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario } from './models/usuario';
 import { UsuariosService } from './services/usuarios.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
+import { RegistrarUsuarioComponent } from './form-registrar-usuario/registrar-usuario.component';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
