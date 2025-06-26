@@ -70,7 +70,7 @@ export class EmpleadosComponent {
 
   abirModalRegistroEmpleado() {
     const modalRef = this.modal.create({
-        nzTitle: 'Registrar usuario',
+        nzTitle: 'Registrar Empleado',
         nzContent: RegistrarEmpleadoComponent,
         nzWidth: 990,
         nzFooter: null,

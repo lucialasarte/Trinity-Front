@@ -68,9 +68,10 @@ export class DetalleReservaComponent {
     this._initFormCalificacion();
     this._initFormCalificacionInquilino();
   }
+
   onSubmitCalificacion() {
     const calificacion = this.formCalificacion.value;
-    console.log('Calificación enviada:', calificacion);
+    console.log('Calificación exitosa:', calificacion);
     this.reservasService
       .calificarPropiedad(this.reserva.id, calificacion)
       .subscribe({
@@ -159,8 +160,6 @@ export class DetalleReservaComponent {
     });
   }
 
-  
-
   calificar() {
     const usuario = this.auth.usuarioActual();
     this.esAdmin = !!usuario?.permisos?.gestionar_empleados;
@@ -212,6 +211,7 @@ export class DetalleReservaComponent {
       });
     }
   }
+  
   subirDocumentacion() {}
 
   verPropiedad(id: number) {

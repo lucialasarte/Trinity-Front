@@ -223,10 +223,14 @@ button {
   font-size: 14px;
   text-align: center;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  
 }
 .boton-lleno {
   width: 100%;
 }
+
+
+
 
 
 button:hover {

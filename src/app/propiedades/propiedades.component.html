@@ -50,7 +50,7 @@
             <tr>
               <th>Propiedad</th>
               <th>Tipo Propiedad</th>
-              <th>Localidad</th>
+              <th>Provincia</th>
               <th>Ciudad</th>
               <th>Precio por Noche</th>
               <th>Estado</th>
@@ -61,7 +61,7 @@
             <tr *ngFor="let propiedad of propertyTable.data">
               <td>{{ propiedad.nombre }}</td>
               <td>{{ propiedad.tipo }}</td>
-              <td>{{ propiedad.ciudad }}</td>
+              <td>{{ propiedad.provincia }}</td>
               <td>{{ propiedad.ciudad }}</td>
               <td>U$D {{ propiedad.precioNoche | number : "1.2-2" }}</td>
               <td>
