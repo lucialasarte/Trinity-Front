@@ -3,9 +3,6 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  FormArray,
-  AbstractControl,
-  ValidationErrors,
 } from '@angular/forms';
 import { Usuario } from '../../models/usuario';
 import { ParametricasService } from '../../../shared/services/parametricas.service';
@@ -18,11 +15,9 @@ import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { finalize } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { RolEnum } from '../../enums/rol.enum';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import Swal from 'sweetalert2';
 import { mayorDeEdadValidator } from 'src/app/shared/models/validatorMayor';
 import { fechaNoVencidaValidator } from 'src/app/shared/models/validadorVenida';
-import { passwordValidator } from 'src/app/shared/models/passwordValidator';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { environment } from 'src/environments/environment';
 
@@ -41,7 +36,6 @@ export class EditarUsuarioComponent implements OnInit {
   editandoUsuario = false; 
   tieneSesion = false;
   imagenes: { id: number; url: string }[] = [];
-  rol: number = 1;
   esAdministrador = false;
   @Input()esInquilino = true;
   @Output() usuarioEditado = new EventEmitter<boolean>();
@@ -77,12 +71,11 @@ export class EditarUsuarioComponent implements OnInit {
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       correo: ['', [Validators.required, Validators.email]],
-      password_hash: ['', [Validators.required, passwordValidator]],
       tipo_identificacion: [null, Validators.required],
       numero_identificacion: ['', Validators.required],
       fecha_nacimiento: [null, [Validators.required, mayorDeEdadValidator]],
       pais: [null, Validators.required],
-      tarjeta: this._createTarjetaFormGroup()
+      tarjeta: this.data.rol === 3 ? this._createTarjetaFormGroup() : null, // Solo inquilinos tienen tarjeta
     });
     this.form.statusChanges.subscribe(() => {
       this.usuarioEditado.emit(this.form.valid);
@@ -93,18 +86,21 @@ export class EditarUsuarioComponent implements OnInit {
     this.usuariosService.getUsuarioPorId(id).subscribe({
       next: (usuario: Usuario) => {
 
-        if (usuario.roles[0].id == 3) {
-          const fechaFormateada = usuario.tarjetas[0].fecha_vencimiento.slice(0, 3) + usuario.tarjetas[0].fecha_vencimiento.slice(5);
+        if (usuario.roles[0].id == 3) {  
           this.tarjetaFormGroup.patchValue(usuario.tarjetas[0]);
-          this.tarjetaFormGroup.get('fecha_vencimiento')?.setValue(fechaFormateada)
-          this.tarjetaFormGroup.updateValueAndValidity();
+          const control = this.tarjetaFormGroup.get('fecha_vencimiento');
+          if (control) {
+            control.markAsTouched();
+            control.updateValueAndValidity();
+          }
+          
 
 
           this.imagenes = usuario.id_imagenes?.map((img: any) => ({
               id: img,
               url: `${this.apiUrl}/imagenDoc/${img}`,
           })) || [];
-            
+          this.tarjetaFormGroup.updateValueAndValidity();
         }
         
         const userDataForPatch: any = {
@@ -113,9 +109,9 @@ export class EditarUsuarioComponent implements OnInit {
             tipo_identificacion: usuario.tipo_identificacion?.id || null,
         };
 
-        const { password_hash, tarjetas, id_imagenes, ...restOfUserTransformed } = userDataForPatch;
+        const {tarjetas, id_imagenes, ...restOfUserTransformed } = userDataForPatch;
         this.form.patchValue(restOfUserTransformed);
-
+        this.form.updateValueAndValidity();
       },
       error: (error) => {
         console.error('Error al cargar el usuario:', error);
