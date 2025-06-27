@@ -246,11 +246,10 @@ export class DetalleReservaComponent {
         this.reserva = data.reserva;
         this._getInquilino(this.reserva.id_inquilino);
         this.propiedad = data.propiedad;
-        this.calificacionPropiedad = new Calificacion(
-          data.calificacion_propiedad
-        );
+        this.calificacionPropiedad = data.calificacion_propiedad;
+        console.log(this.calificacionPropiedad);
         this._getEncargado(this.propiedad.id_encargado);
-        this.calificacionInquilino = data.calificacion_inquilino.calificacion;
+        this.calificacionInquilino = data.calificacion_inquilino?.calificacion;
         this.validarCalificacion();
       },
       error: (error) => {

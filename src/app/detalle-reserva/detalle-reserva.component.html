@@ -4,6 +4,9 @@
     <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
       {{ reserva.estado }}
     </span>
+    <span *ngIf="isEnCurso" class="estado-badge en-curso">
+      En curso
+    </span>
   </h2>
 </div>
 
@@ -93,7 +96,7 @@
       <ng-container *ngIf="inquilino">
         <h3 class="card-title">Inquilino</h3>
         <p *ngIf="calificacionInquilino">
-          <strong>Calificación:</strong> {{ calificacionInquilino }}
+          <strong>Calificación en esta estadía:</strong> {{ calificacionInquilino }}
         </p>
         <p><strong>Calificación promedio:</strong> {{ inquilino.calificacion || "Sin calificaciones"}}</p>
         <p><strong>Nombre:</strong> {{ inquilino.nombre }} </p>
@@ -131,8 +134,8 @@
     </div>
 
     <!-- Card Calificación Propiedad -->
-    <div class="card card-calificacion" *ngIf="calificacionPropiedad">
-      <h3 class="card-title">Calificación</h3>
+    <div class="card card-calificacion" *ngIf="calificacionPropiedad !== null">
+      <h3 class="card-title">Calificación Recibida</h3>
       <div>
         <label style="padding: 10px;">Personal:</label>
         <nz-rate [ngModel]="calificacionPropiedad.personal" disabled></nz-rate>
@@ -197,6 +200,7 @@
             auth.usuarioActual()?.permisos?.gestionar_empleados &&
             reserva.id_estado === 2
           "
+          [disabled]="reserva.documentacion.length < 0"
           class="boton-lleno btn-sm"
           (click)="confirmarReserva()"
         >
@@ -275,6 +279,7 @@
     >
     </app-detalle-chat>
     <form
+      *ngIf="puedeEnviarMensajes"
       [formGroup]="formMensaje"
       (ngSubmit)="onSubmitMensaje()"
       class="form-chat"
@@ -301,6 +306,12 @@
         <i nz-icon nzType="send" nzTheme="outline"></i> Enviar
       </button>
     </form>
+    <div *ngIf="!puedeEnviarMensajes">
+      <hr/>
+      <p class="mensaje-chat-desactivado">
+        No podés enviar mensajes ahora.
+      </p>
+    </div>
   </div>
 </nz-modal>
 

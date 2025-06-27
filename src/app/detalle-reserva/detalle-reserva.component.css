@@ -37,6 +37,17 @@
 
 }
 
+.mensaje-chat-desactivado {
+  text-align: center;
+  font-size: 1.2em;
+  color: #666;
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
 
 /* Estilos específicos por estado */
 .badge-confirmada {
