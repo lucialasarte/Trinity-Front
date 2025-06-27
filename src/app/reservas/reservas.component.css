@@ -168,6 +168,16 @@ button {
   font-size: 12px;
 }
 
+.badge-en-curso{
+  background-color: #5bacee;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
+
+}
+
 
 
 .fullscreen-spinner {

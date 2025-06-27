@@ -122,4 +122,14 @@ export class ReservasComponent {
       },
     });
   }
+
+  isEnCurso(reserva: Reserva): boolean {
+    if (!(reserva && reserva.id_estado == 1)) return false;
+
+    const hoy = new Date();
+    const inicio = new Date(reserva.fecha_inicio);
+    const fin = new Date(reserva.fecha_fin);
+
+    return hoy >= inicio && hoy <= fin;
+  }
 }

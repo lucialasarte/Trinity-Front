@@ -40,6 +40,9 @@ export class AuthService {
       .post<any>(`${this.apiUrl}/login`, { correo, password })
       .pipe(
         tap((response) => {
+          if(!(response.rol==3) && localStorage.getItem('reservaIntento')){
+            localStorage.removeItem('reservaIntento');
+          }
           if (response.token) {
             this.setToken(response.token); // Guarda el token JWT
             // Decodifica el token para extraer el id de usuario
