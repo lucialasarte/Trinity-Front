@@ -13,6 +13,12 @@
             <nz-form-label nzFor="dato">Dato Identificatorio</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="dato" minlength="4" />
+              <span
+                class="text-danger"
+                *ngIf="form.get('dato')?.hasError('minlength')"
+              >
+                El dato debe tener al menos 4 caracteres.
+              </span>
             </nz-form-control>
           </nz-form-item>
         </form>
@@ -47,7 +53,7 @@
           [nzPageSize]="4"
           [nzFrontPagination]="true"
           [nzSize]="'small'"
-          *ngIf="inquilinos && inquilinos.length > 0"
+          *ngIf="inquilinosFiltrados && inquilinosFiltrados.length > 0"
         >
           <thead>
             <tr>
@@ -56,7 +62,7 @@
               <th>Tipo Identificación</th>
               <th>Número de Identificación</th>
               <th>Mail</th>
-              <th>Calificación</th>
+              <th>Calificación promedio</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -65,10 +71,24 @@
             <tr *ngFor="let inquilino of propertyTable.data">
               <td>{{ inquilino.nombre }}</td>
               <td>{{ inquilino.apellido }}</td>
-              <td>{{ inquilino.tipo_identificacion}}</td>
+              <td>{{ inquilino.tipo_identificacion }}</td>
               <td>{{ inquilino.numero_identificacion }}</td>
               <td>{{ inquilino.correo }}</td>
-              <td>{{ inquilino.calificacion || "Sin calificación" }}</td>
+              <td>
+                <ng-container
+                  *ngIf="
+                    inquilino.calificacion !== null &&
+                      inquilino.calificacion !== undefined;
+                    else sinCalificacion
+                  "
+                >
+                  <nz-rate
+                    [ngModel]="inquilino.calificacion"
+                    [nzDisabled]="true"
+                  ></nz-rate>
+                </ng-container>
+                <ng-template #sinCalificacion> Sin calificación </ng-template>
+              </td>
               <td>
                 <span
                   [ngClass]="{
@@ -98,13 +118,11 @@
       </nz-spin>
 
       <div
-        *ngIf="!inquilinos || inquilinos.length === 0"
+        *ngIf="!inquilinosFiltrados || inquilinosFiltrados.length === 0"
         class="mensaje-sin-propiedades"
       >
         No hay inquilinos.
       </div>
     </div>
   </div>
-  
-  
 </ng-container>

@@ -103,6 +103,7 @@ export class DetalleReservaComponent {
       .subscribe({
         next: (res) => {
           this.calificacionInquilino = calificacion;
+          this._getInquilino(this.reserva.id_inquilino);
 
           this.utilsService.showMessage({
             title: 'Calificación exitosa',

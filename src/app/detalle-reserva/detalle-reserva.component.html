@@ -4,7 +4,6 @@
     <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
       {{ reserva.estado }}
     </span>
-    <span *ngIf="isEnCurso()" class="estado-badge en-curso">En curso</span>
   </h2>
 </div>
 
@@ -50,7 +49,7 @@
           "
           class="btn btn-secondary"
           (click)="verPropiedad(propiedad.id)"
-          style="float: right; margin-bottom: 0px; padding: 6px"
+          style="float: right; margin-bottom: 0px;padding: 6px;"
         >
           <i class="fa fa-eye"></i>
         </button>
@@ -96,15 +95,12 @@
         <p *ngIf="calificacionInquilino">
           <strong>Calificación:</strong> {{ calificacionInquilino }}
         </p>
-        <p>
-          <strong>Calificación promedio:</strong>
-          {{ inquilino.calificacion || "Sin calificaciones" }}
-        </p>
-        <p><strong>Nombre:</strong> {{ inquilino.nombre }}</p>
-        <p><strong>Apellido:</strong> {{ inquilino.apellido }}</p>
+        <p><strong>Calificación promedio:</strong> {{ inquilino.calificacion || "Sin calificaciones"}}</p>
+        <p><strong>Nombre:</strong> {{ inquilino.nombre }} </p>
+        <p><strong>Apellido:</strong> {{ inquilino.apellido }} </p>
         <p>
           <strong>Tipo de Identificación:</strong>
-          {{ inquilino.tipo_identificacion }}
+          {{ inquilino.tipo_identificacion.nombre }}
         </p>
         <p>
           <strong>Número de Identificación:</strong>
@@ -120,8 +116,8 @@
     >
       <ng-container *ngIf="encargado">
         <h3 class="card-title">Encargado</h3>
-        <p><strong>Nombre:</strong> {{ encargado.nombre }}</p>
-        <p><strong>Apellido:</strong> {{ encargado.apellido }}</p>
+        <p><strong>Nombre:</strong> {{ encargado.nombre }} </p>
+        <p><strong>Apellido:</strong> {{ encargado.apellido }} </p>
         <p>
           <strong>Tipo de Identificación:</strong>
           {{ encargado.tipo_identificacion }}
@@ -138,11 +134,11 @@
     <div class="card card-calificacion" *ngIf="calificacionPropiedad">
       <h3 class="card-title">Calificación</h3>
       <div>
-        <label style="padding: 10px">Personal:</label>
+        <label style="padding: 10px;">Personal:</label>
         <nz-rate [ngModel]="calificacionPropiedad.personal" disabled></nz-rate>
       </div>
       <div>
-        <label style="padding: 10px">Instalaciones:</label>
+        <label style="padding: 10px;">Instalaciones:</label>
         <nz-rate
           [ngModel]="calificacionPropiedad.instalaciones_servicios"
           disabled
@@ -150,25 +146,26 @@
       </div>
 
       <div>
-        <label style="padding: 10px">Limpieza:</label>
+        <label style="padding: 10px;">Limpieza:</label>
         <nz-rate [ngModel]="calificacionPropiedad.limpieza" disabled></nz-rate>
       </div>
       <div>
-        <label style="padding: 10px">Confort:</label>
+        <label style="padding: 10px;">Confort:</label>
         <nz-rate [ngModel]="calificacionPropiedad.confort" disabled></nz-rate>
       </div>
       <div>
-        <label style="padding: 10px">Relación Precio-Calidad:</label>
+        <label style="padding: 10px;">Relación Precio-Calidad:</label>
         <nz-rate
           [ngModel]="calificacionPropiedad.precio_calidad"
           disabled
         ></nz-rate>
       </div>
       <div>
-        <label style="padding: 10px">Ubicación:</label>
+        <label style="padding: 10px;">Ubicación:</label>
         <nz-rate [ngModel]="calificacionPropiedad.ubicacion" disabled></nz-rate>
       </div>
     </div>
+
 
     <!-- Card Acciones -->
     <div class="card card-acciones">
@@ -214,7 +211,7 @@
           "
         >
           <button
-            *ngIf="puedeCalificar"
+            [disabled]="!puedeCalificar"
             class="boton-lleno btn-sm"
             (click)="calificar()"
             nz-tooltip
@@ -227,25 +224,17 @@
         </span>
 
         <!-- Calificar Inquilino (Encargado/Admin) -->
-        <span
-          class="tooltip-wrapper"
+        <button
           *ngIf="
-            auth.usuarioActual()?.permisos?.gestionar_empleados &&
+            auth.usuarioActual()?.permisos?.gestionar_propiedades &&
             !calificacionInquilino
           "
+          class="boton-lleno btn-sm"
+          [disabled]="!puedeCalificar"
+          (click)="calificar()"
         >
-          <button
-            *ngIf="puedeCalificar"
-            class="boton-lleno btn-sm"
-            (click)="calificar()"
-            nz-tooltip
-            [nzTooltipTitle]="
-              'La calificación podrá ser realizada en un plazo de 14 días luego de finalizada la reserva.'
-            "
-          >
-            Calificar Inquilino
-          </button>
-        </span>
+          Calificar Inquilino
+        </button>
       </div>
     </div>
 
@@ -368,7 +357,7 @@
       nz-button
       (click)="onSubmitCalificacion()"
     >
-      Calificar
+      Enviar
     </button>
   </div>
 </nz-modal>
@@ -426,7 +415,7 @@
       (click)="onSubmitCalificacionInquilino()"
       [disabled]="formCalificacionInquilino.invalid"
     >
-      Calificar
+      Enviar
     </button>
   </div>
 </nz-modal>

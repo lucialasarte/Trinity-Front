@@ -13,7 +13,14 @@
             <nz-form-control>
               <nz-form-label nzFor="dato">Dato Identificatorio</nz-form-label>
               <input nz-input formControlName="dato" minlength="4" />
+              <span
+                class="text-danger"
+                *ngIf="form.get('dato')?.hasError('minlength')"
+              >
+                El dato debe tener al menos 4 caracteres.
+              </span>
             </nz-form-control>
+
           </nz-form-item>
         </form>
         <button
@@ -47,7 +54,7 @@
           [nzPageSize]="4"
           [nzFrontPagination]="true"
           [nzSize]="'small'"
-          *ngIf="empleados && empleados.length > 0"
+          *ngIf="empleadosFiltrados && empleadosFiltrados.length > 0"
         >
           <thead>
             <tr>
@@ -83,7 +90,7 @@
       </nz-spin>
 
       <div
-        *ngIf="!empleados || empleados.length === 0"
+        *ngIf="!empleadosFiltrados || empleadosFiltrados.length === 0"
         class="mensaje-sin-propiedades"
       >
         No hay Empleados.
