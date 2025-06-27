@@ -26,6 +26,7 @@ import { fechaNoVencidaValidator } from 'src/app/shared/models/validadorVenida';
 import { passwordValidator } from 'src/app/shared/models/passwordValidator';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { environment } from 'src/environments/environment';
+import { InquilinosService } from 'src/app/inquilinos/services/inquilinos.service';
 
 @Component({
   selector: 'app-registrar-usuario',
@@ -54,7 +55,8 @@ export class RegistrarUsuarioComponent implements OnInit {
     private usuariosService: UsuariosService,
     private modalRef: NzModalRef<RegistrarUsuarioComponent>, // Inyecta NzModalRef
     private auth: AuthService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private inquilinoService: InquilinosService
   ) {}
 
   ngOnInit(): void {
@@ -218,8 +220,8 @@ export class RegistrarUsuarioComponent implements OnInit {
         roles: [3], 
         id_imagenes: this.imagenes.map((img) => img.id),
       };
-      this.usuariosService
-        .registrarUsuario(payload)
+      this.inquilinoService
+        .registrarInquilino(payload)
         .pipe(
           finalize(() => {
             this.creandoUsuario = false; 

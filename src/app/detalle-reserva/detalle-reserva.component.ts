@@ -68,9 +68,10 @@ export class DetalleReservaComponent {
     this._initFormCalificacion();
     this._initFormCalificacionInquilino();
   }
+
   onSubmitCalificacion() {
     const calificacion = this.formCalificacion.value;
-    console.log('Calificación enviada:', calificacion);
+    console.log('Calificación exitosa:', calificacion);
     this.reservasService
       .calificarPropiedad(this.reserva.id, calificacion)
       .subscribe({
@@ -102,6 +103,7 @@ export class DetalleReservaComponent {
       .subscribe({
         next: (res) => {
           this.calificacionInquilino = calificacion;
+          this._getInquilino(this.reserva.id_inquilino);
 
           this.utilsService.showMessage({
             title: 'Calificación exitosa',
@@ -159,8 +161,6 @@ export class DetalleReservaComponent {
     });
   }
 
-  
-
   calificar() {
     const usuario = this.auth.usuarioActual();
     this.esAdmin = !!usuario?.permisos?.gestionar_empleados;
@@ -212,6 +212,7 @@ export class DetalleReservaComponent {
       });
     }
   }
+
   subirDocumentacion() {}
 
   verPropiedad(id: number) {
@@ -245,11 +246,10 @@ export class DetalleReservaComponent {
         this.reserva = data.reserva;
         this._getInquilino(this.reserva.id_inquilino);
         this.propiedad = data.propiedad;
-        this.calificacionPropiedad = new Calificacion(
-          data.calificacion_propiedad
-        );
+        this.calificacionPropiedad = data.calificacion_propiedad;
+        console.log(this.calificacionPropiedad);
         this._getEncargado(this.propiedad.id_encargado);
-        this.calificacionInquilino = data.calificacion_inquilino.calificacion;
+        this.calificacionInquilino = data.calificacion_inquilino?.calificacion;
         this.validarCalificacion();
       },
       error: (error) => {
@@ -417,7 +417,12 @@ export class DetalleReservaComponent {
   }
 
   get puedeEnviarMensajes(): boolean {
-    if (!this.reserva?.fecha_inicio || !this.reserva?.fecha_fin) return false;
+    if (
+      !this.reserva?.fecha_inicio ||
+      !this.reserva?.fecha_fin ||
+      this.reserva.id_estado === 3
+    )
+      return false;
 
     const ahora = new Date();
     const inicio = new Date(this.reserva.fecha_inicio);
@@ -431,5 +436,15 @@ export class DetalleReservaComponent {
     if (this.esEncargado && esDurante) return true;
 
     return false;
+  }
+
+  isEnCurso(): boolean {
+    if (!this.reserva) return false;
+
+    const hoy = new Date();
+    const inicio = new Date(this.reserva.fecha_inicio);
+    const fin = new Date(this.reserva.fecha_fin);
+
+    return hoy >= inicio && hoy <= fin;
   }
 }

@@ -1,4 +1,11 @@
-import { Component, computed, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,7 +38,9 @@ import { EmpleadosService } from '../services/empleados.service';
 @Component({
   selector: 'app-registrar-empleado',
   templateUrl: './registrar-empleado.component.html',
-  styleUrls: ['../../usuarios/form-registrar-usuario/registrar-usuario.component.css'],
+  styleUrls: [
+    '../../usuarios/form-registrar-usuario/registrar-usuario.component.css',
+  ],
 })
 export class RegistrarEmpleadoComponent implements OnInit {
   @ViewChild('inputImagen') inputImagen!: ElementRef<HTMLInputElement>;
@@ -45,7 +54,7 @@ export class RegistrarEmpleadoComponent implements OnInit {
   imagenes: { id: number; url: string }[] = [];
   rol: number[] = [3];
   esAdministrador = false;
-  @Input()esInquilino = true;
+  @Input() esInquilino = true;
 
   apiUrl = `${environment.apiUrl}/usuarios`;
 
@@ -69,6 +78,40 @@ export class RegistrarEmpleadoComponent implements OnInit {
     this.esAdministrador = this.auth.esAdministrador();
   }
 
+  onSubmit() {
+    if (this.form.valid) {
+      this.creandoUsuario = true;
+      const formValue = this.form.value;
+
+      this.empleadosService
+        .registrarEmpleado({ ...formValue })
+        .pipe(
+          finalize(() => {
+            this.creandoUsuario = false;
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            this.utilsService.showMessage({
+              title: 'Empleado registrado',
+              message: 'El empleado fue registrado exitosamente.',
+              icon: 'success',
+            });
+            this.modalRef.close(response);
+          },
+          error: (error) => {
+            this.utilsService.showMessage({
+              title: 'Error al registrar empleado',
+              icon: 'error',
+              message: error.error.error || 'No se pudo registrar el empleado.',
+            });
+          },
+        });
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
+
   private _initForm() {
     this.form = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -84,11 +127,9 @@ export class RegistrarEmpleadoComponent implements OnInit {
     });
   }
 
-
   get tarjetas(): FormArray {
     return this.form.get('tarjetas') as FormArray;
   }
-
 
   private _loadPaises(): void {
     this.parametricasService
@@ -129,51 +170,4 @@ export class RegistrarEmpleadoComponent implements OnInit {
       .get_tipos_identificacion()
       .subscribe((data) => (this.tiposIdentificacion = data));
   }
-
-
-  onSubmit() {
-    if (this.form.valid) {
-      this.creandoUsuario = true;
-      const formValue = this.form.value;
-
-      
-      this.empleadosService
-        .registrarEmpleado({...formValue})
-        .pipe(
-          finalize(() => {
-            this.creandoUsuario = false; 
-          })
-        )
-        .subscribe({
-          next: (response) => {
-            this.utilsService.showMessage({
-              title: 'Usuario creado',
-              message: 'El usuario se ha creado correctamente.',
-              icon: 'success',
-            });
-            this.modalRef.close(response); 
-          },
-          error: (error) => {
-            
-            if (error.status === 400 && error.error) {
-              const msg =
-                error.error.message ||
-                error.error.error ||
-                error.statusText ||
-                'Error desconocido';
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: msg,
-              });
-            } else {
-              console.error('Error al crear el usuario:', error);
-            }
-          },
-        });
-    } else {
-      this.form.markAllAsTouched();
-    }
-  }
-
 }

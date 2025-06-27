@@ -95,9 +95,12 @@ export class InquilinosComponent {
     modalRef.afterClose.subscribe((usuarioCreado) => {
       if (usuarioCreado) {
         this._getInquilinos();
+        //console.log('Usuario creado:', usuarioCreado);
+        //llamar sevicio link temporal contraseña
       }
     });
   }
+  
   buscarInquilinos(value: any) {
     const dato = value.dato?.trim()?.toLowerCase();
     if (!dato || dato.length < 4) {
@@ -121,6 +124,7 @@ export class InquilinosComponent {
         this.inquilinos = data;
         this.inquilinosFiltrados = data;
         this.cargando = false;
+        console.log('Inquilinos obtenidos:', this.inquilinos);
       },
       error: (error) => {
         console.error('Error fetching inquilinos:', error);

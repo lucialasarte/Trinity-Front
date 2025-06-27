@@ -13,6 +13,12 @@
             <nz-form-label nzFor="dato">Dato Identificatorio</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="dato" minlength="4" />
+              <span
+                class="text-danger"
+                *ngIf="form.get('dato')?.hasError('minlength')"
+              >
+                El dato debe tener al menos 4 caracteres.
+              </span>
             </nz-form-control>
           </nz-form-item>
         </form>
@@ -50,7 +56,7 @@
             <tr>
               <th>Propiedad</th>
               <th>Tipo Propiedad</th>
-              <th>Localidad</th>
+              <th>Provincia</th>
               <th>Ciudad</th>
               <th>Precio por Noche</th>
               <th>Estado</th>
@@ -61,7 +67,7 @@
             <tr *ngFor="let propiedad of propertyTable.data">
               <td>{{ propiedad.nombre }}</td>
               <td>{{ propiedad.tipo }}</td>
-              <td>{{ propiedad.ciudad }}</td>
+              <td>{{ propiedad.provincia }}</td>
               <td>{{ propiedad.ciudad }}</td>
               <td>U$D {{ propiedad.precioNoche | number : "1.2-2" }}</td>
               <td>

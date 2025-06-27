@@ -70,7 +70,7 @@ export class EmpleadosComponent {
 
   abirModalRegistroEmpleado() {
     const modalRef = this.modal.create({
-        nzTitle: 'Registrar usuario',
+        nzTitle: 'Registrar Empleado',
         nzContent: RegistrarEmpleadoComponent,
         nzWidth: 990,
         nzFooter: null,
@@ -120,7 +120,6 @@ export class EmpleadosComponent {
   private _getEmpleados() {
     this.empleadosService.getEmpleados().subscribe({
       next: (data) => {
-        console.log(data);
         this.empleados = data;
         this.empleadosFiltrados = data;
         this.cargando = false;
@@ -134,7 +133,6 @@ export class EmpleadosComponent {
         this.cargando = false;
       },
     });
-    console.log(this.empleados)
   }
   private _initForm() {
     this.form = this.fb.group({

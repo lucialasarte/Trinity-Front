@@ -32,6 +32,23 @@
   margin-left: 8px;
 }
 
+.en-curso {
+  background-color: #5bacee;
+
+}
+
+.mensaje-chat-desactivado {
+  text-align: center;
+  font-size: 1.2em;
+  color: #666;
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+
 /* Estilos específicos por estado */
 .badge-confirmada {
   background-color: #28a745;
@@ -223,10 +240,14 @@ button {
   font-size: 14px;
   text-align: center;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  
 }
 .boton-lleno {
   width: 100%;
 }
+
+
+
 
 
 button:hover {

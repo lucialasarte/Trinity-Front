@@ -1,9 +1,15 @@
-import { Component, computed, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+  Component,
+  computed,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Usuario } from '../../models/usuario';
 import { ParametricasService } from '../../../shared/services/parametricas.service';
 import { Pais } from '../../models/pais';
@@ -33,17 +39,17 @@ export class EditarUsuarioComponent implements OnInit {
   paises: Pais[] = [];
   roles: Rol[] = [];
   tiposIdentificacion: TipoIdentificacion[] = [];
-  editandoUsuario = false; 
+  editandoUsuario = false;
   tieneSesion = false;
   imagenes: { id: number; url: string }[] = [];
   esAdministrador = false;
-  @Input()esInquilino = true;
+  @Input() esInquilino = true;
   @Output() usuarioEditado = new EventEmitter<boolean>();
-  
+
   apiUrl = `${environment.apiUrl}/usuarios`;
 
   constructor(
-    @Inject(NZ_MODAL_DATA) public data: { usuarioId: number,rol:number },
+    @Inject(NZ_MODAL_DATA) public data: { usuarioId: number; rol: number },
     private fb: FormBuilder,
     private parametricasService: ParametricasService,
     private usuariosService: UsuariosService,
@@ -60,10 +66,9 @@ export class EditarUsuarioComponent implements OnInit {
     if (this.data.usuarioId) {
       this._loadUsuario(this.data.usuarioId);
     }
-    
+
     this.tieneSesion = !!this.auth.usuarioActual();
     this.esAdministrador = this.auth.esAdministrador();
-    
   }
 
   private _initForm() {
@@ -79,37 +84,36 @@ export class EditarUsuarioComponent implements OnInit {
     });
     this.form.statusChanges.subscribe(() => {
       this.usuarioEditado.emit(this.form.valid);
-    }); 
+    });
   }
 
   private _loadUsuario(id: number): void {
     this.usuariosService.getUsuarioPorId(id).subscribe({
       next: (usuario: Usuario) => {
-
-        if (usuario.roles[0].id == 3) {  
+        if (usuario.roles[0].id == 3) {
           this.tarjetaFormGroup.patchValue(usuario.tarjetas[0]);
           const control = this.tarjetaFormGroup.get('fecha_vencimiento');
           if (control) {
             control.markAsTouched();
             control.updateValueAndValidity();
           }
-          
 
-
-          this.imagenes = usuario.id_imagenes?.map((img: any) => ({
+          this.imagenes =
+            usuario.id_imagenes?.map((img: any) => ({
               id: img,
               url: `${this.apiUrl}/imagenDoc/${img}`,
-          })) || [];
+            })) || [];
           this.tarjetaFormGroup.updateValueAndValidity();
         }
-        
+
         const userDataForPatch: any = {
-            ...usuario,
-            pais: usuario.pais?.id || null,
-            tipo_identificacion: usuario.tipo_identificacion?.id || null,
+          ...usuario,
+          pais: usuario.pais?.id || null,
+          tipo_identificacion: usuario.tipo_identificacion?.id || null,
         };
 
-        const {tarjetas, id_imagenes, ...restOfUserTransformed } = userDataForPatch;
+        const { tarjetas, id_imagenes, ...restOfUserTransformed } =
+          userDataForPatch;
         this.form.patchValue(restOfUserTransformed);
         this.form.updateValueAndValidity();
       },
@@ -121,21 +125,25 @@ export class EditarUsuarioComponent implements OnInit {
           icon: 'error',
         });
       },
-    });}
-    
-get tarjetaFormGroup(): FormGroup { // <--- CAMBIO CLAVE
+    });
+  }
+
+  get tarjetaFormGroup(): FormGroup {
+    // <--- CAMBIO CLAVE
     return this.form.get('tarjeta') as FormGroup;
   }
   private _createTarjetaFormGroup(): FormGroup {
     return this.fb.group({
       numero: [null, Validators.required],
       nombre_titular: [null, Validators.required],
-      fecha_vencimiento: [null, [Validators.required, fechaNoVencidaValidator()]],
+      fecha_vencimiento: [
+        null,
+        [Validators.required, fechaNoVencidaValidator()],
+      ],
       cvv: [null, Validators.required],
       usuario_id: [null],
     });
   }
-
 
   private _loadPaises(): void {
     this.parametricasService
@@ -156,18 +164,18 @@ get tarjetaFormGroup(): FormGroup { // <--- CAMBIO CLAVE
       if (this.data.rol === RolEnum.Inquilino) {
         formValue.tarjetas = [formValue.tarjeta]; // Convierte el objeto 'tarjeta' en un array de una tarjeta
       }
-      delete formValue.tarjeta; 
+      delete formValue.tarjeta;
 
       const payload = {
         ...formValue,
-        roles: [this.data.rol], 
+        roles: [this.data.rol],
         id_imagenes: this.imagenes.map((img) => img.id),
       };
       this.usuariosService
-        .actualizarUsuario(this.data.usuarioId,payload)
+        .actualizarUsuario(this.data.usuarioId, payload)
         .pipe(
           finalize(() => {
-            this.editandoUsuario = false; 
+            this.editandoUsuario = false;
           })
         )
         .subscribe({
@@ -177,10 +185,9 @@ get tarjetaFormGroup(): FormGroup { // <--- CAMBIO CLAVE
               message: 'Actualización de usuario exitosa.',
               icon: 'success',
             });
-            this.modalRef.close(response); 
+            this.modalRef.close(response);
           },
           error: (error) => {
-            
             if (error.status === 400 && error.error) {
               const msg =
                 error.error.message ||
@@ -230,13 +237,12 @@ get tarjetaFormGroup(): FormGroup { // <--- CAMBIO CLAVE
           });
         },
       });
-      formData.forEach((value, key) => {
-      });
+      formData.forEach((value, key) => {});
     }
 
     input.value = '';
   }
-  
+
   abrirSelectorImagen(): void {
     this.inputImagen.nativeElement.click();
   }

@@ -20,4 +20,8 @@ export class InquilinosService {
     getInquilinos(): Observable<Inquilino[]> {
       return this.http.get<Inquilino[]>(`${this.apiURL}/inquilinos`);
     }
+
+    registrarInquilino(usuario: any): Observable<any> {
+    return this.http.post(`${this.apiURL}/registrarInquilino`, usuario);
+  }
 }
