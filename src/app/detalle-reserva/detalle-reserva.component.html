@@ -4,6 +4,7 @@
     <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
       {{ reserva.estado }}
     </span>
+    <span *ngIf="isEnCurso()" class="estado-badge en-curso">En curso</span>
   </h2>
 </div>
 
@@ -170,17 +171,11 @@
     </div>
 
     <!-- Card Acciones -->
-    <div class="card card-acciones" *ngIf="reserva.id_estado !== 3">
+    <div class="card card-acciones">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <!-- Chat -->
-        <button
-          *ngIf="reserva.id_estado === 1 || reserva.id_estado === 2"
-          class="boton-lleno btn-sm"
-          (click)="chat()"
-        >
-          Chat
-        </button>
+        <button class="boton-lleno btn-sm" (click)="chat()">Chat</button>
         <!-- Cancelar Reserva -->
         <button
           class="boton-lleno btn-sm"
@@ -232,17 +227,25 @@
         </span>
 
         <!-- Calificar Inquilino (Encargado/Admin) -->
-        <button
+        <span
+          class="tooltip-wrapper"
           *ngIf="
             auth.usuarioActual()?.permisos?.gestionar_empleados &&
             !calificacionInquilino
           "
-          class="boton-lleno btn-sm"
-          [disabled]="!puedeCalificar"
-          (click)="calificar()"
         >
-          Calificar Inquilino
-        </button>
+          <button
+            *ngIf="puedeCalificar"
+            class="boton-lleno btn-sm"
+            (click)="calificar()"
+            nz-tooltip
+            [nzTooltipTitle]="
+              'La calificación podrá ser realizada en un plazo de 14 días luego de finalizada la reserva.'
+            "
+          >
+            Calificar Inquilino
+          </button>
+        </span>
       </div>
     </div>
 

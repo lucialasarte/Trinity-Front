@@ -32,6 +32,12 @@
   margin-left: 8px;
 }
 
+.en-curso {
+  background-color: #5bacee;
+
+}
+
+
 /* Estilos específicos por estado */
 .badge-confirmada {
   background-color: #28a745;

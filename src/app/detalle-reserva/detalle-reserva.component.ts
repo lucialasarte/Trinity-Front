@@ -211,7 +211,7 @@ export class DetalleReservaComponent {
       });
     }
   }
-  
+
   subirDocumentacion() {}
 
   verPropiedad(id: number) {
@@ -417,7 +417,12 @@ export class DetalleReservaComponent {
   }
 
   get puedeEnviarMensajes(): boolean {
-    if (!this.reserva?.fecha_inicio || !this.reserva?.fecha_fin) return false;
+    if (
+      !this.reserva?.fecha_inicio ||
+      !this.reserva?.fecha_fin ||
+      this.reserva.id_estado === 3
+    )
+      return false;
 
     const ahora = new Date();
     const inicio = new Date(this.reserva.fecha_inicio);
@@ -431,5 +436,15 @@ export class DetalleReservaComponent {
     if (this.esEncargado && esDurante) return true;
 
     return false;
+  }
+
+  isEnCurso(): boolean {
+    if (!this.reserva) return false;
+
+    const hoy = new Date();
+    const inicio = new Date(this.reserva.fecha_inicio);
+    const fin = new Date(this.reserva.fecha_fin);
+
+    return hoy >= inicio && hoy <= fin;
   }
 }
