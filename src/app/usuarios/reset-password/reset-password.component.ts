@@ -40,11 +40,11 @@ export class ResetPasswordComponent {
   }
 
   onSubmit() {
-    if (this.form.invalid || !this.token) return;
+    if (this.form.invalid) return;
     this.loading = true;
     this.error = null;
     const { password, confirmPassword } = this.form.value;
-    this.usuarios.resetPassword(password, confirmPassword, this.token).subscribe({
+    this.usuarios.resetPassword(password, confirmPassword, this.token || undefined).subscribe({
       next: () => {
         this.loading = false;
         this.utilsService.showMessage({
@@ -53,7 +53,8 @@ export class ResetPasswordComponent {
           icon: 'success',
         });
 
-        this.router.navigate(['/iniciar-sesion']);
+        if (this.token) this.router.navigate(['/iniciar-sesion']);
+        else this.router.navigate(['usuarios/mi-perfil'])
       },
       error: (err) => {
         this.loading = false;
