@@ -75,7 +75,7 @@ export class RegistrarUsuarioComponent implements OnInit {
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       correo: ['', [Validators.required, Validators.email]],
-      password_hash: ['', [Validators.required, passwordValidator]],
+      //password_hash: ['', [Validators.required, passwordValidator]],
       tipo_identificacion: [null, Validators.required],
       numero_identificacion: ['', Validators.required],
       fecha_nacimiento: [null, [Validators.required, mayorDeEdadValidator]],
