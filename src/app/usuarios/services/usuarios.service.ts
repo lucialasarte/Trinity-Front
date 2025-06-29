@@ -87,7 +87,7 @@ export class UsuariosService {
   }
 
   // POST /auth/forgot-password/reset
-  resetPassword(password: string, password_confirmación: string, token: string): Observable<any> {
+  resetPassword(password: string, password_confirmación: string, token?: string): Observable<any> {
     const headers = {
       Authorization: `Bearer ${token}`
     };

@@ -68,30 +68,6 @@
           </nz-form-control>
         </nz-form-item>
       </div>
-      <div nz-col nzSpan="12">
-        <nz-form-item>
-          <nz-form-label [nzSpan]="24" nzFor="password_hash" nzRequired
-            >Contraseña</nz-form-label
-          >
-          <nz-form-control [nzSpan]="24" [nzErrorTip]="passwordErrorTpl">
-            <input
-              nz-input
-              type="password"
-              formControlName="password_hash"
-              placeholder="Contraseña"
-            />
-            <ng-template #passwordErrorTpl let-control>
-              <span *ngIf="control.hasError('required')"
-                >La contraseña es obligatoria.</span
-              >
-              <span *ngIf="control.hasError('invalidPassword')">
-                La contraseña debe tener al menos 8 caracteres, una mayúscula y
-                un número.
-              </span>
-            </ng-template>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
     </div>
 
     <div nz-row [nzGutter]="16">
