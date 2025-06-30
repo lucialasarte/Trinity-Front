@@ -47,7 +47,7 @@
         Detalles de la Propiedad
         <button
           *ngIf="
-            auth.usuarioActual()?.permisos?.gestionar_propiedades &&
+            puedeVerPropiedad() &&
             !isEliminada
           "
           class="btn btn-secondary"
@@ -171,7 +171,7 @@
 
 
     <!-- Card Acciones -->
-    <div class="card card-acciones">
+    <div class="card card-acciones" *ngIf="puedeVerAcciones()">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <!-- Chat -->

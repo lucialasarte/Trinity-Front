@@ -447,4 +447,17 @@ export class DetalleReservaComponent {
 
     return hoy >= inicio && hoy <= fin;
   }
+
+  puedeVerPropiedad(): boolean {
+    if (this.esInquilino) return false;
+    if (this.esEncargado && !(this.propiedad.id_encargado === this.usuario()?.id))
+      return false;
+    return true;
+  }
+
+  puedeVerAcciones(): boolean {
+    if (this.esEncargado && !(this.propiedad.id_encargado === this.usuario()?.id))
+      return false;
+    return true;
+  }
 }
