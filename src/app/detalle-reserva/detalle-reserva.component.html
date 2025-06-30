@@ -4,7 +4,7 @@
     <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
       {{ reserva.estado }}
     </span>
-    <span *ngIf="isEnCurso" class="estado-badge en-curso">
+    <span *ngIf="isEnCurso()" class="estado-badge en-curso">
       En curso
     </span>
   </h2>
