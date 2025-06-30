@@ -181,7 +181,7 @@
           class="boton-lleno btn-sm"
           (click)="cancelar(this.reserva.id)"
           *ngIf="
-            reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada'
+            reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada' && !isEnCurso()
           "
         >
           Cancelar
