@@ -4,7 +4,7 @@
     <span class="estado-badge" [ngClass]="estadoClase(reserva.estado)">
       {{ reserva.estado }}
     </span>
-    <span *ngIf="isEnCurso" class="estado-badge en-curso">
+    <span *ngIf="isEnCurso()" class="estado-badge en-curso">
       En curso
     </span>
   </h2>
@@ -47,7 +47,7 @@
         Detalles de la Propiedad
         <button
           *ngIf="
-            auth.usuarioActual()?.permisos?.gestionar_propiedades &&
+            puedeVerPropiedad() &&
             !isEliminada
           "
           class="btn btn-secondary"
@@ -171,7 +171,7 @@
 
 
     <!-- Card Acciones -->
-    <div class="card card-acciones">
+    <div class="card card-acciones" *ngIf="puedeVerAcciones()">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <!-- Chat -->
@@ -181,7 +181,7 @@
           class="boton-lleno btn-sm"
           (click)="cancelar(this.reserva.id)"
           *ngIf="
-            reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada'
+            reserva.estado !== 'Finalizada' && reserva.estado !== 'Cancelada' && !isEnCurso()
           "
         >
           Cancelar

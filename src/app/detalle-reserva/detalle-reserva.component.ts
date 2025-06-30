@@ -439,12 +439,25 @@ export class DetalleReservaComponent {
   }
 
   isEnCurso(): boolean {
-    if (!this.reserva) return false;
+    if (!this.reserva || this.reserva.id_estado !== 1) return false;
 
     const hoy = new Date();
     const inicio = new Date(this.reserva.fecha_inicio);
     const fin = new Date(this.reserva.fecha_fin);
 
     return hoy >= inicio && hoy <= fin;
+  }
+
+  puedeVerPropiedad(): boolean {
+    if (this.esInquilino) return false;
+    if (this.esEncargado && !(this.propiedad.id_encargado === this.usuario()?.id))
+      return false;
+    return true;
+  }
+
+  puedeVerAcciones(): boolean {
+    if (this.esEncargado && !(this.propiedad.id_encargado === this.usuario()?.id))
+      return false;
+    return true;
   }
 }
