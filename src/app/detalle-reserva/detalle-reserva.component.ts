@@ -448,16 +448,26 @@ export class DetalleReservaComponent {
     return hoy >= inicio && hoy <= fin;
   }
 
-  puedeVerPropiedad(): boolean {
-    if (this.esInquilino) return false;
-    if (this.esEncargado && !(this.propiedad.id_encargado === this.usuario()?.id))
-      return false;
-    return true;
+  puedeAcciones(): boolean {
+  const usuario = this.auth.usuarioActual();
+  if (!usuario) return false;
+
+  const esEncargado = this.propiedad.id_encargado === usuario.id;
+  const esInquilino = this.reserva.id_inquilino === usuario.id;
+  const esAdmin = !!usuario.permisos?.gestionar_empleados;
+
+  return esEncargado || esInquilino || esAdmin;
+}
+
+
+  puedePropiedad(): boolean {
+    const usuario = this.auth.usuarioActual();
+    if (!usuario) return false;
+
+    const esAdmin = !!usuario.permisos?.gestionar_empleados;
+    const esEncargado = this.propiedad.id_encargado === usuario.id;
+
+    return esAdmin || esEncargado;
   }
 
-  puedeVerAcciones(): boolean {
-    if (this.esEncargado && !(this.propiedad.id_encargado === this.usuario()?.id))
-      return false;
-    return true;
-  }
 }

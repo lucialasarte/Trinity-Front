@@ -50,6 +50,7 @@
             puedeVerPropiedad() &&
             !isEliminada
           "
+          [disabled]="!puedePropiedad()"
           class="btn btn-secondary"
           (click)="verPropiedad(propiedad.id)"
           style="float: right; margin-bottom: 0px;padding: 6px;"
@@ -171,7 +172,7 @@
 
 
     <!-- Card Acciones -->
-    <div class="card card-acciones" *ngIf="puedeVerAcciones()">
+    <div class="card card-acciones" *ngIf="puedeAcciones()">
       <h3 class="card-title">Acciones</h3>
       <div class="card-content">
         <!-- Chat -->
@@ -207,14 +208,8 @@
           Confirmar Reserva
         </button>
         <!-- Calificar Propiedad (Inquilino)-->
-        <span
-          class="tooltip-wrapper"
-          *ngIf="
-            !auth.usuarioActual()?.permisos?.gestionar_propiedades &&
-            calificacionPropiedad?.confort == null
-          "
-        >
           <button
+            *ngIf="!auth.usuarioActual()?.permisos?.gestionar_propiedades && calificacionPropiedad?.confort == null"
             [disabled]="!puedeCalificar"
             class="boton-lleno btn-sm"
             (click)="calificar()"
@@ -223,9 +218,9 @@
               'La calificación podrá ser realizada en un plazo de 14 días luego de finalizada la reserva.'
             "
           >
-            Calificar
+            Calificar 
           </button>
-        </span>
+        
 
         <!-- Calificar Inquilino (Encargado/Admin) -->
         <button
@@ -236,9 +231,14 @@
           class="boton-lleno btn-sm"
           [disabled]="!puedeCalificar"
           (click)="calificar()"
+          nz-tooltip
+            [nzTooltipTitle]="
+              'La calificación podrá ser realizada en un plazo de 14 días luego de finalizada la reserva.'
+            "
         >
           Calificar Inquilino
         </button>
+     
       </div>
     </div>
 
