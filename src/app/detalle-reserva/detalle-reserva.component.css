@@ -233,10 +233,8 @@ button {
   background-color: #475c70;
   color: #fff4e6;
   border: 2px solid #2c3e508a;
-  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 5px;
   font-size: 14px;
   text-align: center;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
@@ -244,11 +242,9 @@ button {
 }
 .boton-lleno {
   width: 100%;
+  padding: 10px 20px;
+  margin: 5px;
 }
-
-
-
-
 
 button:hover {
   background-color: antiquewhite;
@@ -263,6 +259,31 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.btn-cancel{
+  background-color: #f5f5f5;
+  color: #2c3e508a; 
+  border-color: #2c3e508a; 
+  transition: all 0.3s ease;
+}
+.btn-aceptar{
+  background-color: #475c70;
+  color: #fff4e6;
+  border: 2px solid #2c3e508a;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.btn-aceptar:hover {
+  background-color: antiquewhite;
+  color: #2c3e50;
+  border-color: #2c3e508a;
+}
+.btn-aceptar:disabled {
+  background-color: #b8b5b5; 
+  color: #999; 
+  border-color: #ddd; 
+  cursor: not-allowed;
+}
 
 .fullscreen-spinner {
   position: fixed;
@@ -295,6 +316,7 @@ button:disabled {
   align-items: center;
   gap: 4px;
 }
+
 
 /* Estilos para todas las caritas por defecto (deseleccionadas) */
 .emoji-rate i {
