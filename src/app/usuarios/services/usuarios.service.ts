@@ -100,4 +100,8 @@ export class UsuariosService {
   getInquilinos(): Observable<Inquilino[]> {
     return this.http.get<Inquilino[]>(`${this.apiUrl}/inquilinos`);
   }
+
+  getInquilinosActivos(): Observable<Inquilino[]> {
+    return this.http.get<Inquilino[]>(`${this.apiUrl}/inquilinos/activos`);
+  }
 }

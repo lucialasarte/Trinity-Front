@@ -279,7 +279,7 @@ export class HomeComponent {
   agregarUsuario() {
     this.isAgregarUsuario = true;
     this.cargandoUsuarios = true;
-    this._getUsuarios();
+    this._getInquilinosActivos();
   }
 
   cargar(usuario: any) {
@@ -367,8 +367,8 @@ export class HomeComponent {
       });
   }
 
-  private _getUsuarios() {
-    this.userService.getUsuariosPorRol(3).subscribe({
+  private _getInquilinosActivos() {
+    this.userService.getInquilinosActivos().subscribe({
       next: (data) => {
         this.cargandoUsuarios = false;
         this.usuarios = data;
