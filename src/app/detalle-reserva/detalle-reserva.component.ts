@@ -439,7 +439,7 @@ export class DetalleReservaComponent {
   }
 
   isEnCurso(): boolean {
-    if (!this.reserva) return false;
+    if (!this.reserva || this.reserva.id_estado !== 1) return false;
 
     const hoy = new Date();
     const inicio = new Date(this.reserva.fecha_inicio);

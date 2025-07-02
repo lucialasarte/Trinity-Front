@@ -36,6 +36,9 @@
         <div class="perfil-row">
           <b>Número Identificación:</b> {{ user.numero_identificacion || "-" }}
         </div>
+        <div class="perfil-row">
+          <a [routerLink]="['/usuarios/reset-password']">Cambiar contraseña</a>
+        </div>
       </div>
     </div>
     
