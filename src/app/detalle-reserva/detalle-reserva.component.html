@@ -207,7 +207,7 @@
             auth.usuarioActual()?.permisos?.gestionar_empleados &&
             reserva.id_estado === 2
           "
-          [disabled]="reserva.documentacion.length < 0"
+          [disabled]="documentos.length == 0"
           class="boton-lleno btn-sm"
           (click)="confirmarReserva()"
         >
