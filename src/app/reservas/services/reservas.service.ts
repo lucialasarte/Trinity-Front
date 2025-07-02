@@ -63,4 +63,14 @@ export class ReservasService {
   confirmar(id: number) {
     return this.http.patch<any>(`${this.apiUrl}/confirmar/${id}`, {});
   }
+
+  subirDocumentacion(formData: FormData, idReserva: string) {
+    return this.http.post<string>(
+      `${this.apiUrl}/documentacion/${idReserva}`,
+      formData
+    );
+  }
+  eliminarDocumentacion(idDocumento: string) {
+    return this.http.delete(`${this.apiUrl}/documentacion/${idDocumento}`);
+  }
 }
