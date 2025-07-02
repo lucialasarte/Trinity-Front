@@ -194,6 +194,13 @@
         >
           Subir Documentación
         </button>
+        <input
+          type="file"
+          #inputImagen
+          accept="image/*"
+          style="display: none"
+          (change)="onImagenSeleccionada($event)"
+        />
         <!-- Confirmar Reserva Administrador -->
         <button
           *ngIf="
@@ -247,11 +254,21 @@
       *ngIf="propiedad.requiere_documentacion"
     >
       <h5>Documentación Adjunta</h5>
+
       <ul *ngIf="documentos.length > 0">
         <li *ngFor="let doc of documentos">
-          <a href="{{ doc.url }}" target="_blank">{{ doc.nombre }}</a>
+          <button class="boton-cerrar" (click)="eliminarDocumentacion(doc)">
+            <i class="fa fa-close"></i>
+          </button>
+          
+          <img
+            [src]="'http://localhost:8000/reservas/documentacion/' + doc"
+            alt="Documentacion"
+            class="imagen-reserva"
+          />
         </li>
       </ul>
+
       <p *ngIf="documentos.length === 0">No se ha subido documentación.</p>
     </div>
   </div>

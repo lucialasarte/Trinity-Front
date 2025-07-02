@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, ElementRef, ViewChild} from '@angular/core';
 import { Reserva } from '../reservas/models/reserva';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +17,7 @@ import { Chat } from './detalle-chat/models/chat';
   styleUrls: ['./detalle-reserva.component.css'],
 })
 export class DetalleReservaComponent {
+  @ViewChild('inputImagen') inputImagen!: ElementRef<HTMLInputElement>;
   reserva: Reserva = new Reserva();
   chatReserva: Chat[] = [];
   formMensaje!: FormGroup;
@@ -71,7 +72,6 @@ export class DetalleReservaComponent {
 
   onSubmitCalificacion() {
     const calificacion = this.formCalificacion.value;
-    console.log('Calificación exitosa:', calificacion);
     this.reservasService
       .calificarPropiedad(this.reserva.id, calificacion)
       .subscribe({
@@ -125,7 +125,6 @@ export class DetalleReservaComponent {
 
   onSubmitMensaje() {
     const mensaje = this.formMensaje.value;
-    console.log('Mensaje enviado:', mensaje);
     this.reservasService.enviarMensajeChat(this.reserva.id, mensaje).subscribe({
       next: () => {
         this.utilsService.showMessage({
@@ -213,7 +212,73 @@ export class DetalleReservaComponent {
     }
   }
 
-  subirDocumentacion() {}
+  subirDocumentacion() {
+    this.inputImagen.nativeElement.click();
+  }
+
+  onImagenSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      const id = this.reserva.id.toString();
+      this.reservasService.subirDocumentacion(formData, id).subscribe({
+        next: () => {
+          this.utilsService.showMessage({
+            title: 'Imagen subida con éxito',
+            message: 'La imagen se ha subido correctamente.',
+            icon: 'success',
+          });
+          this._getReserva(this.reserva.id);
+        },
+        error: (error) => {
+          this.utilsService.showMessage({
+            title: 'Error al subir la imagen',
+            message:
+              error.error.error ||
+              'No se pudo subir la imagen. Por favor, intente nuevamente.',
+            icon: 'error',
+          });
+        },
+      });
+    }
+
+    input.value = '';
+  }
+  eliminarDocumentacion(doc: string){
+    this.utilsService.showMessage({
+        title: '¿Estás seguro?',
+        message: '¿Querés eliminar esta imagen?',
+        icon: 'warning',
+        confirmButtonText: 'Si, eliminar!',
+        cancelButtonText: 'Cancelar',
+        showConfirmButton: true,
+        showCancelButton: true,
+        actionOnConfirm: () => {
+          this.reservasService.eliminarDocumentacion(doc).subscribe({
+            next: () => {
+              this.utilsService.showMessage({
+                title: 'Imagen eliminada',
+                message: 'La imagen fue eliminada correctamente.',
+                icon: 'success',
+              }); 
+              this._getReserva(this.reserva.id);          
+            },
+            error: (err) => {
+              console.error('Error al eliminar imagen:', err);
+              this.utilsService.showMessage({
+                title: 'Error',
+                message: 'No se pudo eliminar la imagen.',
+                icon: 'error',
+              });
+            },
+          });
+        },
+      });
+
+  }
 
   verPropiedad(id: number) {
     this.router.navigate(['/detalle-propiedad', id]);
@@ -247,7 +312,7 @@ export class DetalleReservaComponent {
         this._getInquilino(this.reserva.id_inquilino);
         this.propiedad = data.propiedad;
         this.calificacionPropiedad = data.calificacion_propiedad;
-        console.log(this.calificacionPropiedad);
+        this.documentos = data.reserva.id_doc;
         this._getEncargado(this.propiedad.id_encargado);
         this.calificacionInquilino = data.calificacion_inquilino?.calificacion;
         this.validarCalificacion();
