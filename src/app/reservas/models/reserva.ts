@@ -14,7 +14,8 @@ export class Reserva {
   monto_total: number;
   // huespedes: Array<Huesped>;
   //   fecha_cancelacion?: Date;
-  documentacion: Array<Documento>;
+  documentacion: [number];
+  id_doc:[number];
   id_usuario_carga?: number;
   constructor(obj?: any) {
     this.id = (obj && obj.id) || null;
@@ -33,7 +34,8 @@ export class Reserva {
     //   obj && obj.fecha_cancelacion
     //     ? new Date(obj.fecha_cancelacion)
     //     : undefined;
-    this.documentacion = obj && obj.documentacion ? [...obj.documentacion] : [];
+    this.documentacion = (obj && obj.id_doc) || [];
+    this.id_doc = (obj && obj.id_doc) || [];
     this.estado = (obj && obj.estado) || null;
   }
 

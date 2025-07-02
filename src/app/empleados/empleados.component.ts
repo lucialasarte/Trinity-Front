@@ -191,6 +191,7 @@ export class EmpleadosComponent {
         this.spinnerVisible = false;
         this.utilsService.showMessage({
           icon: 'success',
+          title: 'Empleado eliminado',
           message: 'El empleado ha sido eliminado correctamente.',
         });
         this._getEmpleados();
