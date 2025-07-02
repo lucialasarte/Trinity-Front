@@ -40,8 +40,10 @@ export class AuthService {
       .post<any>(`${this.apiUrl}/login`, { correo, password })
       .pipe(
         tap((response) => {
-          if(!(response.rol==3) && localStorage.getItem('reservaIntento')){
-            localStorage.removeItem('reservaIntento');
+          if (!(response.rol == 3) && localStorage.getItem('reservaIntento')) {
+            const intento = JSON.parse(localStorage.getItem('reservaIntento')!);
+            intento.esEmpleado = true;
+            localStorage.setItem('reservaIntento', JSON.stringify(intento));
           }
           if (response.token) {
             this.setToken(response.token); // Guarda el token JWT

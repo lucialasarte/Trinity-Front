@@ -151,16 +151,28 @@
         <p class="mensaje">Debe registrarse para realizar reservas.</p>
         <div class="acciones">
           <button
-            class="btn-registrarse"
+            class="login-header-btn"
             nz-button
             nzType="default"
+            (click)="redireccionarALogin()"
+          >
+            <span
+              nz-icon
+              nzType="user"
+              nzTheme="outline"
+              class="login-header-icon"
+            ></span>
+            <span class="label">Iniciar Sesión</span>
+          </button>
+          <button
+            class="register-header-btn"
+            nz-button
+            nzType="primary"
             (click)="redireccionarARegistro()"
           >
-            Registrarse
+            <span nz-icon nzType="user-add" nzTheme="outline"></span>
+            <span class="label">Registrarse</span>
           </button>
-          <!-- <button class="btn-iniciar-sesion" nz-button nzType="primary" (click)="redireccionarALogin()">
-            Iniciar Sesión
-          </button> -->
         </div>
       </div>
     </div>

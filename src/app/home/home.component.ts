@@ -86,7 +86,6 @@ export class HomeComponent {
       } else {
         this.isVisible = true;
       }
-      console.log(reservaIntento);
     }
   }
 
@@ -105,8 +104,8 @@ export class HomeComponent {
 
     this.search = {
       id: formValue.id,
-      checkin: checkin,
-      checkout: checkout,
+      checkin: new Date(checkin),
+      checkout: new Date(checkout),
       huespedes: formValue.huespedes,
     };
 
@@ -163,30 +162,73 @@ export class HomeComponent {
       monto_pagado: this.montoSena,
       id_inquilino: this.idUsuario,
     };
-    this.reservasService.createReserva(reserva).subscribe({
-      next: (data) => {
-        this.cargando = false;
-        this.utilsService.showMessage({
-          title: 'Reserva creada con éxito',
-          message: 'Tu reserva ha sido creada exitosamente.',
-          icon: 'success',
-        });
-        this.handleCancelReserva();
-        this.form.reset();
-        this.router.navigate(['/detalle-reserva', data.id]);
-      },
-      error: (error) => {
-        this.cargando = false;
-        console.error('Error al crear la reserva:', error);
-        this.utilsService.showMessage({
-          title: 'Error al crear la reserva',
-          message:
-            error.error.error ||
-            'No se pudo crear la reserva. Por favor, intenta nuevamente.',
-          icon: 'error',
-        });
-      },
-    });
+    this.userService
+      .getUsuarioPorId(this.idUsuario)
+      .subscribe((usuario: any) => {
+        console.log('Usuario seleccionado:', usuario);
+
+        const tarjeta =
+          usuario?.tarjetas && usuario.tarjetas.length > 0
+            ? usuario.tarjetas[0]
+            : undefined;
+
+        let fechaVencimiento: Date | null = null;
+        if (tarjeta?.fecha_vencimiento) {
+          const [mesStr, anioStr] = tarjeta.fecha_vencimiento.split('/');
+          const mes = parseInt(mesStr, 10); // de 1 a 12
+          let anio = parseInt(anioStr, 10);
+
+          // Corregir años abreviados tipo "26" → 2026
+          if (anio < 100) {
+            anio += 2000;
+          }
+
+          // Último día del mes
+          fechaVencimiento = new Date(anio, mes, 0, 23, 59, 59);
+        }
+
+        if (fechaVencimiento && fechaVencimiento < new Date()) {
+          this.cargando = false;
+          this.utilsService.showMessage({
+            title: 'Tarjeta vencida',
+            message: 'Tu tarjeta de crédito está vencida.',
+            icon: 'error',
+          });
+          return;
+        } else if (usuario?.id == 7) {
+          this.cargando = false;
+          this.utilsService.showMessage({
+            title: 'Pago Rechazado',
+            message: 'Fondos insuficientes.',
+            icon: 'error',
+          });
+        } else {
+          this.reservasService.createReserva(reserva).subscribe({
+            next: (data) => {
+              this.cargando = false;
+              this.utilsService.showMessage({
+                title: 'Reserva creada con éxito',
+                message: 'Tu reserva ha sido creada exitosamente.',
+                icon: 'success',
+              });
+              this.handleCancelReserva();
+              this.form.reset();
+              this.router.navigate(['/detalle-reserva', data.id]);
+            },
+            error: (error) => {
+              this.cargando = false;
+              console.error('Error al crear la reserva:', error);
+              this.utilsService.showMessage({
+                title: 'Error al crear la reserva',
+                message:
+                  error.error.error ||
+                  'No se pudo crear la reserva. Por favor, intenta nuevamente.',
+                icon: 'error',
+              });
+            },
+          });
+        }
+      });
   }
 
   onSubmitReserva() {
@@ -329,18 +371,18 @@ export class HomeComponent {
 
   // para implementar esto del login tengo que ver que me devulevan el rol en el login con el token
 
-  // redireccionarALogin() {
-  //   localStorage.setItem(
-  //     'reservaIntento',
-  //     JSON.stringify({
-  //       propiedad: this.porpiedadParaReservar,
-  //       search: this.search,
-  //       returnUrl: this.router.url,
-  //       esEmpleado: false,
-  //     })
-  //   );
-  //   this.router.navigate(['/iniciar-sesion']);
-  // }
+  redireccionarALogin() {
+    localStorage.setItem(
+      'reservaIntento',
+      JSON.stringify({
+        propiedad: this.porpiedadParaReservar,
+        search: this.search,
+        returnUrl: this.router.url,
+        esEmpleado: false,
+      })
+    );
+    this.router.navigate(['/iniciar-sesion']);
+  }
 
   private _initForm() {
     this.form = this.fb.group({
