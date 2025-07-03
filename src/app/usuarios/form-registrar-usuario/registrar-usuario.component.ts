@@ -22,7 +22,7 @@ import { RolEnum } from '../enums/rol.enum';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import Swal from 'sweetalert2';
 import { mayorDeEdadValidator } from 'src/app/shared/models/validatorMayor';
-import { fechaNoVencidaValidator } from 'src/app/shared/models/validadorVenida';
+import { fechaNoVencidaValidator, fechaNoVencidaValidatorError } from 'src/app/shared/models/validadorVenida';
 import { passwordValidator } from 'src/app/shared/models/passwordValidator';
 import { UtilsService } from 'src/app/shared/services/utils.service';
 import { environment } from 'src/environments/environment';
@@ -89,7 +89,7 @@ export class RegistrarUsuarioComponent implements OnInit {
     return this.fb.group({
       numero: [null, Validators.required],
       nombre_titular: [null, Validators.required],
-      fecha_vencimiento: [null, [Validators.required, fechaNoVencidaValidator]],
+      fecha_vencimiento: [null, [Validators.required, fechaNoVencidaValidatorError]],
       cvv: [null, Validators.required],
       usuario_id: [null],
     });
