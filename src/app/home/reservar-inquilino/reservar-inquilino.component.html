@@ -98,6 +98,12 @@
     </div>
   </div>
   <nz-divider></nz-divider>
+  <div class="politica-reserva" *ngIf="propiedad.requiere_documentacion">
+    <p>
+      <strong>Atención: </strong>Tu reserva quedará pendiente hasta que
+      completes la documentación adicional requerida para esta propiedad.
+    </p>
+  </div>
   <div class="politica-reserva">
     <p>
       <strong>Política de Reserva: </strong>{{ propiedad.pol_reserva }}. El

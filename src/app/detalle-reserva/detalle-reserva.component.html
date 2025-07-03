@@ -136,7 +136,8 @@
 
     <!-- Card Calificación Propiedad -->
     <div class="card card-calificacion" *ngIf="calificacionPropiedad !== null">
-      <h3 class="card-title">Calificación Recibida</h3>
+      <h3 *ngIf="auth.usuarioActual()?.permisos?.gestionar_propiedades" class="card-title">Calificación Recibida</h3>
+      <h3  *ngIf="!auth.usuarioActual()?.permisos?.gestionar_propiedades" class="card-title">Tu calificación</h3>
       <div>
         <label style="padding: 10px;">Personal:</label>
         <nz-rate [ngModel]="calificacionPropiedad.personal" disabled></nz-rate>
@@ -189,7 +190,7 @@
         </button>
         <!-- Subir Documentacion -->
         <button
-          *ngIf="propiedad.requiere_documentacion"
+          *ngIf="propiedad.requiere_documentacion && reserva.id_estado === 2 "
           class="boton-lleno btn-sm"
           (click)="subirDocumentacion()"
         >
@@ -257,7 +258,7 @@
 
       <ul *ngIf="documentos.length > 0">
         <li *ngFor="let doc of documentos">
-          <button class="boton-cerrar" (click)="eliminarDocumentacion(doc)">
+          <button *ngIf="reserva.id_estado === 2" class="boton-cerrar" (click)="eliminarDocumentacion(doc)">
             <i class="fa fa-close"></i>
           </button>
           
@@ -293,6 +294,7 @@
       [esEncargado]="esEncargado"
       [esInquilino]="esInquilino"
       [chat]="chatReserva || []"
+      [id_estado]="reserva.id_estado"
     >
     </app-detalle-chat>
     <form

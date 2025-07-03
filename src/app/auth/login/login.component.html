@@ -19,7 +19,7 @@
         </div>
       </nz-form-control>
     </nz-form-item>
-    <button nz-button nzType="primary" class="login-btn" [disabled]="form.invalid" style="width:100%;margin-top:12px;align-items: center;">Entrar</button>
+    <button nz-button   type="submit" nzType="primary" class="login-btn" [disabled]="form.invalid" style="width:100%;margin-top:12px;align-items: center;">Entrar</button>
     <div style="text-align: center; margin-top: 10px;">
       <a (click)="toggleForgotPassword()">¿Olvidó su contraseña?</a>
     </div>
@@ -39,10 +39,10 @@
     </nz-form-item>
     <div nz-row [nzGutter]="8" style="margin-top:12px;">
       <div nz-col [nzSpan]="12">
-        <button nz-button class="btn-cancel" style="width:100%;" (click)="toggleForgotPassword()">Cancelar</button>
+        <button nz-button class="btn-cancel"   type="button" style="width:100%;" (click)="toggleForgotPassword()">Cancelar</button>
       </div>
       <div nz-col [nzSpan]="12">
-        <button nz-button class="btn-guardar" style="width:100%;" [disabled]="forgotPasswordForm.invalid" [nzLoading]="loading">Enviar</button>
+        <button nz-button class="btn-guardar"  type="submit" style="width:100%;" [disabled]="forgotPasswordForm.invalid" [nzLoading]="loading">Enviar</button>
       </div>
     </div>
   </form>

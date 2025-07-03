@@ -247,6 +247,7 @@ export class DetalleReservaComponent {
 
     input.value = '';
   }
+  
   eliminarDocumentacion(doc: string){
     this.utilsService.showMessage({
         title: '¿Estás seguro?',

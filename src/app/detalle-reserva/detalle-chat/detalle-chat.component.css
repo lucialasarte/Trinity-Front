@@ -39,3 +39,11 @@
   font-size: 11px;
   color: #999;
 }
+
+.chat-vacio {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  
+  font-size: 1.1rem;
+}
