@@ -292,6 +292,9 @@ export class DetalleReservaComponent {
     this.esEncargado =
       !this.esAdmin && !!usuario?.permisos?.gestionar_propiedades;
     this.esInquilino = !this.esAdmin && !this.esEncargado;
+    if(usuario?.id == this.propiedad.id_encargado){
+      this.esEncargado = true;
+    }
 
     this.isVisibleChat = true;
   }
