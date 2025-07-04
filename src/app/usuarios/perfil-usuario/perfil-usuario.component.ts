@@ -1,6 +1,6 @@
 import { Component, computed, effect, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsuariosService } from '../services/usuarios.service';
 import Swal from 'sweetalert2';
 import { SafeUrl } from '@angular/platform-browser';
@@ -8,11 +8,14 @@ import { environment } from 'src/environments/environment';
 import { Usuario } from '../models/usuario';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { EditarUsuarioComponent } from './perfil-usuario-editar/perfil-usuario-editar.component';
+import { Router } from '@angular/router';
+import { UtilsService } from 'src/app/shared/services/utils.service';
+import { error } from '@ant-design/icons-angular/public_api';
 
 @Component({
   selector: 'app-perfil-usuario',
   templateUrl: './perfil-usuario.component.html',
-  styleUrls: ['./perfil-usuario.component.css']
+  styleUrls: ['./perfil-usuario.component.css'],
 })
 export class PerfilUsuarioComponent {
   // Signal computado que obtiene el usuario actual desde AuthService
@@ -21,29 +24,34 @@ export class PerfilUsuarioComponent {
   imagenesDocIds: number[] = [];
   fotoPerfilUrl: SafeUrl | string | null = null;
   subiendoDoc = false;
-  user !: Usuario;
+  user!: Usuario;
   apiUrl = `${environment.apiUrl}/usuarios`;
   imagenUrls: string[] = [];
+  isVisible = false;
+  password!: FormGroup;
+  currentStep = 0;
   // Inyección del AuthService como público para acceso en plantilla
   constructor(
     public auth: AuthService,
     private fb: FormBuilder,
     private usuariosService: UsuariosService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private router: Router,
+    private utilsService: UtilsService
   ) {
     // Si no hay usuario cargado (por ejemplo, acceso directo por URL), intenta cargarlo desde el token
     if (!this.auth.usuarioActual()) {
       this.auth.cargarUsuarioDesdeToken();
     }
     this.form = this.fb.group({
-      foto_perfil: [null]
+      foto_perfil: [null],
     });
     // Efecto reactivo: cada vez que cambia el usuario, refresca las imágenes
     effect(() => {
       // this.cargarImagenesUsuario();
     });
   }
-  
+
   // cargarImagenesUsuario() {
   //   const usuario = this.usuario();
   //   if (!usuario) return;
@@ -85,12 +93,50 @@ export class PerfilUsuarioComponent {
     }
   }
 
+  recuperarPassword() {
+    this.password = this.fb.group({
+      password: ['', [Validators.required]],
+    });
+    this.isVisible = true;
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+    this.password.reset();
+    this.currentStep = 0;
+  }
+
+  passOk() {
+    this.auth.checkPassword(this.password.value.password).subscribe({
+      next: () => {
+        this.currentStep = 1;
+      },
+      error: (error) => {
+        this.utilsService.showMessage({
+          title: 'Error al verificar contraseña',
+          icon: 'error',
+          message: error.error.error || 'Ocurrió un error.',
+        });
+      },
+    });
+  }
+
+  onCloseModal(): void {
+    this.isVisible = false;
+    this.password.reset();
+    this.currentStep = 0;
+  }
+
   onSubmitFotos() {
     const usuario = this.usuario();
     if (!this.form.valid || !usuario) return;
     const idUsuario = usuario.id;
     if (typeof idUsuario !== 'number') {
-      Swal.fire({ icon: 'error', title: 'Usuario no válido', text: 'No se pudo identificar el usuario.' });
+      Swal.fire({
+        icon: 'error',
+        title: 'Usuario no válido',
+        text: 'No se pudo identificar el usuario.',
+      });
       return;
     }
     const fotoPerfil = this.form.get('foto_perfil')?.value;
@@ -99,12 +145,21 @@ export class PerfilUsuarioComponent {
       formData.append('foto_perfil', fotoPerfil);
       this.usuariosService.subirImagenDocumento(formData, idUsuario).subscribe({
         next: () => {
-          Swal.fire({ icon: 'success', title: 'Foto de perfil actualizada', timer: 1200, showConfirmButton: false });
+          Swal.fire({
+            icon: 'success',
+            title: 'Foto de perfil actualizada',
+            timer: 1200,
+            showConfirmButton: false,
+          });
           this.auth.refrescarUsuarioActual();
         },
         error: (err) => {
-          Swal.fire({ icon: 'error', title: 'Error al subir foto de perfil', text: err?.error?.message || 'Intente nuevamente.' });
-        }
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al subir foto de perfil',
+            text: err?.error?.message || 'Intente nuevamente.',
+          });
+        },
       });
       this.form.reset();
     } else {
@@ -124,12 +179,21 @@ export class PerfilUsuarioComponent {
       if (result.isConfirmed) {
         this.usuariosService.eliminarImagenDoc(idImagen).subscribe({
           next: () => {
-            Swal.fire({ icon: 'success', title: 'Documento eliminado', timer: 1200, showConfirmButton: false });
+            Swal.fire({
+              icon: 'success',
+              title: 'Documento eliminado',
+              timer: 1200,
+              showConfirmButton: false,
+            });
             this.auth.refrescarUsuarioActual();
           },
           error: (err) => {
-            Swal.fire({ icon: 'error', title: 'Error al eliminar documento', text: err?.error?.message || 'Intente nuevamente.' });
-          }
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar documento',
+              text: err?.error?.message || 'Intente nuevamente.',
+            });
+          },
         });
       }
     });
@@ -150,33 +214,54 @@ export class PerfilUsuarioComponent {
     this.subiendoDoc = true;
     const formData = new FormData();
     formData.append('image', file);
-    this.usuariosService.subirImagenDocAdicional(formData, idUsuario).subscribe({
-      next: () => {
-        this.subiendoDoc = false;
-        Swal.fire({ icon: 'success', title: 'Documento subido', timer: 1200, showConfirmButton: false });
-        this.auth.refrescarUsuarioActual();
+    this.usuariosService
+      .subirImagenDocAdicional(formData, idUsuario)
+      .subscribe({
+        next: () => {
+          this.subiendoDoc = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Documento subido',
+            timer: 1200,
+            showConfirmButton: false,
+          });
+          this.auth.refrescarUsuarioActual();
+        },
+        error: (err) => {
+          this.subiendoDoc = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al subir documento',
+            text: err?.error?.message || 'Intente nuevamente.',
+          });
+        },
+      });
+  }
+  updateUser(id: number) {
+    const modalRef = this.modal.create({
+      nzContent: EditarUsuarioComponent,
+      nzWidth: 990,
+      nzFooter: null,
+      nzData: {
+        usuarioId: id,
+        rol: this.auth.usuarioActual()?.roles[0].id,
       },
-      error: (err) => {
-        this.subiendoDoc = false;
-        Swal.fire({ icon: 'error', title: 'Error al subir documento', text: err?.error?.message || 'Intente nuevamente.' });
+    });
+    modalRef.afterClose.subscribe((usuarioEditado) => {
+      if (usuarioEditado) {
+        this.auth.refrescarUsuarioActual();
       }
     });
   }
-  updateUser(id: number) {
-      const modalRef = this.modal.create({
-            nzContent: EditarUsuarioComponent,
-            nzWidth: 990,
-            nzFooter: null,
-            nzData: {
-              usuarioId: id,
-              rol: this.auth.usuarioActual()?.roles[0].id,
-          },
-          });
-          modalRef.afterClose.subscribe((usuarioEditado) => {
-            if (usuarioEditado) {
-              this.auth.refrescarUsuarioActual();
-            }
-          });
-    }
 
+  get modalTitle(): string {
+    switch (this.currentStep) {
+      case 0:
+        return 'Verificar contraseña actual';
+      case 1:
+        return 'Ingresar nueva contraseña';
+      default:
+        return '';
+    }
+  }
 }

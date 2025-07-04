@@ -1,14 +1,15 @@
 <div class="perfil-container">
-  <h2>Mi Perfil 
+  <h2>
+    Mi Perfil
     <div *ngIf="usuario() as user">
       <button
-          class="btn btn-secondary"
-          (click)="updateUser(user.id)"
-          style="float: right">
-          <i class="fa fa-pencil"></i>
-  </button>
+        class="btn btn-secondary"
+        (click)="updateUser(user.id)"
+        style="float: right"
+      >
+        <i class="fa fa-pencil"></i>
+      </button>
     </div>
-    
   </h2>
   <div *ngIf="usuario() as user">
     <div class="perfil-grid">
@@ -37,41 +38,43 @@
           <b>Número Identificación:</b> {{ user.numero_identificacion || "-" }}
         </div>
         <div class="perfil-row">
-          <a [routerLink]="['/usuarios/reset-password']">Cambiar contraseña</a>
+          <button class="cambiar-contra">
+            <a (click)="recuperarPassword()">Cambiar contraseña</a>
+          </button>
         </div>
       </div>
     </div>
-    
+
     <div *ngIf="!user.permisos?.gestionar_propiedades">
       <hr />
-    <div *ngIf="user.tarjetas.length > 0" class="perfil-pago">
-      <div class="perfil-row"><b>Datos de Pago</b></div>
-      <div class="perfil-grid">
-        <div class="perfil-col">
-          <div class="perfil-row">
-            <b>Número de Tarjeta:</b> **** **** ****
-            {{ user.tarjetas[0].numero.toString().slice(-4) }}
+      <div *ngIf="user.tarjetas.length > 0" class="perfil-pago">
+        <div class="perfil-row"><b>Datos de Pago</b></div>
+        <div class="perfil-grid">
+          <div class="perfil-col">
+            <div class="perfil-row">
+              <b>Número de Tarjeta:</b> **** **** ****
+              {{ user.tarjetas[0].numero.toString().slice(-4) }}
+            </div>
+          </div>
+          <div class="perfil-col">
+            <div class="perfil-row">
+              <b>Fecha de Vencimiento:</b>
+              {{ user.tarjetas[0].fecha_vencimiento || "-" }}
+            </div>
           </div>
         </div>
-        <div class="perfil-col">
-          <div class="perfil-row">
-            <b>Fecha de Vencimiento:</b>
-            {{ user.tarjetas[0].fecha_vencimiento || "-" }}
-          </div>
-        </div>
+      </div>
+      <hr />
+    </div>
+    <div *ngIf="user?.id_imagenes" class="imagenes-grid">
+      <div class="imagen-wrapper" *ngFor="let imagen of user.id_imagenes">
+        <img
+          [src]="'http://localhost:8000/usuarios/imagenDoc/' + imagen"
+          alt="imagen-propiedad"
+          class="imagen-propiedad"
+        />
       </div>
     </div>
-     <hr />
-</div>
-   <div *ngIf="user?.id_imagenes" class="imagenes-grid">
-        <div class="imagen-wrapper" *ngFor="let imagen of user.id_imagenes">
-          <img
-            [src]="'http://localhost:8000/usuarios/imagenDoc/' + imagen"
-            alt="imagen-propiedad"
-            class="imagen-propiedad"
-          />
-        </div>
-      </div>
     <!-- <div class="perfil-row">
       <b>Foto de perfil actual:</b>
       <ng-container *ngIf="fotoPerfilUrl && fotoPerfilUrl !== 'assets/anonimo.jpg'; else noFotoPerfil">
@@ -122,3 +125,50 @@
     </div>
   </div>
 </div>
+
+<!-- Steps -->
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzFooter]="null"
+  nzWidth="400px"
+  (nzOnCancel)="handleCancel()"
+>
+  <nz-steps [nzCurrent]="currentStep">
+    <nz-step nzTitle="Verificar contraseña"></nz-step>
+    <nz-step nzTitle="Nueva contraseña"></nz-step>
+  </nz-steps>
+
+  <div *nzModalContent [ngSwitch]="currentStep">
+    <!-- PASO 1 -->
+
+    <div *ngSwitchCase="0" class="verificar-container">
+      <p class="verificar-text">Por favor, ingresá tu contraseña actual.</p>
+      <form [formGroup]="password" class="verificar-form">
+        <label class="verificar-label">Contraseña actual:</label>
+        <input
+          nz-input
+          formControlName="password"
+          placeholder="Ingresá tu contraseña actual"
+          type="password"
+        />
+        <div class="verificar-boton">
+          <button
+            class="cambiar-contra"
+            nz-button
+            nzType="primary"
+            [disabled]="password.invalid"
+            (click)="passOk()"
+          >
+            Verificar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- PASO 2 -->
+    <div *ngSwitchCase="1">
+      <app-reset-password [isModal]="true" (onClose)="onCloseModal()">
+      </app-reset-password>
+    </div>
+  </div>
+</nz-modal>

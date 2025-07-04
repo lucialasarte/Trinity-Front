@@ -132,3 +132,51 @@
   margin: 0 auto;
   border-radius: 12px;
 }
+
+.verificar-container {
+  padding: 24px;
+}
+
+.verificar-text {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.verificar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.verificar-label {
+  font-weight: 500;
+  color: #444;
+}
+
+.verificar-boton {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+button[nz-button] {
+  min-width: 100px;
+}
+
+
+.cambiar-contra{
+  background-color: #475c70;
+  color: #fff4e6;
+  border: 2px solid #2c3e508a;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  margin: 0px;
+  &:hover {
+    background-color: antiquewhite;
+    color: #2c3e508a;
+    border-color: #2c3e508a;
+  }
+}

@@ -196,6 +196,7 @@
         [precioTotal]="precioTotal"
         [montoSena]="montoSena"
       ></app-reservar-inquilino>
+
       <div class="row">
         <div
           *ngIf="!isAgregarUsuario && idUsuario === 0"
@@ -237,6 +238,7 @@
               </form>
             </div>
           </div>
+
           <div class="table-container">
             <nz-table
               #usuariosTable
@@ -289,11 +291,12 @@
             <!-- Mensaje si no hay usuarios -->
             <div
               *ngIf="!usuariosFiltrados || usuariosFiltrados.length === 0"
-              class="mensaje-sin-propiedades"
+              class=" col-4 no-user"
             >
-              No hay usuarios.
+              No hay usuarios activos.
             </div>
           </div>
+
         </div>
       </div>
       <div *ngIf="idUsuario !== 0" class="usuario-seleccionado-card">
