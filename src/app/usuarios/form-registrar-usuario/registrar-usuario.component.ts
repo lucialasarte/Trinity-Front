@@ -237,21 +237,12 @@ export class RegistrarUsuarioComponent implements OnInit {
             this.modalRef.close(response); 
           },
           error: (error) => {
-            
-            if (error.status === 400 && error.error) {
-              const msg =
-                error.error.message ||
-                error.error.error ||
-                error.statusText ||
-                'Error desconocido';
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: msg,
-              });
-            } else {
-              console.error('Error al crear el usuario:', error);
-            }
+            this.utilsService.showMessage({
+              title: 'Error al crear usuario',
+              message:
+                error.error.error || 'Error al crear usuario. Por favor, intente nuevamente.',
+              icon: 'error',
+            });
           },
         });
     } else {
