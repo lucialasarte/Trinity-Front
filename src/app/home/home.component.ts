@@ -415,6 +415,9 @@ export class HomeComponent {
         this.cargandoUsuarios = false;
         this.usuarios = data;
         this.usuariosFiltrados = data;
+        if (data.length === 0) {
+          this.formBuscar.get('dato')?.disable();
+        }
       },
       error: (error) => {
         this.cargandoUsuarios = false;

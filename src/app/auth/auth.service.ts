@@ -59,6 +59,10 @@ export class AuthService {
         })
       );
   }
+  checkPassword(password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/check-password`, { password });
+  }
+    
 
   /**
    * Cierra la sesión: elimina el token, limpia el usuario y redirige al login.
@@ -166,6 +170,8 @@ export class AuthService {
     }
   }
 }
+
+  
 
 /**
  * USO RECOMENDADO EN COMPONENTES:
