@@ -102,6 +102,13 @@
 
               <td>
                 <button
+                  *ngIf="auth.usuarioActual()?.permisos?.gestionar_empleados"
+                  (click)="eliminarInquilino(inquilino.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  <i class="fa fa-trash"></i> Eliminar
+                </button>
+                <button
                   (click)="cambiarEstado(inquilino.id)"
                   class="btn btn-warning btn-sm"
                 >

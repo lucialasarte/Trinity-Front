@@ -56,7 +56,20 @@ export class InquilinosComponent {
       },
     });
   }
-
+  eliminarInquilino(id: number) {
+    this.utilsService.showMessage2({
+      title: '¿Estás seguro?',
+      message: '¿Querés eliminar al inquilino?',
+      icon: 'warning',
+      confirmButtonText: 'Si, eliminar!',
+      cancelButtonText: 'Cancelar',
+      showConfirmButton: true,
+      showCancelButton: true,
+      actionOnConfirm: () => {
+        this._eliminarInquilino(id);
+      },
+    });
+  }
   cambiarEstadoInquilino(id: number) {
     this.userService.cambiar_estado_inquilino(id).subscribe({
       next: (data) => {
@@ -136,6 +149,32 @@ export class InquilinosComponent {
   private _initForm() {
     this.form = this.fb.group({
       dato: [null, [Validators.required, Validators.minLength(4)]],
+    });
+  }
+
+  private _eliminarInquilino(id: number) {
+    this.inquilinoService.eliminarInquilino(id).subscribe({
+      next: (data) => {
+        this.utilsService.showMessage({
+          icon: 'success',
+          title: 'Inquilino eliminado',
+          message: `El inquilino ha sido eliminado correctamente.`,
+        });
+        this._getInquilinos();
+      },
+      error: (error) => {
+        this.utilsService.showMessage2({
+          icon: 'error',
+          title: 'Error al eliminar inquilino',
+          message: error.error.error ||`No se pudo eliminar el inquilino.`,
+          showConfirmButton: true,
+          showCancelButton: false,
+          confirmButtonText: 'Aceptar',
+          actionOnConfirm: () => {
+            
+          }
+        });
+      },
     });
   }
 }

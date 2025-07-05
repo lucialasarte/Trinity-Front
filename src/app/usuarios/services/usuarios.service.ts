@@ -104,4 +104,9 @@ export class UsuariosService {
   getInquilinosActivos(): Observable<Inquilino[]> {
     return this.http.get<Inquilino[]>(`${this.apiUrl}/inquilinos/activos`);
   }
+
+  deleteMe(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/me`);
+  }
+
 }

@@ -203,6 +203,21 @@ export class PerfilUsuarioComponent {
     return `${environment.apiUrl}/usuarios/imagenDoc/${id}`;
   }
 
+  eliminarUsuario(id: number) {
+    this.utilsService.showMessage2({
+      title: '¿Eliminar usuario?',
+      message: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      actionOnConfirm: () => {
+        this._deleteMe(id);
+      },
+    });
+  }
+
   /**
    * Maneja la carga reactiva y asincrónica de un documento adicional.
    * Muestra feedback visual y actualiza la UI en tiempo real.
@@ -263,5 +278,25 @@ export class PerfilUsuarioComponent {
       default:
         return '';
     }
+  }
+
+  private _deleteMe(id: number) {
+    this.usuariosService.deleteMe(id).subscribe({
+      next: () => {
+        this.utilsService.showMessage({
+          icon: 'success',
+          title: 'Usuario eliminado',
+        });
+        this.auth.logout();
+        this.router.navigate(['/iniciar-sesion']);
+      },
+      error: (err) => {
+        this.utilsService.showMessage({
+          icon: 'error',
+          title: 'Error al eliminar usuario',
+          message: err?.error?.error || 'Intente nuevamente.',
+        });
+      },
+    });
   }
 }
