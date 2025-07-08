@@ -1,10 +1,7 @@
 import { Component, computed } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { PropiedadesService } from '../propiedades/services/propiedades.service';
@@ -296,9 +293,8 @@ export class HomeComponent {
         },
         error: (error) => {
           this.cargando = false;
-          console.error('Error al crear la reserva:', error);
           this.utilsService.showMessage({
-            title: 'Error al crear la reserva',
+            title: error.error.title || 'Error al crear la reserva',
             message:
               error.error.error ||
               'No se pudo crear la reserva. Por favor, intenta nuevamente.',

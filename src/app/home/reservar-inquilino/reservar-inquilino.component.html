@@ -100,8 +100,13 @@
   <nz-divider></nz-divider>
   <div class="politica-reserva" *ngIf="propiedad.requiere_documentacion">
     <p>
-      <strong>Atención: </strong>Tu reserva quedará pendiente hasta que
+      <strong>Política de Documentación: </strong>Tu reserva quedará pendiente hasta que
       completes la documentación adicional requerida para esta propiedad.
+    </p>
+  </div>
+  <div class="politica-reserva" *ngIf="!propiedad.requiere_documentacion">
+    <p>
+      <strong>Política de Documentación: </strong>Esta propiedad no requiere ninguna documentación adicional.
     </p>
   </div>
   <div class="politica-reserva">

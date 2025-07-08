@@ -274,7 +274,7 @@
                         : "-"
                     }}
                   </td>
-                  <td>{{ usuario?.pais?.nombre || "-" }}</td>
+                  <td>{{ usuario?.pais || "-" }}</td>
                   <td class="acciones-column">
                     <button
                       nz-button
@@ -305,7 +305,7 @@
             <p><strong>Nombre:</strong> {{ usuarioSeleccionado.nombre }}</p>
             <p>
               <strong>Tipo de Identificación:</strong>
-              {{ usuarioSeleccionado.tipo_identificacion.nombre }}
+              {{ usuarioSeleccionado.tipo_identificacion }}
             </p>
             <p>
               <strong>Número Identificación:</strong>

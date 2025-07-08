@@ -140,12 +140,11 @@
     <!-- PASO 2 -->
     <div *ngSwitchCase="1">
       <p>
-        El empleado con ese correo está dado de baja. ¿Querés recuperar su
-        información?
+        El empleado con ese correo fue dado de baja. ¿Deseás reactivarlo?
       </p>
       <button nz-button (click)="cancelar()">Cancelar</button>
       <button nz-button nzType="primary" (click)="confirmarReactivacion()">
-        Sí, recuperar!
+        Sí, reactivar!
       </button>
     </div>
 
