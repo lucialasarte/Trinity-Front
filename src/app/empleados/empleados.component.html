@@ -11,8 +11,8 @@
         >
           <nz-form-item>
             <nz-form-control>
-              <nz-form-label nzFor="dato">Dato Identificatorio</nz-form-label>
-              <input nz-input formControlName="dato" minlength="4" />
+              <nz-form-label nzFor="dato"></nz-form-label>
+              <input nz-input formControlName="dato" minlength="4" placeholder="Ingrese nombre, apellido, identificación o correo..." />
               <span
                 class="text-danger"
                 *ngIf="form.get('dato')?.hasError('minlength')"
@@ -75,7 +75,8 @@
               <td>{{ empleado.numero_identificacion }}</td>
               <td>{{ empleado.rol }}</td>
               <td>
-                <button (click)="eliminar(empleado.id)">
+                <button (click)="eliminar(empleado.id)"
+                *ngIf="auth.usuarioActual()?.id !== empleado.id">
                   <i class="fa fa-trash"></i> Eliminar
                 </button>
               </td>

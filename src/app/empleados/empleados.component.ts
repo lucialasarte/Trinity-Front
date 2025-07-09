@@ -187,7 +187,7 @@ export class EmpleadosComponent {
   private _eliminarEmpleado(id: number) {
     this.spinnerVisible = true;
     this.empleadosService.eliminarEmpleado(id).subscribe({
-      next: (data) => {
+      next: () => {
         this.spinnerVisible = false;
         this.utilsService.showMessage({
           icon: 'success',
@@ -203,6 +203,7 @@ export class EmpleadosComponent {
           icon: 'error',
           message: error.error.error || 'No se pudo eliminar el empleado.',
         });
+        this._getEmpleados();
       },
     });
   }

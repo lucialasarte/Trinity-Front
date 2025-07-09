@@ -174,6 +174,7 @@ export class InquilinosComponent {
             
           }
         });
+        this._getInquilinos();
       },
     });
   }
