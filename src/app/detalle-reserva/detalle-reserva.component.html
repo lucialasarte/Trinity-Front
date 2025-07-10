@@ -273,7 +273,7 @@
       <ul *ngIf="documentos.length > 0">
         <li *ngFor="let doc of documentos">
           <button
-            *ngIf="reserva.id_estado === 2"
+            *ngIf="reserva.id_estado === 2 && ((auth.usuarioActual()?.id === propiedad.id_encargado) || auth.usuarioActual()?.permisos?.gestionar_empleados)"
             class="boton-cerrar"
             (click)="eliminarDocumentacion(doc)"
           >
