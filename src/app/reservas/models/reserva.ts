@@ -6,20 +6,20 @@ export class Reserva {
   id_inquilino: number;
   fecha_inicio: Date;
   fecha_fin: Date;
+  propiedad: { nombre: string };;
   cantidad_personas: number;
   id_estado: number;
   estado: string;
   fecha_reserva: Date;
   monto_pagado: number;
   monto_total: number;
-  // huespedes: Array<Huesped>;
-  //   fecha_cancelacion?: Date;
   documentacion: [number];
   id_doc:[number];
   id_usuario_carga?: number;
   constructor(obj?: any) {
     this.id = (obj && obj.id) || null;
     this.id_propiedad = (obj && obj.id_propiedad) || null;
+    this.propiedad = (obj && obj.propiedad) || null;
     this.id_inquilino = (obj && obj.id_inquilino) || null;
     this.fecha_inicio = (obj && obj.fecha_inicio) || null;
     this.fecha_fin = (obj && obj.fecha_fin) || null;
@@ -29,11 +29,6 @@ export class Reserva {
     this.fecha_reserva = (obj && obj.fecha_reserva) || null;
     this.monto_pagado = (obj && obj.monto_pagado) || null;
     this.monto_total = (obj && obj.monto_total) || null;
-    // this.huespedes = (obj && obj.huespedes) ? [...obj.huespedes] : [];
-    // this.fecha_cancelacion =
-    //   obj && obj.fecha_cancelacion
-    //     ? new Date(obj.fecha_cancelacion)
-    //     : undefined;
     this.documentacion = (obj && obj.id_doc) || [];
     this.id_doc = (obj && obj.id_doc) || [];
     this.estado = (obj && obj.estado) || null;

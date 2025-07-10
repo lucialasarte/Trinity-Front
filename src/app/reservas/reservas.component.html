@@ -32,6 +32,9 @@
               >
                 Estado
               </th>
+              <th>
+                Nombre Propiedad
+              </th>
               <th
                 nzShowSort
                 nzColumnKey="fecha_inicio"
@@ -72,6 +75,9 @@
                   En curso
                 </span>
               </td>
+              <td style="text-align: left">
+                {{ reserva.propiedad.nombre }}
+              </td>
               <td>{{ reserva.fecha_inicio | date : "dd/MM/yyyy" }}</td>
               <td>{{ reserva.fecha_fin | date : "dd/MM/yyyy" }}</td>
               <td style="text-align: left">
@@ -94,6 +100,7 @@
                 </button>
               </td>
             </tr>
+
           </tbody>
         </nz-table>
       </nz-spin>
