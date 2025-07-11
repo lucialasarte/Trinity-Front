@@ -175,7 +175,15 @@ button {
   border-radius: 20px;
   font-weight: bold;
   font-size: 12px;
+}
 
+.badge-id{
+  background-color: antiquewhite;
+  color: #2c3e508a;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 
